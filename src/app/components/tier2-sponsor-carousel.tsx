@@ -1,65 +1,94 @@
-import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router';
+import { silverSponsors } from '../data/sponsors';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
-import logoStirue from "figma:asset/92bd99e4a15ca20e57c6964cdc27e88788461d2a.png";
-import logoDrogheda from "figma:asset/1710ea26cbece1ab6961c7d015a6977e2e6d4a47.png";
-import logoTony from "figma:asset/08b5df057017e6d791a7b6673cd340457b4e871f.png";
-import logoBelview from "figma:asset/3be250974f17bcfb90f6d8ff4668a77936a340a4.png";
-import logoHomeInstead from "figma:asset/c981f3b3f69e9057f76ab3ba1e6cb0b3c6bebf51.png";
-
-/**
- * Community Sponsors - Secondary Banner
- * Horizontal scrolling row of club supporters.
- */
-const tier2Sponsors = [
-  { name: 'Stirue Fencing', logo: logoStirue, url: '#' },
-  { name: 'Drogheda Hire', logo: logoDrogheda, url: '#' },
-  { name: 'Tony OBrien', logo: logoTony, url: '#' },
-  { name: 'Belview Eggs', logo: logoBelview, url: '#' },
-  { name: 'Home Instead', logo: logoHomeInstead, url: '#' },
-];
+function SilverSponsorCard({
+  name,
+  logo,
+  url,
+}: {
+  name: string;
+  logo?: string;
+  url: string;
+}) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Visit ${name}`}
+      className="flex min-h-[220px] min-w-[320px] max-w-[320px] flex-shrink-0 items-center justify-center rounded-[2rem] border border-slate-300 bg-[linear-gradient(180deg,#f4f5f7_0%,#e6e9ee_100%)] p-8 shadow-sm transition-all hover:-translate-y-1 hover:border-[#1E3A8A]/20 hover:shadow-lg"
+    >
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+        {logo ? (
+          <>
+            <div className="flex h-[112px] w-full items-center justify-center">
+              <ImageWithFallback
+                src={logo}
+                alt={name}
+                className="max-h-[96px] w-auto max-w-full object-contain"
+              />
+            </div>
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+              {name}
+            </p>
+          </>
+        ) : (
+          <div className="flex h-[112px] w-full items-center justify-center">
+            <span className="text-center text-lg font-black uppercase tracking-[0.1em] text-[#1E3A8A]">
+              {name}
+            </span>
+          </div>
+        )}
+      </div>
+    </a>
+  );
+}
 
 export function Tier2SponsorCarousel() {
+  const scrollingSponsors = [...silverSponsors, ...silverSponsors];
+
   return (
-    <section className="bg-gray-50 py-16 border-y border-gray-100 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 mb-10 flex items-center justify-between">
+    <section className="border-y border-slate-300 bg-[linear-gradient(180deg,#eef1f4_0%,#d9dde3_100%)] py-16 overflow-hidden">
+      <style>{`
+        @keyframes sponsor-marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 0.5rem)); }
+        }
+      `}</style>
+      <div className="mx-auto mb-8 flex max-w-7xl items-end justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <div>
-          <h2 className="text-2xl font-black text-[#1E3A8A] uppercase tracking-tight">
+          <p className="text-[11px] font-black uppercase tracking-[0.28em] text-slate-500">
             Club Sponsors
-          </h2>
-          <p className="text-[11px] font-bold text-amber-500 uppercase tracking-[0.2em]">
-            Invested in our community
           </p>
+          <h2 className="mt-2 text-3xl font-black uppercase tracking-tight text-[#1E3A8A]">
+            Backing The Club All Season
+          </h2>
         </div>
         <Link
           to="/sponsors"
-          className="inline-flex items-center gap-2 text-xs font-black text-[#1E3A8A] uppercase tracking-widest hover:text-amber-500 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.22em] text-[#1E3A8A] transition-colors hover:text-amber-600"
         >
-          View Directory <ArrowRight size={14} />
+          View Sponsors <ArrowRight size={14} />
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex gap-4 overflow-x-auto pb-3">
-          {tier2Sponsors.map((sponsor) => (
-            <a
-              key={sponsor.name}
-              href={sponsor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Visit ${sponsor.name}`}
-              className="flex min-w-[220px] flex-shrink-0 items-center justify-center rounded-2xl border border-gray-100 bg-white px-6 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="flex h-[70px] w-full items-center justify-center">
-                <ImageWithFallback
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  className="max-h-[70px] w-auto max-w-full object-contain"
-                />
-              </div>
-            </a>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="overflow-hidden">
+          <div
+            className="flex w-max gap-4 pb-3 hover:[animation-play-state:paused]"
+            style={{ animation: 'sponsor-marquee 36s linear infinite' }}
+          >
+            {scrollingSponsors.map((sponsor, index) => (
+            <SilverSponsorCard
+              key={`${sponsor.id}-${index}`}
+              name={sponsor.name}
+              logo={sponsor.logo}
+              url={sponsor.url}
+            />
           ))}
+          </div>
         </div>
       </div>
     </section>

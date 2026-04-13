@@ -38,13 +38,22 @@ export function Navigation() {
             </div>
 
             <div className="relative group">
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1E3A8A] flex items-center gap-1">
+              <Link to="/teams" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1E3A8A] flex items-center gap-1">
                 Teams
                 <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="absolute left-0 mt-0 w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Club Teams</Link>
-                <Link to="/teams/adult" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Adult Teams</Link>
+              </Link>
+              <div className="absolute left-0 mt-0 w-56 rounded-md bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                <div className="relative group/adult">
+                  <Link to="/teams/adult" className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                    Adult Teams
+                    <ChevronDown className="-rotate-90 h-4 w-4" />
+                  </Link>
+                  <div className="absolute left-full top-0 ml-0.5 w-56 rounded-md bg-white shadow-lg opacity-0 invisible group-hover/adult:opacity-100 group-hover/adult:visible transition-all">
+                    <Link to="/teams/senior-men" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Senior Men</Link>
+                    <Link to="/teams/senior-ladies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Senior Ladies</Link>
+                  </div>
+                </div>
+                <Link to="/teams/adult/social" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Social</Link>
                 <Link to="/teams/juvenile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Juvenile Teams</Link>
               </div>
             </div>
@@ -104,13 +113,23 @@ export function Navigation() {
               Child Safety
             </Link>
             <div className="px-3 py-2">
-              <p className="text-sm font-medium text-gray-700">Teams</p>
+              <Link to="/teams" onClick={() => setIsOpen(false)} className="text-sm font-medium text-gray-700 hover:text-[#1E3A8A]">
+                Teams
+              </Link>
               <div className="mt-2 ml-3 space-y-1 border-l border-gray-200 pl-3">
-                <Link to="/teams" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
-                  Club Teams
-                </Link>
                 <Link to="/teams/adult" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
                   Adult Teams
+                </Link>
+                <div className="ml-3 space-y-1 border-l border-gray-200 pl-3">
+                  <Link to="/teams/senior-men" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+                    Senior Men
+                  </Link>
+                  <Link to="/teams/senior-ladies" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+                    Senior Ladies
+                  </Link>
+                </div>
+                <Link to="/teams/adult/social" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+                  Social
                 </Link>
                 <Link to="/teams/juvenile" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
                   Juvenile Teams

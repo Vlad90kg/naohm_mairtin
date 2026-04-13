@@ -8,6 +8,17 @@ import { useCMS } from '../data/cms-context';
 export function ChildSafetyPage() {
   const { pages } = useCMS();
   const { childSafety } = pages;
+  const safeguardingContacts = [
+    ...childSafety.contacts,
+    {
+      id: 'designated-liaison-person',
+      name: 'TBC',
+      role: 'Designated Liaison Person',
+      description: 'Primary liaison contact for safeguarding matters and referral coordination.',
+      email: '',
+      phone: '',
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -73,7 +84,7 @@ export function ChildSafetyPage() {
             <h2 className="text-2xl font-bold text-gray-900">Safeguarding Contacts</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            {childSafety.contacts.map((contact, idx) => (
+            {safeguardingContacts.map((contact, idx) => (
               <motion.div 
                 key={contact.id}
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
@@ -89,12 +100,14 @@ export function ChildSafetyPage() {
                     <p className="text-sm text-gray-500 leading-relaxed">{contact.description}</p>
                   </div>
                   <div className="mt-auto space-y-3 pt-6 border-t border-gray-50">
-                    <a href={`mailto:${contact.email}`} className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#1E3A8A] transition-colors group">
-                      <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-[#1E3A8A]/10 transition-colors">
-                        <Mail className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium truncate">{contact.email}</span>
-                    </a>
+                    {contact.email && (
+                      <a href={`mailto:${contact.email}`} className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#1E3A8A] transition-colors group">
+                        <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-[#1E3A8A]/10 transition-colors">
+                          <Mail className="w-4 h-4" />
+                        </div>
+                        <span className="font-medium truncate">{contact.email}</span>
+                      </a>
+                    )}
                     {contact.phone && (
                       <div className="flex items-center gap-3 text-sm text-gray-600">
                         <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">

@@ -1,5 +1,5 @@
 import { Navigation } from '../components/navigation';
-import { HomeSponsorsSection, PremiumSponsorBanner } from '../components/premium-sponsor-banner';
+import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { HeroSection } from '../components/hero-section';
 import { AnnouncementEventsSection } from '../components/announcement-events-section';
 import { NewsSection } from '../components/news-section';
@@ -32,15 +32,7 @@ export function HomePage() {
         />
       )}
 
-      {home.sections.sponsors.enabled && (
-        <HomeSponsorsSection
-          title={home.sections.sponsors.sectionTitle}
-          itemsLimit={home.sections.sponsors.itemsLimit}
-        />
-      )}
-
-      {/* SECONDARY sponsor placement — horizontally scrolling Tier 2 banner */}
-      <Tier2SponsorCarousel />
+      {home.sections.sponsors.enabled && <Tier2SponsorCarousel />}
 
       {home.sections.shops.enabled && (
         <ShopSection

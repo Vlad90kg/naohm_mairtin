@@ -16,6 +16,10 @@ import { SeniorLadiesPage } from './pages/senior-ladies-page';
 import { FixturesResultsPage } from './pages/fixtures-results-page';
 import { AdultTeamsPage } from './pages/adult-teams-page';
 import { JuvenileTeamsPage } from './pages/juvenile-teams-page';
+import { SocialPage } from './pages/social-page';
+import { G4MOPage } from './pages/g4mo-page';
+import { G4DLPage } from './pages/g4dl-page';
+import { FuriousButNotFastPage } from './pages/furious-but-not-fast-page';
 import { CMSProvider } from './data/cms-context';
 
 // Admin Pages
@@ -52,6 +56,22 @@ export const router = createBrowserRouter([
       {
         path: 'teams/juvenile',
         Component: JuvenileTeamsPage,
+      },
+      {
+        path: 'teams/adult/social',
+        Component: SocialPage,
+      },
+      {
+        path: 'teams/adult/social/g4mo',
+        Component: G4MOPage,
+      },
+      {
+        path: 'teams/adult/social/g4dl',
+        Component: G4DLPage,
+      },
+      {
+        path: 'teams/adult/social/furious-but-not-fast',
+        Component: FuriousButNotFastPage,
       },
       {
         path: 'teams/senior-men',

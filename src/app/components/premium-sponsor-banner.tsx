@@ -1,47 +1,60 @@
+import { goldSponsors } from '../data/sponsors';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
-import logoXL from "figma:asset/f53629ddb107c4b3ee14a45135a4df4c1c062460.png";
-import logoBeltec from "figma:asset/0d2864839ffd3906f94a2f3891988093fdd4583d.png";
-import logoTrinity from "figma:asset/53c88e94157083d2c282cf63c7b59e3ea670b6f1.png";
-import logoAssist from "figma:asset/874b8970ede3b31f3c2a7db9348b3e6d40fea3f4.png";
-import logoBoylan from "figma:asset/da297634fb1eea9c76882865827d3413545a5d56.png";
+function SponsorVisual({
+  name,
+  logo,
+}: {
+  name: string;
+  logo?: string;
+}) {
+  if (logo) {
+    return (
+      <ImageWithFallback
+        src={logo}
+        alt={name}
+        className="max-h-[96px] w-auto max-w-full object-contain"
+      />
+    );
+  }
 
-/**
- * Premium Sponsor Data
- * Static display of top-tier partners.
- */
-const tier1Sponsors = [
-  { name: 'XL Tenure Stores', logo: logoXL, url: '#' },
-  { name: 'Beltec Construction', logo: logoBeltec, url: '#' },
-  { name: 'Trinity Finances', logo: logoTrinity, url: '#' },
-  { name: 'Assist Electrical', logo: logoAssist, url: '#' },
-  { name: 'Boylan Print Group', logo: logoBoylan, url: '#' },
-];
+  return (
+    <span className="text-lg font-black uppercase tracking-[0.1em] text-[#1E3A8A] text-center sm:text-xl">
+      {name}
+    </span>
+  );
+}
 
 export function PremiumSponsorBanner() {
+  if (!goldSponsors.length) {
+    return null;
+  }
+
   return (
-    <section className="w-full bg-white border-b border-gray-100 relative z-40">
-      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <p className="text-[11px] font-black text-[#1E3A8A] uppercase tracking-[0.25em] text-center mb-5">
-          Club Sponsors
-        </p>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {tier1Sponsors.map((sponsor) => (
+    <section className="relative z-40 border-b border-amber-200 bg-[linear-gradient(135deg,#fffaf0_0%,#ffffff_45%,#f3f6fb_100%)]">
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mb-4 text-center">
+          <span className="text-[11px] font-black uppercase tracking-[0.32em] text-amber-700">
+            {goldSponsors.length > 1 ? 'Main Club Sponsors' : 'Main Club Sponsor'}
+          </span>
+        </div>
+
+        <div className={`grid gap-4 ${goldSponsors.length === 1 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'}`}>
+          {goldSponsors.map((featuredSponsor) => (
             <a
-              key={sponsor.name}
-              href={sponsor.url}
+              key={featuredSponsor.id}
+              href={featuredSponsor.url}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Visit ${sponsor.name}`}
-              className="flex items-center justify-center rounded-2xl border border-gray-100 bg-white px-5 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              aria-label={`Visit ${featuredSponsor.name}`}
+              className="flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-[2rem] border border-amber-300/70 bg-white/90 p-8 text-center shadow-[0_12px_40px_rgba(30,58,138,0.08)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_48px_rgba(30,58,138,0.12)]"
             >
-              <div className="flex h-[70px] w-full items-center justify-center">
-                <ImageWithFallback
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  className="max-h-[70px] w-auto max-w-full object-contain"
-                />
+              <div className="flex h-[112px] w-full items-center justify-center">
+                <SponsorVisual name={featuredSponsor.name} logo={featuredSponsor.logo} />
               </div>
+              <p className="text-sm font-black uppercase tracking-[0.14em] text-slate-500">
+                {featuredSponsor.name}
+              </p>
             </a>
           ))}
         </div>
@@ -50,43 +63,4 @@ export function PremiumSponsorBanner() {
   );
 }
 
-export function HomeSponsorsSection({
-  title = 'Club Sponsors',
-  itemsLimit = 5,
-}: {
-  title?: string;
-  itemsLimit?: number;
-}) {
-  return (
-    <section className="w-full bg-white border-b border-gray-100 relative z-40">
-      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <p className="text-[11px] font-black text-[#1E3A8A] uppercase tracking-[0.25em] text-center mb-5">
-          {title}
-        </p>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {tier1Sponsors.slice(0, itemsLimit).map((sponsor) => (
-            <a
-              key={sponsor.name}
-              href={sponsor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Visit ${sponsor.name}`}
-              className="flex items-center justify-center rounded-2xl border border-gray-100 bg-white px-5 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="flex h-[70px] w-full items-center justify-center">
-                <ImageWithFallback
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  className="max-h-[70px] w-auto max-w-full object-contain"
-                />
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Backward-compat alias
 export { PremiumSponsorBanner as Tier1SponsorStrip };

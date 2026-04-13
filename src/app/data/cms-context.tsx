@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { teamsData as initialTeams, type Team } from './teams';
-import logoXL from '../../assets/f53629ddb107c4b3ee14a45135a4df4c1c062460.png';
-import logoBeltec from '../../assets/0d2864839ffd3906f94a2f3891988093fdd4583d.png';
-import logoTrinity from '../../assets/53c88e94157083d2c282cf63c7b59e3ea670b6f1.png';
+import { sponsors as initialSponsorDirectory } from './sponsors';
 
 // Types for our CMS data
 export interface Event {
@@ -193,11 +191,15 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     }
   ]);
 
-  const [sponsors, setSponsors] = useState<Sponsor[]>([
-    { id: '1', name: 'XL Tenure Stores', logo: logoXL, url: '#', tier: 1 },
-    { id: '2', name: 'Beltec Construction', logo: logoBeltec, url: '#', tier: 1 },
-    { id: '3', name: 'Trinity Finances', logo: logoTrinity, url: '#', tier: 2 },
-  ]);
+  const [sponsors, setSponsors] = useState<Sponsor[]>(
+    initialSponsorDirectory.map((sponsor) => ({
+      id: sponsor.id,
+      name: sponsor.name,
+      logo: sponsor.logo ?? '',
+      url: sponsor.url,
+      tier: sponsor.tier === 'gold' ? 1 : sponsor.tier === 'silver' ? 2 : 3,
+    }))
+  );
 
   const [lotto, setLotto] = useState<LottoState>({
     winningNumbers: ['04', '12', '19', '28'],
