@@ -9,59 +9,29 @@ type JuvenileTeam = {
   trainingTime: string;
 };
 
-type JuvenileGroup = {
-  title: string;
-  description: string;
-  teams: JuvenileTeam[];
-};
-
-const juvenileGroups: JuvenileGroup[] = [
-  {
-    title: 'Foundation',
-    description: 'Introductory teams focused on fun, participation, and building confidence.',
-    teams: [
-      { name: 'All Stars', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'Nursery', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-    ],
-  },
-  {
-    title: 'Youth',
-    description: 'Early youth teams developing core football skills and enjoyment of the game.',
-    teams: [
-      { name: 'U7 Boys & Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U8 Boys & Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U9 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U9 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U10 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U10 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-    ],
-  },
-  {
-    title: 'Development',
-    description: 'Teams moving into structured development and stronger competitive foundations.',
-    teams: [
-      { name: 'U11 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U11 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U12 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U12 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U13 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U13 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-    ],
-  },
-  {
-    title: 'Senior Youth',
-    description: 'Older juvenile teams preparing players for the transition toward adult football.',
-    teams: [
-      { name: 'U14 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U14 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U15 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U15 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U16 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'U16 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'Minor Men', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-      { name: 'Minor Ladies', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
-    ],
-  },
+const juvenileTeams: JuvenileTeam[] = [
+  { name: 'All Stars', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'Nursery', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U7 Boys & Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U8 Boys & Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U9 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U9 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U10 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U10 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U11 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U11 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U12 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U12 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U13 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U13 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U14 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U14 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U15 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U15 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U16 Boys', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'U16 Girls', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'Minor Men', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
+  { name: 'Minor Ladies', coach: 'Coach placeholder', contact: 'Contact placeholder', trainingTime: 'Training time placeholder' },
 ];
 
 export function JuvenileTeamsPage() {
@@ -76,46 +46,28 @@ export function JuvenileTeamsPage() {
         <TeamsSectionIntro
           eyebrow="Juvenile Pathway"
           title="Juvenile Teams"
-          description="The juvenile section is grouped by stage so it stays easy to scan while still showing every team."
+          description="Browse the full juvenile setup below and open any card to view the team details."
         />
 
-        <div className="space-y-10">
-          {juvenileGroups.map((group) => (
-            <section
-              key={group.title}
-              className="rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm sm:p-8"
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {juvenileTeams.map((team) => (
+            <button
+              key={team.name}
+              type="button"
+              onClick={() => setSelectedTeam(team)}
+              className="rounded-2xl border border-gray-100 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#1E3A8A]/15 hover:shadow-md"
             >
-              <div className="mb-6 max-w-2xl space-y-2">
-                <h3 className="text-2xl font-black tracking-tight text-[#1E3A8A]">
-                  {group.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-gray-500 sm:text-base">
-                  {group.description}
-                </p>
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#1E3A8A]">
+                <User className="h-5 w-5" />
               </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {group.teams.map((team) => (
-                  <button
-                    key={team.name}
-                    type="button"
-                    onClick={() => setSelectedTeam(team)}
-                    className="rounded-2xl border border-gray-100 bg-gray-50 p-5 text-left transition-all hover:-translate-y-0.5 hover:border-[#1E3A8A]/15 hover:bg-white hover:shadow-md"
-                  >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-[#1E3A8A]">
-                      <User className="h-5 w-5" />
-                    </div>
-                    <h4 className="mt-5 text-lg font-black tracking-tight text-[#1E3A8A]">
-                      {team.name}
-                    </h4>
-                    <p className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1E3A8A]">
-                      View Details
-                      <ChevronRight className="h-4 w-4" />
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </section>
+              <h4 className="mt-5 text-lg font-black tracking-tight text-[#1E3A8A]">
+                {team.name}
+              </h4>
+              <p className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1E3A8A]">
+                View Details
+                <ChevronRight className="h-4 w-4" />
+              </p>
+            </button>
           ))}
         </div>
       </div>
