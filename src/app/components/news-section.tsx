@@ -1,24 +1,26 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Instagram, Facebook, ExternalLink } from 'lucide-react';
+import instagramImage from '../../assets/social-media/instagram.png';
+import facebookImage from '../../assets/social-media/facebook.png';
 
 const socialUpdates = [
   {
     id: 2,
     platform: 'Instagram',
     icon: <Instagram size={16} className="text-[#E4405F]" />,
-    content: 'Fantastic morning at the U10 blitz today! Great to see so many young stars showing off their skills. Well done to all the coaches and parents! 🏐✨',
-    date: '5 hours ago',
-    image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=800',
-    link: 'https://instagram.com'
+    content: 'See the latest club photos, matchday moments, and community updates on our official Instagram page.',
+    date: 'Instagram',
+    image: instagramImage,
+    link: 'https://www.instagram.com/naomhmairtin/'
   },
   {
     id: 3,
     platform: 'Facebook',
     icon: <Facebook size={16} className="text-[#1877F2]" />,
-    content: 'Reminder: Club Lotto draw takes place tonight at 9pm! Tickets available online until 8:30pm. Don\'t miss out on your chance to win! 💶🍀',
-    date: '1 day ago',
-    image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800',
-    link: 'https://facebook.com'
+    content: 'Follow our Facebook page for announcements, fixtures, event reminders, and club news throughout the season.',
+    date: 'Facebook',
+    image: facebookImage,
+    link: 'https://www.facebook.com/NaomhMairtincpg/'
   },
 ];
 
