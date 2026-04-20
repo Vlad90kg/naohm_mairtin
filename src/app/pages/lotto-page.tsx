@@ -38,7 +38,7 @@ export function LottoPage() {
       <PremiumSponsorBanner />
 
       {/* Hero */}
-      <section className="club-hero-surface pt-16 pb-28 px-4 relative overflow-hidden text-center">
+      <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-center sm:py-28">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.15),_transparent_60%)] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto relative z-10">

@@ -17,7 +17,7 @@ export function FixturesArchivePage() {
       <PremiumSponsorBanner />
 
       <main className="flex-grow">
-        <section className="club-hero-surface pt-16 pb-24 px-4">
+        <section className="club-hero-surface px-4 py-20 sm:py-28">
           <div className="max-w-4xl mx-auto text-center">
             <Link 
               to="/fixtures-results" 

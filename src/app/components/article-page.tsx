@@ -20,7 +20,7 @@ export function ArticlePage({ content }: ArticlePageProps) {
       <main className="flex-grow">
         {/* Hero Header */}
         <section className={cn(
-          'relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden',
+          'relative overflow-hidden px-4 py-20 text-white sm:py-28',
           !hero.backgroundImage && 'club-hero-surface'
         )}>
           {hero.backgroundImage && (
@@ -28,10 +28,10 @@ export function ArticlePage({ content }: ArticlePageProps) {
               className="absolute inset-0 bg-cover bg-center z-0"
               style={{ backgroundImage: `url(${hero.backgroundImage})` }}
             >
-              <div className="absolute inset-0 bg-[#1E3A8A]/60 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-black/40" />
             </div>
           )}
-          <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <div className="relative z-10 mx-auto max-w-7xl text-center">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

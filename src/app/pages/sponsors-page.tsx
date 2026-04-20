@@ -52,7 +52,7 @@ export function SponsorsPage() {
       <Navigation />
       <PremiumSponsorBanner />
 
-      <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white">
+      <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white sm:py-28">
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <p className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-400">
             Sponsors

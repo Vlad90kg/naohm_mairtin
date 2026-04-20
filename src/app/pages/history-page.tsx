@@ -70,7 +70,7 @@ export function HistoryPage() {
 
       <main className="flex-grow">
         {/* Modern Header */}
-        <section className="club-hero-surface pt-16 pb-24 px-4 text-center">
+        <section className="club-hero-surface px-4 py-20 text-center sm:py-28">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">
               Club History

@@ -49,7 +49,7 @@ export function ShopPage() {
       <PremiumSponsorBanner />
 
       {/* Hero */}
-      <section className="club-hero-surface py-20 px-4 relative overflow-hidden">
+      <section className="club-hero-surface relative overflow-hidden px-4 py-20 sm:py-28">
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 16 }}

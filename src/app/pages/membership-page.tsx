@@ -16,7 +16,7 @@ export function MembershipPage() {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="club-hero-surface pt-16 pb-24 px-4 text-center relative overflow-hidden">
+        <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-center sm:py-28">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none" />
           
           <div className="max-w-4xl mx-auto relative z-10">

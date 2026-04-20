@@ -86,16 +86,16 @@ export function EventsPage() {
       <PremiumSponsorBanner />
 
       {/* Hero Section - Simplified with Club Colors */}
-      <section className="club-hero-surface py-12 px-4 border-b-4 border-amber-400">
+      <section className="club-hero-surface border-b-4 border-amber-400 px-4 py-20 text-center sm:py-28">
         <div className="max-w-7xl mx-auto">
           <motion.h1 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight"
           >
             Club Events
           </motion.h1>
-          <p className="text-blue-100 font-medium mt-2">Fixtures, meetings, and social gatherings.</p>
+          <p className="mt-4 text-blue-100 font-medium text-lg max-w-2xl mx-auto">Fixtures, meetings, and social gatherings.</p>
         </div>
       </section>
 

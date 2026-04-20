@@ -18,8 +18,7 @@ export function TeamsPageShell({
       <PremiumSponsorBanner />
 
       <main className="flex-grow">
-        <section className="club-hero-surface relative overflow-hidden px-4 py-24 text-white sm:py-32">
-          <div className="absolute inset-0 bg-black/60" />
+        <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white sm:py-28">
           <div className="relative mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl">
               {title}
