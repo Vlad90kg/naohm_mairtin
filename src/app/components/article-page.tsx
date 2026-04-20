@@ -21,7 +21,7 @@ export function ArticlePage({ content }: ArticlePageProps) {
         {/* Hero Header */}
         <section className={cn(
           'relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden',
-          hero.backgroundClassName ?? 'bg-[#1E3A8A]'
+          !hero.backgroundImage && 'club-hero-surface'
         )}>
           {hero.backgroundImage && (
             <div 
