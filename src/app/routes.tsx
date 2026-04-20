@@ -9,17 +9,21 @@ import { MembershipPage } from './pages/membership-page';
 import { HistoryPage } from './pages/history-page';
 import { CommitteesPage } from './pages/committees-page';
 import { FacilitiesPage } from './pages/facilities-page';
+import { HealthWellbeingPage } from './pages/health-wellbeing-page';
+import { CulturePage } from './pages/culture-page';
 import { LottoPage } from './pages/lotto-page';
 import { ShopPage } from './pages/shop-page';
 import { SeniorMenPage } from './pages/senior-men-page';
 import { SeniorLadiesPage } from './pages/senior-ladies-page';
 import { FixturesResultsPage } from './pages/fixtures-results-page';
+import { FixturesArchivePage } from './pages/fixtures-archive-page';
 import { AdultTeamsPage } from './pages/adult-teams-page';
 import { JuvenileTeamsPage } from './pages/juvenile-teams-page';
 import { SocialPage } from './pages/social-page';
 import { G4MOPage } from './pages/g4mo-page';
 import { G4DLPage } from './pages/g4dl-page';
 import { FuriousButNotFastPage } from './pages/furious-but-not-fast-page';
+import { ScorPage } from './pages/scor-page';
 import { CMSProvider } from './data/cms-context';
 
 // Admin Pages
@@ -62,6 +66,10 @@ export const router = createBrowserRouter([
         Component: SocialPage,
       },
       {
+        path: 'teams/scor',
+        Component: ScorPage,
+      },
+      {
         path: 'teams/adult/social/g4mo',
         Component: G4MOPage,
       },
@@ -84,6 +92,10 @@ export const router = createBrowserRouter([
       {
         path: 'fixtures-results',
         Component: FixturesResultsPage,
+      },
+      {
+        path: 'fixtures-archive',
+        Component: FixturesArchivePage,
       },
       {
         path: 'sponsors',
@@ -124,6 +136,14 @@ export const router = createBrowserRouter([
       {
         path: 'facilities',
         Component: FacilitiesPage,
+      },
+      {
+        path: 'health-wellbeing',
+        Component: HealthWellbeingPage,
+      },
+      {
+        path: 'culture',
+        Component: CulturePage,
       },
       {
         path: 'admin',

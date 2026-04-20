@@ -3,6 +3,7 @@ import { ShoppingBag, ExternalLink, ArrowRight } from 'lucide-react';
 import { Navigation } from '../components/navigation';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { Footer } from '../components/footer';
+import { cn } from '../components/ui/utils';
 import oneillsImg from 'figma:asset/852d2c85a3331660887554d243d06f2c25e7b657.png';
 import ccmLogo from '../../assets/clear-cut-marketing-placeholder.svg';
 
@@ -28,6 +29,16 @@ const shops = [
     image: ccmLogo,
     isLogo: true,
     cta: "Shop Clear Cut",
+  },
+  {
+    name: "Future Supplier",
+    description: "Coming Soon",
+    detail: "We are always looking to expand our range of official club gear. Stay tuned for new partnerships and exciting new merchandise options.",
+    url: "#",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+    isLogo: false,
+    cta: "Coming Soon",
+    isPlaceholder: true,
   },
 ];
 
@@ -70,19 +81,19 @@ export function ShopPage() {
 
       {/* Shops Grid */}
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-16">
-        <div className="grid md:grid-cols-2 gap-10 lg:gap-14 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 mb-16">
           {shops.map((shop, i) => (
             <motion.div
               key={shop.name}
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex flex-col"
+              className={cn("flex flex-col", shop.isPlaceholder && "opacity-60 grayscale hover:grayscale-0 transition-all duration-500")}
             >
               {/* Image card */}
               <a
                 href={shop.url}
-                target="_blank"
+                target={shop.isPlaceholder ? undefined : "_blank"}
                 rel="noopener noreferrer"
                 className="group relative overflow-hidden rounded-[2.5rem] shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white border-8 border-white aspect-[16/10] flex items-center justify-center"
               >

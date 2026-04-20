@@ -1,5 +1,5 @@
 /**
- * Centralized Team Data for Naomh Mairtin CPG
+ * Centralized Team Data for Naomh Mairtin CLG & LGFA
  * 
  * Managers, contact details, and training times can be updated here.
  * This structure makes it easy for admins to edit content without 

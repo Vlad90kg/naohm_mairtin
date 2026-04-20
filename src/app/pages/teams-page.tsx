@@ -1,72 +1,32 @@
-import {
-  BookOpenText,
-  ChevronRight,
-  ClipboardList,
-  HeartHandshake,
-  Mic2,
-  Music2,
-  Shield,
-  Sparkles,
-  Zap,
-} from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router';
 import { TeamsPageShell, TeamsSectionIntro } from '../components/teams-page-shell';
 
-const adultTeams = [
+const pageLinks = [
   {
-    title: 'Senior Men',
-    description: 'Access the dedicated senior men team page for fixtures, updates, and team information.',
-    href: '/teams/senior-men',
+    title: 'Adult Teams',
+    description: 'Browse the adult football section, including links onward to the senior men, senior ladies, and social overview pages.',
+    href: '/teams/adult',
+    eyebrow: 'Adult Teams',
   },
   {
-    title: 'Senior Ladies',
-    description: 'Access the dedicated senior ladies team page for fixtures, updates, and team information.',
-    href: '/teams/senior-ladies',
-  },
-];
-
-const juvenileGroups = [
-  'All Stars',
-  'U7',
-  'U8',
-  'U9',
-  'U10',
-  'U11',
-  'U12',
-  'U13',
-  'U14',
-  'U15',
-  'U16',
-  'Minor',
-];
-
-const socialGroups = [
-  {
-    title: 'Gaelic for Mothers and Others (G4MO)',
-    description: 'A welcoming social football pathway for women who want to stay active and connected through the club.',
-    href: '/teams/adult/social/g4mo',
-    icon: HeartHandshake,
+    title: 'Juvenile Teams',
+    description: 'Open the juvenile pathway page to view the full structure of teams and the current placeholder team details layout.',
+    href: '/teams/juvenile',
+    eyebrow: 'Juvenile Teams',
   },
   {
-    title: 'Gaelic for Dads and Lads (G4DL)',
-    description: 'A relaxed social football option for men who want to enjoy the game and be part of club life.',
-    href: '/teams/adult/social/g4dl',
-    icon: Shield,
+    title: 'Social',
+    description: 'Visit the social section for direct access to G4MO, G4DL, and Furious but not Fast.',
+    href: '/teams/adult/social',
+    eyebrow: 'Social',
   },
   {
-    title: 'Furious but not Fast',
-    description: 'A social running group focused on movement, encouragement, and shared participation.',
-    href: '/teams/adult/social/furious-but-not-fast',
-    icon: Zap,
+    title: 'Scór',
+    description: 'Explore the dedicated Scór page for the cultural side of the club, including music, performance, storytelling, and quiz activity.',
+    href: '/teams/scor',
+    eyebrow: 'Scór',
   },
-];
-
-const scorActivities = [
-  { title: 'Music', icon: Music2 },
-  { title: 'Singing', icon: Mic2 },
-  { title: 'Dancing', icon: Sparkles },
-  { title: 'Storytelling', icon: BookOpenText },
-  { title: 'Quiz', icon: ClipboardList },
 ];
 
 const gallerySlots = Array.from({ length: 6 }, (_, index) => index + 1);
@@ -75,34 +35,37 @@ export function TeamsPage() {
   return (
     <TeamsPageShell
       title="OUR TEAMS"
-      subtitle="Explore adult teams, juvenile teams, social groups, and cultural activity across Naomh Mairtin CPG"
+      subtitle="Use this page as the club teams hub, with direct links to each section and a gallery that stays here on the main teams page"
     >
       <div className="mx-auto max-w-6xl space-y-16">
         <section className="space-y-6">
           <TeamsSectionIntro
-            eyebrow="Adult Teams"
-            title="Adult Teams"
-            description="Access the adult football pathway below, with direct links to the senior team pages and the social area through the Teams dropdown."
+            eyebrow="Teams Hub"
+            title="Explore Team Sections"
+            description="Each area below links to its own dedicated page. Adult Teams, Juvenile Teams, Social, and Scór now live as separate destinations, while the gallery remains here on the main Teams page."
           />
 
           <div className="grid gap-6 md:grid-cols-2">
-            {adultTeams.map((team) => (
+            {pageLinks.map((page) => (
               <article
-                key={team.title}
+                key={page.title}
                 className="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl sm:p-10"
               >
                 <div className="max-w-xl space-y-5">
+                  <p className="text-[11px] font-black uppercase tracking-[0.25em] text-amber-500">
+                    {page.eyebrow}
+                  </p>
                   <h3 className="text-2xl font-black tracking-tight text-[#1E3A8A] sm:text-3xl">
-                    {team.title}
+                    {page.title}
                   </h3>
                   <p className="text-base leading-relaxed text-gray-600">
-                    {team.description}
+                    {page.description}
                   </p>
                   <Link
-                    to={team.href}
+                    to={page.href}
                     className="inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-blue-800"
                   >
-                    View Team
+                    Open Page
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -111,113 +74,12 @@ export function TeamsPage() {
           </div>
         </section>
 
-        <section className="space-y-6">
-          <TeamsSectionIntro
-            eyebrow="Juvenile Teams"
-            title="Juvenile Teams"
-            description="A full juvenile structure from All Stars through to Minor, shown here as a clean grid of team boxes."
-          />
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {juvenileGroups.map((group) => (
-              <article
-                key={group}
-                className="rounded-[2rem] border border-gray-100 bg-white p-6 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-              >
-                <h3 className="text-xl font-black tracking-tight text-[#1E3A8A]">
-                  {group}
-                </h3>
-              </article>
-            ))}
-          </div>
-
-          <div>
-            <Link
-              to="/teams/juvenile"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-blue-800"
-            >
-              View Juvenile Page
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </section>
-
-        <section className="space-y-6">
-          <TeamsSectionIntro
-            eyebrow="Social"
-            title="Social"
-            description="The social side of the club sits within the adult pathway and includes dedicated pages for each group."
-          />
-
-          <div className="grid gap-6 xl:grid-cols-3">
-            {socialGroups.map((group) => (
-              <article
-                key={group.title}
-                className="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1E3A8A] text-white shadow-lg shadow-blue-900/10">
-                  <group.icon className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight text-[#1E3A8A]">
-                  {group.title}
-                </h3>
-                <p className="mt-4 text-base leading-relaxed text-gray-600">
-                  {group.description}
-                </p>
-                <Link
-                  to={group.href}
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-blue-800"
-                >
-                  View Group
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </article>
-            ))}
-          </div>
-
-          <div>
-            <Link
-              to="/teams/adult/social"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-[#1E3A8A] transition-colors hover:bg-blue-50"
-            >
-              Social Overview
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </section>
-
         <section className="space-y-8">
           <TeamsSectionIntro
-            eyebrow="Scór"
-            title="Scór"
-            description="A dedicated cultural section celebrating the creative and community side of the club."
+            eyebrow="Gallery"
+            title="Gallery"
+            description="The gallery remains on the main Teams page and can continue to showcase images from across every section of the club."
           />
-
-          <div className="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm sm:p-10">
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-600">
-              About Scór
-            </p>
-            <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg">
-              Scór celebrates the cultural side of the GAA through performance, creativity, and community participation.
-              This section is ready for future content about club involvement, events, achievements, and how members can take part.
-            </p>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
-            {scorActivities.map((activity) => (
-              <article
-                key={activity.title}
-                className="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1E3A8A] text-white shadow-lg shadow-blue-900/10">
-                  <activity.icon className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight text-[#1E3A8A]">
-                  {activity.title}
-                </h3>
-              </article>
-            ))}
-          </div>
 
           <div className="space-y-6">
             <div>

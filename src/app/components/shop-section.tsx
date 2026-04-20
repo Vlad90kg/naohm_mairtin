@@ -1,4 +1,5 @@
 import { ExternalLink, ShoppingBag } from 'lucide-react';
+import { cn } from './ui/utils';
 import oneillsImg from 'figma:asset/852d2c85a3331660887554d243d06f2c25e7b657.png';
 import ccmLogo from '../../assets/clear-cut-marketing-placeholder.svg';
 
@@ -16,12 +17,20 @@ const shops = [
     url: "https://clearcutmarketing.ie/",
     image: ccmLogo,
     isLogo: true
+  },
+  {
+    name: "Future Supplier",
+    description: "Coming Soon",
+    url: "#",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+    isLogo: false,
+    isPlaceholder: true
   }
 ];
 
 export function ShopSection({
   title = 'Official Club Shops',
-  itemsLimit = 2,
+  itemsLimit = 3,
 }: {
   title?: string;
   itemsLimit?: number;
@@ -44,12 +53,12 @@ export function ShopSection({
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {visibleShops.map((shop) => (
-            <div key={shop.name} className="flex flex-col">
+            <div key={shop.name} className={cn("flex flex-col", shop.isPlaceholder && "opacity-60 grayscale hover:grayscale-0 transition-all duration-500")}>
               <a 
                 href={shop.url} 
-                target="_blank" 
+                target={shop.isPlaceholder ? undefined : "_blank"} 
                 rel="noopener noreferrer"
                 className="group relative flex-grow overflow-hidden rounded-[2.5rem] shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white border-8 border-white aspect-[16/10] flex items-center justify-center"
               >

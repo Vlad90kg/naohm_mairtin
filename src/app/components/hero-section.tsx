@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import clubLogo from 'figma:asset/c29df835214418d1211d6ebf912ea41a16418b68.png';
+import clubLogo from '../../assets/lgfa-logo.jpg';
 import heroBackground from '../../assets/hero_background.jpg';
 import { useCMS } from '../data/cms-context';
 

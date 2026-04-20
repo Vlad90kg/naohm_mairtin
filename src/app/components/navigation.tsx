@@ -1,7 +1,7 @@
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
-import clubLogo from 'figma:asset/c29df835214418d1211d6ebf912ea41a16418b68.png';
+import clubLogo from '../../assets/lgfa-logo.jpg';
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +13,8 @@ export function Navigation() {
           {/* Logo/Brand */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src={clubLogo} alt="Naomh Mairtin CPG" className="h-12 w-12 object-contain" />
-              <span className="text-xl font-bold text-[#1E3A8A]">Naomh Mairtin CPG</span>
+              <img src={clubLogo} alt="Naomh Mairtin CLG & LGFA" className="h-12 w-12 object-contain" />
+              <span className="text-xl font-bold text-[#1E3A8A]">Naomh Mairtin CLG & LGFA</span>
             </Link>
           </div>
 
@@ -33,6 +33,8 @@ export function Navigation() {
                 <Link to="/history" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">History</Link>
                 <Link to="/committees" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Committees</Link>
                 <Link to="/facilities" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Facilities</Link>
+                <Link to="/health-wellbeing" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Health & Wellbeing</Link>
+                <Link to="/culture" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Culture</Link>
                 <Link to="/child-safety" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Child Safety</Link>
               </div>
             </div>
@@ -53,8 +55,9 @@ export function Navigation() {
                     <Link to="/teams/senior-ladies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Senior Ladies</Link>
                   </div>
                 </div>
-                <Link to="/teams/adult/social" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Social</Link>
                 <Link to="/teams/juvenile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Juvenile Teams</Link>
+                <Link to="/teams/adult/social" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Social</Link>
+                <Link to="/teams/scor" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Scór</Link>
               </div>
             </div>
             <Link to="/fixtures-results" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1E3A8A]">
@@ -109,6 +112,12 @@ export function Navigation() {
             <Link to="/facilities" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
               Facilities
             </Link>
+            <Link to="/health-wellbeing" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+              Health & Wellbeing
+            </Link>
+            <Link to="/culture" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+              Culture
+            </Link>
             <Link to="/child-safety" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
               Child Safety
             </Link>
@@ -128,11 +137,14 @@ export function Navigation() {
                     Senior Ladies
                   </Link>
                 </div>
+                <Link to="/teams/juvenile" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+                  Juvenile Teams
+                </Link>
                 <Link to="/teams/adult/social" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
                   Social
                 </Link>
-                <Link to="/teams/juvenile" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
-                  Juvenile Teams
+                <Link to="/teams/scor" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
+                  Scór
                 </Link>
               </div>
             </div>

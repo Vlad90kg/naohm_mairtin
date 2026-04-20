@@ -71,6 +71,23 @@ export interface Facility {
   order: number;
 }
 
+export interface ContentBlock {
+  id: string;
+  title?: string;
+  image?: string;
+  content: string;
+  imagePosition?: 'left' | 'right' | 'top' | 'full';
+}
+
+export interface ArticlePageContent {
+  hero: {
+    title: string;
+    subtitle: string;
+    backgroundImage?: string;
+  };
+  blocks: ContentBlock[];
+}
+
 export interface PageContent {
   home: {
     hero: {
@@ -146,6 +163,8 @@ export interface PageContent {
       buttonLink: string;
     };
   };
+  healthWellbeing: ArticlePageContent;
+  culture: ArticlePageContent;
 }
 
 interface CMSContextType {
@@ -220,7 +239,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const [pages, setPages] = useState<PageContent>({
     home: {
       hero: {
-        title: 'Naomh Mairtin CPG',
+        title: 'Naomh Mairtin CLG & LGFA',
         subtitle: 'Strength in community, excellence on the field.',
         primaryButtonText: 'View Events',
         primaryButtonLink: '/events',
@@ -243,7 +262,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         shops: {
           enabled: true,
           sectionTitle: 'Official Club Shops',
-          itemsLimit: 2,
+          itemsLimit: 3,
         },
         events: {
           enabled: true,
@@ -264,7 +283,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     },
     facilities: {
       hero: {
-        description: 'Naomh Mairtin CPG boasts some of the finest sporting and social facilities in the region, supporting our teams from juvenile to senior level.',
+        description: 'Naomh Mairtin CLG & LGFA boasts some of the finest sporting and social facilities in the region, supporting our teams from juvenile to senior level.',
         locationLabel: 'Monasterboice, Co. Louth',
       },
       media: {
@@ -305,15 +324,23 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         title: 'Safeguarding & Child Welfare',
         subtitle: 'Our commitment to a safe environment for all our young members.',
       },
-      commitment: 'Naomh Mairtin CPG is committed to creating a safe and enjoyable environment for all children and young people. We follow the GAA Code of Behaviour (Underage) and all national safeguarding policies.',
+      commitment: 'Naomh Mairtin CLG & LGFA is committed to creating a safe and enjoyable environment for all children and young people. We follow the GAA Code of Behaviour (Underage) and all national safeguarding policies.',
       contacts: [
         {
           id: '1',
           name: 'Mary O\'Sullivan',
           role: 'Children\'s Officer',
-          description: 'Primary contact for safeguarding concerns.',
+          description: 'Primary contact for safeguarding concerns and child welfare within the club.',
           email: 'childrensofficer.naomhmairtin.louth@gaa.ie',
           phone: '087 123 4567',
+        },
+        {
+          id: '2',
+          name: 'TBC',
+          role: 'Designated Liaison Person (DLP)',
+          description: 'The DLP is responsible for reporting allegations or suspicions of child abuse to TUSLA and/or An Garda Síochána.',
+          email: 'dlp.naomhmairtin.louth@gaa.ie',
+          phone: '',
         }
       ],
       documents: [
@@ -340,6 +367,52 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         buttonText: 'Contact Mary',
         buttonLink: 'mailto:childrensofficer.naomhmairtin.louth@gaa.ie',
       }
+    },
+    healthWellbeing: {
+      hero: {
+        title: 'Health & Wellbeing',
+        subtitle: 'Supporting the mental and physical health of our community.',
+        backgroundImage: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1600&q=80',
+      },
+      blocks: [
+        {
+          id: '1',
+          title: 'Healthy Club Project',
+          content: 'The Healthy Club Project is an initiative by the GAA to make our club a hub for health and wellbeing in our community. We focus on physical activity, mental fitness, healthy eating, and drug/alcohol awareness.',
+          image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80',
+          imagePosition: 'right',
+        },
+        {
+          id: '2',
+          title: 'Mental Health Awareness',
+          content: 'We are committed to supporting the mental fitness of all our members. Our club provides resources and runs workshops to help normalize conversations around mental health.',
+          image: 'https://images.unsplash.com/photo-1527137342181-19aab11a8ee1?w=800&q=80',
+          imagePosition: 'left',
+        }
+      ]
+    },
+    culture: {
+      hero: {
+        title: 'Culture & Heritage',
+        subtitle: 'Celebrating our Irish identity through language, music, and dance.',
+        backgroundImage: 'https://images.unsplash.com/photo-1590076214667-c0f33b98c442?w=1600&q=80',
+      },
+      blocks: [
+        {
+          id: '1',
+          title: 'Scór',
+          content: 'Scór is a GAA competition that combines all the colour and excitement of Gaelic games with the magic of Irish traditional culture. We encourage all members to participate in music, song, dance, and drama.',
+          image: 'https://images.unsplash.com/photo-1535970790272-af05f54077d5?w=800&q=80',
+          imagePosition: 'right',
+        },
+        {
+          id: '2',
+          title: 'Irish Language',
+          content: 'The promotion of the Irish language is central to our club\'s identity. We host language classes and encourage the use of Gaeilge in our daily club activities.',
+          image: 'https://images.unsplash.com/photo-1590076214667-c0f33b98c442?w=800&q=80',
+          imagePosition: 'left',
+        }
+      ]
     }
   });
 

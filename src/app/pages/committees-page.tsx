@@ -10,6 +10,7 @@ import joeWalshPhoto from '../../assets/Committee Photos/Joe Walsh.jpeg';
 import martinMcHughPhoto from '../../assets/Committee Photos/Martin Mc Hugh.jpeg';
 import neilCooneyPhoto from '../../assets/Committee Photos/Neil Cooney.jpeg';
 import patriciaMaddenPhoto from '../../assets/Committee Photos/Patricia Madden.jpeg';
+import paulCarryPhoto from '../../assets/Committee Photos/Paul Carry.jpeg';
 import paulMcDonnellPhoto from '../../assets/Committee Photos/Paul McDonnell.jpeg';
 
 type CommitteeMember = {
@@ -38,8 +39,10 @@ const committees: CommitteeSection[] = [
       { role: 'Asst Communication Officer', name: 'Claire Clarke' },
       { role: 'Cultural Officer', name: 'Patricia Madden', image: patriciaMaddenPhoto },
       { role: 'Language Officer', name: 'Deirdre Ryan', image: deirdreRyanPhoto },
-      { role: 'Health & Wellbeing Officers', name: 'Audrey Gannon & Linda Donohue', image: audreyGannonPhoto },
-      { role: 'County Board Reps', name: 'Neil Cooney & Paul Carry', image: neilCooneyPhoto },
+      { role: 'Health & Wellbeing Officer', name: 'Audrey Gannon', image: audreyGannonPhoto },
+      { role: 'Health & Wellbeing Officer', name: 'Linda Donohue' },
+      { role: 'County Board Rep', name: 'Neil Cooney', image: neilCooneyPhoto },
+      { role: 'County Board Rep', name: 'Paul Carry', image: paulCarryPhoto },
       { role: 'Children’s Officer', name: 'Elma Flood', image: elmaFloodPhoto },
       { role: 'Green Club Officer', name: 'Dolores McAloon' },
     ],
