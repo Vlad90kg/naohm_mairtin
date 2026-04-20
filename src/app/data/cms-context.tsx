@@ -84,6 +84,7 @@ export interface ArticlePageContent {
     title: string;
     subtitle: string;
     backgroundImage?: string;
+    backgroundClassName?: string;
   };
   blocks: ContentBlock[];
 }
@@ -395,7 +396,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       hero: {
         title: 'Culture & Heritage',
         subtitle: 'Celebrating our Irish identity through language, music, and dance.',
-        backgroundImage: 'https://images.unsplash.com/photo-1590076214667-c0f33b98c442?w=1600&q=80',
+        backgroundClassName: 'bg-[#1E3A8A]',
       },
       blocks: [
         {
