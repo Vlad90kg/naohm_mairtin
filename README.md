@@ -1,11 +1,19 @@
 
-  # Homepage Wireframe for GAA Club
+# Homepage Wireframe for GAA Club
 
-  This is a code bundle for Homepage Wireframe for GAA Club. The original project is available at https://www.figma.com/design/LSlJE1zeAYSfiKdLNDlv9Y/Homepage-Wireframe-for-GAA-Club.
+This repository is now organized as a small monorepo with separate frontend and backend folders.
 
-  ## Running the code
+## Workspace Layout
 
-  Run `npm i` to install the dependencies.
+- `frontend/`: the existing Vite frontend application
+- `backend/`: reserved for the future Django backend
 
-  Run `npm run dev` to start the development server.
-  # naohm_mairtin
+## Running the code
+
+Install frontend dependencies from the repo root with `npm install`.
+
+Start the frontend from the repo root with `npm run dev`.
+
+Build the frontend from the repo root with `npm run build`.
+
+The `backend/` folder is intentionally left ready for a Django setup you can create later in PyCharm.
