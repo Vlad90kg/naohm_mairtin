@@ -1,4 +1,4 @@
-import { goldSponsors } from '../data/sponsors';
+import { useCMS } from '../data/cms-context';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 function SponsorVisual({
@@ -26,6 +26,9 @@ function SponsorVisual({
 }
 
 export function PremiumSponsorBanner() {
+  const { sponsors } = useCMS();
+  const goldSponsors = sponsors.filter((sponsor) => sponsor.tier === 1);
+
   if (!goldSponsors.length) {
     return null;
   }

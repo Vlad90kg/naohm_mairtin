@@ -11,6 +11,8 @@ import {
 import { useCMS, type Sponsor } from '../../data/cms-context';
 import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
 import { MediaUploadButton } from '../../components/admin/media-upload-button';
+import { toast } from 'sonner';
+import { uploadSponsorLogo } from '../../data/sponsors-api';
 
 type SponsorDraft = Omit<Sponsor, 'id'>;
 
@@ -18,6 +20,8 @@ export function SponsorsManagementPage() {
   const { sponsors, addSponsor, updateSponsor, deleteSponsor } = useCMS();
   const [isEditing, setIsEditing] = useState<Sponsor | null>(null);
   const [isAdding, setIsAdding] = useState<SponsorDraft | null>(null);
+  const [editingLogoFile, setEditingLogoFile] = useState<File | null>(null);
+  const [addingLogoFile, setAddingLogoFile] = useState<File | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState<0 | 1 | 2 | 3>(0);
 
@@ -27,14 +31,25 @@ export function SponsorsManagementPage() {
     return matchesSearch && matchesTier;
   });
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEditing) {
-      updateSponsor(isEditing.id, isEditing);
-      setIsEditing(null);
-    } else if (isAdding) {
-      addSponsor(isAdding);
-      setIsAdding(null);
+    try {
+      if (isEditing) {
+        const logo = editingLogoFile ? await uploadSponsorLogo(editingLogoFile) : isEditing.logo;
+        await updateSponsor(isEditing.id, { ...isEditing, logo });
+        setIsEditing(null);
+        setEditingLogoFile(null);
+        toast.success('Sponsor updated successfully.');
+      } else if (isAdding) {
+        const logo = addingLogoFile ? await uploadSponsorLogo(addingLogoFile) : isAdding.logo;
+        await addSponsor({ ...isAdding, logo });
+        setIsAdding(null);
+        setAddingLogoFile(null);
+        toast.success('Sponsor created successfully.');
+      }
+    } catch (error) {
+      toast.error('Could not save sponsor. Please try again.');
+      console.error(error);
     }
   };
 
@@ -120,7 +135,15 @@ export function SponsorsManagementPage() {
                   <Edit2 size={12} /> Edit
                 </button>
                 <button 
-                  onClick={() => deleteSponsor(sponsor.id)}
+                  onClick={async () => {
+                    try {
+                      await deleteSponsor(sponsor.id);
+                      toast.success('Sponsor deleted.');
+                    } catch (error) {
+                      toast.error('Could not delete sponsor.');
+                      console.error(error);
+                    }
+                  }}
                   className="p-3 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                 >
                   <Trash2 size={14} />
@@ -137,7 +160,12 @@ export function SponsorsManagementPage() {
           <div className="bg-white rounded-[2.5rem] w-full max-w-xl overflow-hidden shadow-2xl animate-in zoom-in duration-200">
             <div className="bg-[#1E3A8A] p-8 text-white relative">
               <button 
-                onClick={() => { setIsEditing(null); setIsAdding(null); }}
+                onClick={() => {
+                  setIsEditing(null);
+                  setIsAdding(null);
+                  setEditingLogoFile(null);
+                  setAddingLogoFile(null);
+                }}
                 className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors"
               >
                 <X className="h-6 w-6" />
@@ -197,25 +225,42 @@ export function SponsorsManagementPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Logo URL / Figma Asset</label>
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Logo URL Or Upload</label>
                 <div className="flex gap-4">
                   <input 
                     type="text" 
                     value={isEditing?.logo || isAdding?.logo || ''}
                     onChange={(e) => {
-                      if (isEditing) setIsEditing({...isEditing, logo: e.target.value});
-                      if (isAdding) setIsAdding({...isAdding, logo: e.target.value});
+                      if (isEditing) {
+                        setIsEditing({...isEditing, logo: e.target.value});
+                        setEditingLogoFile(null);
+                      }
+                      if (isAdding) {
+                        setIsAdding({...isAdding, logo: e.target.value});
+                        setAddingLogoFile(null);
+                      }
                       }}
                       className="flex-grow px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 focus:ring-2 focus:ring-[#1E3A8A]/20 outline-none"
-                      placeholder="figma:asset/..."
+                      placeholder="https://... or use upload"
                     />
                   <MediaUploadButton
-                    onSelect={(url) => {
-                      if (isEditing) setIsEditing({ ...isEditing, logo: url });
-                      if (isAdding) setIsAdding({ ...isAdding, logo: url });
+                    onSelect={(url, file) => {
+                      if (isEditing) {
+                        setIsEditing({ ...isEditing, logo: url });
+                        setEditingLogoFile(file);
+                      }
+                      if (isAdding) {
+                        setIsAdding({ ...isAdding, logo: url });
+                        setAddingLogoFile(file);
+                      }
                     }}
                   />
                 </div>
+                {(editingLogoFile || addingLogoFile) && (
+                  <p className="text-xs font-bold text-emerald-600">
+                    Logo selected from device. It will upload when you save.
+                  </p>
+                )}
               </div>
 
               {/* Logo Preview */}
@@ -234,7 +279,12 @@ export function SponsorsManagementPage() {
               <div className="mt-12 flex gap-4 pt-6">
                 <button 
                   type="button"
-                  onClick={() => { setIsEditing(null); setIsAdding(null); }}
+                  onClick={() => {
+                    setIsEditing(null);
+                    setIsAdding(null);
+                    setEditingLogoFile(null);
+                    setAddingLogoFile(null);
+                  }}
                   className="flex-grow py-4 bg-gray-100 text-[#1E3A8A] rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-gray-200 transition-all"
                 >
                   Cancel

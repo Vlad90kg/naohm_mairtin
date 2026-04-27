@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { teamsData as initialTeams, type Team } from './teams';
 import { sponsors as initialSponsorDirectory } from './sponsors';
+import {
+  createSponsor as createSponsorApi,
+  deleteSponsorById,
+  listSponsors,
+  updateSponsorById,
+} from './sponsors-api';
+import { getEventsPageContent, listEvents } from './events-api';
 
 // Types for our CMS data
 export interface Event {
@@ -10,6 +17,8 @@ export interface Event {
   location: string;
   description: string;
   image: string;
+  category: string;
+  time?: string;
 }
 
 export interface Sponsor {
@@ -128,6 +137,12 @@ export interface PageContent {
       };
     };
   };
+  events: {
+    hero: {
+      title: string;
+      subtitle: string;
+    };
+  };
   contact: {
     email: string;
     address: string;
@@ -178,9 +193,9 @@ interface CMSContextType {
   addEvent: (event: Omit<Event, 'id'>) => void;
   updateEvent: (id: string, updates: Partial<Event>) => void;
   deleteEvent: (id: string) => void;
-  addSponsor: (sponsor: Omit<Sponsor, 'id'>) => void;
-  updateSponsor: (id: string, updates: Partial<Sponsor>) => void;
-  deleteSponsor: (id: string) => void;
+  addSponsor: (sponsor: Omit<Sponsor, 'id'>) => Promise<void>;
+  updateSponsor: (id: string, updates: Partial<Sponsor>) => Promise<void>;
+  deleteSponsor: (id: string) => Promise<void>;
   updateLotto: (updates: Partial<LottoState>) => void;
   updateMembership: (updates: Partial<MembershipState>) => void;
   updatePageContent: (page: keyof PageContent, updates: any) => void;
@@ -191,24 +206,7 @@ const CMSContext = createContext<CMSContextType | undefined>(undefined);
 export function CMSProvider({ children }: { children: React.ReactNode }) {
   // Initialize with dummy data or local storage
   const [teams, setTeams] = useState<Team[]>(initialTeams);
-  const [events, setEvents] = useState<Event[]>([
-    {
-      id: '1',
-      title: 'Annual General Meeting',
-      date: '2026-04-15',
-      location: 'Clubhouse Hall',
-      description: 'The annual general meeting for all club members to discuss the past year and future plans.',
-      image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=80',
-    },
-    {
-      id: '2',
-      title: 'Summer Cul Camp 2026',
-      date: '2026-07-06',
-      location: 'Main Training Grounds',
-      description: 'Our popular annual youth camp for football and hurling.',
-      image: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=800&q=80',
-    }
-  ]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const [sponsors, setSponsors] = useState<Sponsor[]>(
     initialSponsorDirectory.map((sponsor) => ({
@@ -219,6 +217,59 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       tier: sponsor.tier === 'gold' ? 1 : sponsor.tier === 'silver' ? 2 : 3,
     }))
   );
+
+  useEffect(() => {
+    const loadSponsors = async () => {
+      try {
+        const remoteSponsors = await listSponsors();
+        setSponsors(
+          remoteSponsors.map((sponsor) => ({
+            id: sponsor.id,
+            name: sponsor.name,
+            logo: sponsor.logo,
+            url: sponsor.url,
+            tier: sponsor.tier,
+          }))
+        );
+      } catch (error) {
+        console.error('Failed to load sponsors from API:', error);
+      }
+    };
+
+    const loadEvents = async () => {
+      try {
+        const remoteEvents = await listEvents();
+        setEvents(
+          remoteEvents.map((event) => ({
+            id: event.id,
+            title: event.title,
+            date: event.date,
+            location: event.location,
+            description: event.description,
+            image: event.image,
+            category: event.category,
+            time: event.time,
+          }))
+        );
+
+        const pageContent = await getEventsPageContent();
+        setPages((prev) => ({
+          ...prev,
+          events: {
+            hero: {
+              title: pageContent.hero_title,
+              subtitle: pageContent.hero_subtitle,
+            },
+          },
+        }));
+      } catch (error) {
+        console.error('Failed to load events from API:', error);
+      }
+    };
+
+    void loadSponsors();
+    void loadEvents();
+  }, []);
 
   const [lotto, setLotto] = useState<LottoState>({
     winningNumbers: ['04', '12', '19', '28'],
@@ -274,6 +325,12 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           sectionTitle: 'Our Teams',
           itemsLimit: 2,
         },
+      },
+    },
+    events: {
+      hero: {
+        title: 'Club Events',
+        subtitle: 'Fixtures, meetings, and social gatherings.',
       },
     },
     contact: {
@@ -432,16 +489,52 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     setEvents(prev => prev.filter(e => e.id !== id));
   };
 
-  const addSponsor = (sponsor: Omit<Sponsor, 'id'>) => {
-    setSponsors(prev => [...prev, { ...sponsor, id: Date.now().toString() }]);
+  const addSponsor = async (sponsor: Omit<Sponsor, 'id'>) => {
+    const createdSponsor = await createSponsorApi({
+      name: sponsor.name,
+      logo: sponsor.logo,
+      url: sponsor.url,
+      tier: sponsor.tier,
+    });
+
+    setSponsors((prev) => [
+      ...prev,
+      {
+        id: createdSponsor.id,
+        name: createdSponsor.name,
+        logo: createdSponsor.logo,
+        url: createdSponsor.url,
+        tier: createdSponsor.tier,
+      },
+    ]);
   };
 
-  const updateSponsor = (id: string, updates: Partial<Sponsor>) => {
-    setSponsors(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+  const updateSponsor = async (id: string, updates: Partial<Sponsor>) => {
+    const updatedSponsor = await updateSponsorById(id, {
+      name: updates.name,
+      logo: updates.logo,
+      url: updates.url,
+      tier: updates.tier,
+    });
+
+    setSponsors((prev) =>
+      prev.map((sponsor) =>
+        sponsor.id === id
+          ? {
+              ...sponsor,
+              name: updatedSponsor.name,
+              logo: updatedSponsor.logo,
+              url: updatedSponsor.url,
+              tier: updatedSponsor.tier,
+            }
+          : sponsor
+      )
+    );
   };
 
-  const deleteSponsor = (id: string) => {
-    setSponsors(prev => prev.filter(s => s.id !== id));
+  const deleteSponsor = async (id: string) => {
+    await deleteSponsorById(id);
+    setSponsors((prev) => prev.filter((sponsor) => sponsor.id !== id));
   };
 
   const updateLotto = (updates: Partial<LottoState>) => {

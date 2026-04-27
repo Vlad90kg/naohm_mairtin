@@ -25,16 +25,6 @@ import { G4DLPage } from './pages/g4dl-page';
 import { FuriousButNotFastPage } from './pages/furious-but-not-fast-page';
 import { ScorPage } from './pages/scor-page';
 
-// Admin Pages
-import { AdminLayout } from './components/admin/admin-layout';
-import { DashboardPage } from './pages/admin/dashboard-page';
-import { EventsManagementPage } from './pages/admin/events-management-page';
-import { SponsorsManagementPage } from './pages/admin/sponsors-management-page';
-import { TeamsManagementPage } from './pages/admin/teams-management-page';
-import { LottoManagementPage } from './pages/admin/lotto-management-page';
-import { MembershipManagementPage } from './pages/admin/membership-management-page';
-import { PagesManagementPage } from './pages/admin/pages-management-page';
-
 const RootLayout = () => (
   <Outlet />
 );
@@ -143,40 +133,6 @@ export const router = createBrowserRouter([
       {
         path: 'culture',
         Component: CulturePage,
-      },
-      {
-        path: 'admin',
-        Component: AdminLayout,
-        children: [
-          {
-            index: true,
-            Component: DashboardPage,
-          },
-          {
-            path: 'events',
-            Component: EventsManagementPage,
-          },
-          {
-            path: 'sponsors',
-            Component: SponsorsManagementPage,
-          },
-          {
-            path: 'teams',
-            Component: TeamsManagementPage,
-          },
-          {
-            path: 'lotto',
-            Component: LottoManagementPage,
-          },
-          {
-            path: 'membership',
-            Component: MembershipManagementPage,
-          },
-          {
-            path: 'pages',
-            Component: PagesManagementPage,
-          },
-        ],
       },
     ],
   },

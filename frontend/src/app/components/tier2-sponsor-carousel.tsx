@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
-import { silverSponsors } from '../data/sponsors';
+import { useCMS } from '../data/cms-context';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 function SilverSponsorCard({
@@ -47,6 +47,8 @@ function SilverSponsorCard({
 }
 
 export function Tier2SponsorCarousel() {
+  const { sponsors } = useCMS();
+  const silverSponsors = sponsors.filter((sponsor) => sponsor.tier === 2);
   const scrollingSponsors = [...silverSponsors, ...silverSponsors];
 
   return (

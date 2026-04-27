@@ -1,9 +1,38 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Footer } from '../components/footer';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { Navigation } from '../components/navigation';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
-import { sponsors } from '../data/sponsors';
+import { useCMS } from '../data/cms-context';
+
+type SponsorsPageContent = {
+  hero_eyebrow: string;
+  hero_title: string;
+  hero_description: string;
+  section_eyebrow: string;
+  section_title: string;
+  section_description: string;
+  cta_title: string;
+  cta_description: string;
+  cta_button_text: string;
+  cta_button_link: string;
+};
+
+const defaultPageContent: SponsorsPageContent = {
+  hero_eyebrow: 'Sponsors',
+  hero_title: 'Sponsor Directory',
+  hero_description: 'A full directory of club sponsors, with featured supporters highlighted across the wider site.',
+  section_eyebrow: 'Our Sponsors',
+  section_title: 'Every Sponsor In One Place',
+  section_description: 'Please support the businesses and individuals who support Naomh Mairtin CPG.',
+  cta_title: 'Become A Club Sponsor',
+  cta_description: 'We offer sponsorship options for businesses at different levels while keeping visibility clear and structured.',
+  cta_button_text: 'Get In Touch',
+  cta_button_link: '/contact',
+};
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
 
 function BronzeSponsorCard({
   name,
@@ -47,6 +76,35 @@ function BronzeSponsorCard({
 }
 
 export function SponsorsPage() {
+  const { sponsors } = useCMS();
+  const [pageContent, setPageContent] = useState<SponsorsPageContent>(defaultPageContent);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadPageContent = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/pages/sponsors/`);
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as SponsorsPageContent;
+        if (!ignore) {
+          setPageContent(data);
+        }
+      } catch (error) {
+        console.error('Failed to load sponsors page content:', error);
+      }
+    };
+
+    void loadPageContent();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-100">
       <Navigation />
@@ -55,13 +113,13 @@ export function SponsorsPage() {
       <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white sm:py-28">
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <p className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-400">
-            Sponsors
+            {pageContent.hero_eyebrow}
           </p>
           <h1 className="mt-4 text-4xl font-black uppercase tracking-tight sm:text-6xl">
-            Sponsor Directory
+            {pageContent.hero_title}
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg font-medium text-blue-100">
-            A full directory of club sponsors, with featured supporters highlighted across the wider site.
+            {pageContent.hero_description}
           </p>
         </div>
         <div className="absolute right-0 top-0 h-full w-1/4 translate-x-20 skew-x-12 bg-amber-400/10" />
@@ -71,13 +129,13 @@ export function SponsorsPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 text-center">
             <p className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-600">
-              Our Sponsors
+              {pageContent.section_eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-black uppercase tracking-tight text-[#1E3A8A]">
-              Every Sponsor In One Place
+              {pageContent.section_title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-              Please support the businesses and individuals who support Naomh Mairtin CPG.
+              {pageContent.section_description}
             </p>
           </div>
 
@@ -99,16 +157,16 @@ export function SponsorsPage() {
           <div className="relative overflow-hidden rounded-[3rem] border-8 border-white bg-[#1E3A8A] p-12 text-center text-white shadow-2xl sm:p-16">
             <div className="relative z-10">
               <h2 className="text-4xl font-black uppercase tracking-tight">
-                Become A Club Sponsor
+                {pageContent.cta_title}
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-blue-100">
-                We offer sponsorship options for businesses at different levels while keeping visibility clear and structured.
+                {pageContent.cta_description}
               </p>
               <Link
-                to="/contact"
+                to={pageContent.cta_button_link}
                 className="mt-10 inline-block rounded-2xl bg-amber-400 px-12 py-4 text-base font-black uppercase tracking-[0.18em] text-[#1E3A8A] transition-all hover:-translate-y-1 hover:bg-amber-500"
               >
-                Get In Touch
+                {pageContent.cta_button_text}
               </Link>
             </div>
             <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-white/5 blur-3xl" />

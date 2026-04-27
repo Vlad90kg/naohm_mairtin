@@ -4,80 +4,59 @@ import { useState } from 'react';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
-
-const UPCOMING_EVENTS = [
-  {
-    id: 1,
-    title: "Senior Football Championship: Round 3",
-    date: "Saturday, April 12, 2026",
-    time: "7:30 PM",
-    location: "Pairc Naomh Mairtin",
-    category: "Matches",
-    description: "Naomh Mairtin vs St. Mary's. Come out and support the lads!",
-    image: "https://images.unsplash.com/photo-1529900948638-21f99c10d16a?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 2,
-    title: "Annual Club Lotto Draw & Social",
-    date: "Friday, April 18, 2026",
-    time: "8:00 PM",
-    location: "Clubhouse Bar",
-    category: "Club Events",
-    description: "Join us for the big monthly draw. Live music and refreshments provided.",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 3,
-    title: "U14 Juvenile Training Camp",
-    date: "Mon-Wed, April 20-22, 2026",
-    time: "10:00 AM - 2:00 PM",
-    location: "Main Pitch & Astro",
-    category: "Training",
-    description: "Easter skills camp for all U14 boys and girls. Registration required.",
-    image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: 4,
-    title: "Table Quiz Fundraiser",
-    date: "Saturday, May 2, 2026",
-    time: "8:30 PM",
-    location: "Monasterboice Inn",
-    category: "Club Events",
-    description: "Support our new clubhouse development fund. Teams of 4 - €40 per table.",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"
-  }
-];
-
-const PAST_EVENTS = [
-  {
-    id: 101,
-    title: "St. Patrick's Day Parade",
-    date: "March 17, 2026",
-    location: "Drogheda Town Centre",
-    category: "Club Events"
-  },
-  {
-    id: 102,
-    title: "Junior B League vs O'Connells",
-    date: "March 15, 2026",
-    location: "Castlebellingham",
-    category: "Matches"
-  },
-  {
-    id: 103,
-    title: "Club Clean-up Day",
-    date: "March 8, 2026",
-    location: "Sillogue Lane Grounds",
-    category: "Club Events"
-  }
-];
+import { useCMS } from '../data/cms-context';
 
 export function EventsPage() {
+  const { events, pages } = useCMS();
+  const content = pages.events;
   const [filter, setFilter] = useState('All');
 
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-IE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }).format(date);
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  const getDayName = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-IE', { weekday: 'long' }).format(date);
+    } catch (e) {
+      return '';
+    }
+  };
+
+  const getDateDetail = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat('en-IE', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(date);
+    } catch (e) {
+      return dateString;
+    }
+  };
+
+  const now = new Date();
+  // Set time to start of day for comparison
+  now.setHours(0, 0, 0, 0);
+
+  const upcomingEvents = events.filter(e => new Date(e.date) >= now);
+  const pastEvents = events.filter(e => new Date(e.date) < now);
+
   const filteredEvents = filter === 'All' 
-    ? UPCOMING_EVENTS 
-    : UPCOMING_EVENTS.filter(e => e.category === filter);
+    ? upcomingEvents 
+    : upcomingEvents.filter(e => e.category === filter);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -92,9 +71,9 @@ export function EventsPage() {
             animate={{ opacity: 1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight"
           >
-            Club Events
+            {content.hero.title}
           </motion.h1>
-          <p className="mt-4 text-blue-100 font-medium text-lg max-w-2xl mx-auto">Fixtures, meetings, and social gatherings.</p>
+          <p className="mt-4 text-blue-100 font-medium text-lg max-w-2xl mx-auto">{content.hero.subtitle}</p>
         </div>
       </section>
 
@@ -133,8 +112,8 @@ export function EventsPage() {
                     {event.category}
                   </span>
                   <div className="text-right">
-                    <p className="text-xs font-bold text-gray-400 uppercase">{event.date.split(',')[0]}</p>
-                    <p className="text-sm font-black text-[#1E3A8A]">{event.date.split(',')[1] || event.date}</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase">{getDayName(event.date)}</p>
+                    <p className="text-sm font-black text-[#1E3A8A]">{getDateDetail(event.date)}</p>
                   </div>
                 </div>
                 
@@ -143,10 +122,12 @@ export function EventsPage() {
                 </h3>
                 
                 <div className="space-y-1.5 mb-6">
-                  <div className="flex items-center gap-2 text-gray-500 text-xs font-bold">
-                    <Clock size={14} className="text-amber-500" />
-                    {event.time}
-                  </div>
+                  {event.time && (
+                    <div className="flex items-center gap-2 text-gray-500 text-xs font-bold">
+                      <Clock size={14} className="text-amber-500" />
+                      {event.time}
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-gray-500 text-xs font-bold">
                     <MapPin size={14} className="text-amber-500" />
                     {event.location}
@@ -179,7 +160,7 @@ export function EventsPage() {
             Recent Past Events
           </h2>
           <div className="space-y-4">
-            {PAST_EVENTS.map((event) => (
+            {pastEvents.map((event) => (
               <div 
                 key={event.id}
                 className="flex items-center justify-between p-4 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors group"
@@ -190,7 +171,7 @@ export function EventsPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-700 text-sm">{event.title}</h4>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase">{event.date} • {event.location}</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase">{formatDate(event.date)} • {event.location}</p>
                   </div>
                 </div>
                 <span className="text-[10px] font-black text-gray-300 uppercase group-hover:text-gray-400 transition-colors">

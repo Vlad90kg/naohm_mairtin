@@ -1,6 +1,8 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { TeamsPageShell, TeamsSectionIntro } from '../components/teams-page-shell';
+import { fetchTeamsPageContent, type ApiTeamsPageContent } from '../data/fixtures-results-api';
 
 const pageLinks = [
   {
@@ -32,17 +34,35 @@ const pageLinks = [
 const gallerySlots = Array.from({ length: 6 }, (_, index) => index + 1);
 
 export function TeamsPage() {
+  const [content, setContent] = useState<ApiTeamsPageContent | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTeamsPageContent().then(data => {
+      setContent(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-10 h-10 text-[#1E3A8A] animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <TeamsPageShell
-      title="OUR TEAMS"
-      subtitle="Use this page as the club teams hub, with direct links to each section and a gallery that stays here on the main teams page"
+      title={content?.hero_title || "OUR TEAMS"}
+      subtitle={content?.hero_subtitle || ""}
     >
       <div className="mx-auto max-w-6xl space-y-16">
         <section className="space-y-6">
           <TeamsSectionIntro
-            eyebrow="Teams Hub"
-            title="Explore Team Sections"
-            description="Each area below links to its own dedicated page. Adult Teams, Juvenile Teams, Social, and Scór now live as separate destinations, while the gallery remains here on the main Teams page."
+            eyebrow={content?.hub_eyebrow || "Teams Hub"}
+            title={content?.hub_title || "Explore Team Sections"}
+            description={content?.hub_description || ""}
           />
 
           <div className="grid gap-6 md:grid-cols-2">
@@ -76,9 +96,9 @@ export function TeamsPage() {
 
         <section className="space-y-8">
           <TeamsSectionIntro
-            eyebrow="Gallery"
-            title="Gallery"
-            description="The gallery remains on the main Teams page and can continue to showcase images from across every section of the club."
+            eyebrow={content?.gallery_eyebrow || "Gallery"}
+            title={content?.gallery_title || "Gallery"}
+            description={content?.gallery_description || ""}
           />
 
           <div className="space-y-6">
