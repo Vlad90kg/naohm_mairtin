@@ -19,18 +19,8 @@ export function ArticlePage({ content }: ArticlePageProps) {
 
       <main className="flex-grow">
         {/* Hero Header */}
-        <section className={cn(
-          'relative overflow-hidden px-4 py-20 text-white sm:py-28',
-          !hero.backgroundImage && 'club-hero-surface'
-        )}>
-          {hero.backgroundImage && (
-            <div 
-              className="absolute inset-0 bg-cover bg-center z-0"
-              style={{ backgroundImage: `url(${hero.backgroundImage})` }}
-            >
-              <div className="absolute inset-0 bg-black/40" />
-            </div>
-          )}
+        <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white sm:py-28">
+          <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 mx-auto max-w-7xl text-center">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}

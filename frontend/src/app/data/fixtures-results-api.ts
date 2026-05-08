@@ -92,7 +92,8 @@ export interface ApiHistoryPageContent {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
 
 function buildUrl(path: string, params?: Record<string, string | undefined>) {
-  const url = new URL(`${API_BASE_URL}${path}`);
+  const normalizedPath = path.replace(/\/+$/, '') || '/';
+  const url = new URL(`${API_BASE_URL}${normalizedPath}`);
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -124,6 +125,10 @@ export async function fetchResults(params?: { team?: string; category?: string }
 
 export async function fetchTeams(params?: { category?: string; internal?: string }) {
   return request<ApiTeam[]>('/teams/', params);
+}
+
+export async function fetchTeamBySlug(slug: string) {
+  return request<ApiTeam>(`/teams/slug/${slug}/`);
 }
 
 export async function createTeam(team: Partial<ApiTeam>) {

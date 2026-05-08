@@ -17,7 +17,8 @@ export interface EventsPageContentDTO {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const normalizedPath = path.replace(/\/+$/, '') || '/';
+  const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
     ...options,
     headers: {
       ...(options?.headers ?? {}),
@@ -42,4 +43,30 @@ export async function listEvents(): Promise<EventDTO[]> {
 
 export async function getEventsPageContent(): Promise<EventsPageContentDTO> {
   return request<EventsPageContentDTO>('/pages/events/');
+}
+
+export async function createEvent(event: Omit<EventDTO, 'id'>): Promise<EventDTO> {
+  return request<EventDTO>('/events/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(event),
+  });
+}
+
+export async function updateEvent(id: string, event: Partial<Omit<EventDTO, 'id'>>) {
+  return request<EventDTO>(`/events/${id}/`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(event),
+  });
+}
+
+export async function deleteEvent(id: string) {
+  return request<void>(`/events/${id}/`, {
+    method: 'DELETE',
+  });
 }

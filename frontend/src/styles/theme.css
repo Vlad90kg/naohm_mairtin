@@ -181,8 +181,26 @@
 }
 
 .club-hero-surface {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/hero_background.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--club-hero-background-image, url('../assets/hero_background.jpg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+/* Instagram embed sizing guardrails */
+.instagram-embed-shell {
+  width: 100%;
+  overflow: hidden;
+}
+
+.instagram-embed-shell .instagram-media,
+.instagram-embed-shell iframe.instagram-media,
+.instagram-embed-shell iframe[src*="instagram.com"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  box-sizing: border-box !important;
 }

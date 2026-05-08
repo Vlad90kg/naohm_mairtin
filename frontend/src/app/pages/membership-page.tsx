@@ -1,13 +1,30 @@
 import { motion } from 'motion/react';
 import { Smartphone, ExternalLink, CheckCircle2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { useCMS } from '../data/cms-context';
+import { fetchMembershipPageContent, type ApiMembershipPageContent } from '../data/membership-api';
+
+const DEFAULT_MEMBERSHIP_PAGE: ApiMembershipPageContent = {
+  description: 'We have moved our membership and club communications to the ClubSpot app.',
+  app_store_link: 'https://apps.apple.com/ie/app/clubspot/id1506101166',
+  google_play_link: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
+  poster: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
+  registrar_email: 'registrar.naomhmairtin.louth@gaa.ie',
+};
 
 export function MembershipPage() {
-  const { membership } = useCMS();
+  const [membership, setMembership] = useState<ApiMembershipPageContent>(DEFAULT_MEMBERSHIP_PAGE);
+
+  useEffect(() => {
+    fetchMembershipPageContent()
+      .then((remote) => setMembership({ ...DEFAULT_MEMBERSHIP_PAGE, ...remote }))
+      .catch((error) => {
+        console.error('Failed to load membership page content:', error);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -57,7 +74,7 @@ export function MembershipPage() {
             >
               {/* App Store */}
               <a
-                href={membership.appStoreLink}
+                href={membership.app_store_link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-4 bg-black text-white px-6 py-3.5 rounded-2xl hover:bg-gray-900 transition-all shadow-xl shadow-black/30 hover:-translate-y-0.5 min-w-[200px]"
@@ -74,7 +91,7 @@ export function MembershipPage() {
 
               {/* Google Play */}
               <a
-                href={membership.googlePlayLink}
+                href={membership.google_play_link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-4 bg-black text-white px-6 py-3.5 rounded-2xl hover:bg-gray-900 transition-all shadow-xl shadow-black/30 hover:-translate-y-0.5 min-w-[200px]"
@@ -221,7 +238,7 @@ export function MembershipPage() {
               If you have any issues downloading the app or registering, please contact our club registrar.
             </p>
             <a 
-              href="mailto:registrar.naomhmairtin.louth@gaa.ie"
+              href={`mailto:${membership.registrar_email}`}
               className="text-[#1E3A8A] font-black flex items-center justify-center gap-2 hover:underline uppercase text-sm tracking-wider"
             >
               Contact Registrar

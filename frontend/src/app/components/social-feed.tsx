@@ -1,67 +1,15 @@
-import { useEffect } from 'react';
 import { ExternalLink, Facebook, Instagram } from 'lucide-react';
-
-declare global {
-  interface Window {
-    instgrm?: {
-      Embeds?: {
-        process: () => void;
-      };
-    };
-  }
-}
-
-const INSTAGRAM_EMBED_SCRIPT_ID = 'instagram-embed-script';
-
-const INSTAGRAM_POSTS = [
-  {
-    id: 'instagram-post-1',
-    permalink: 'https://www.instagram.com/naomhmairtin/p/DXWLjVHCCXC/',
-  },
-  {
-    id: 'instagram-post-2',
-    permalink: 'https://www.instagram.com/p/REPLACE_WITH_LATEST_POST_2/',
-  },
-];
+import instagramFallbackImage from '../../assets/social-media/instagram.png';
+import { useCMS } from '../data/cms-context';
 
 const FACEBOOK_PAGE_URL = 'https://www.facebook.com/NaomhMairtincpg/';
 
-function processInstagramEmbeds() {
-  window.instgrm?.Embeds?.process();
-}
-
-function ensureInstagramScript() {
-  const existingScript = document.getElementById(INSTAGRAM_EMBED_SCRIPT_ID) as HTMLScriptElement | null;
-
-  if (existingScript) {
-    if (existingScript.dataset.loaded === 'true') {
-      processInstagramEmbeds();
-      return;
-    }
-
-    existingScript.addEventListener('load', processInstagramEmbeds, { once: true });
-    return;
-  }
-
-  const script = document.createElement('script');
-  script.id = INSTAGRAM_EMBED_SCRIPT_ID;
-  script.src = 'https://www.instagram.com/embed.js';
-  script.async = true;
-  script.onload = () => {
-    script.dataset.loaded = 'true';
-    processInstagramEmbeds();
-  };
-  document.body.appendChild(script);
-}
-
 export function SocialFeed() {
-  useEffect(() => {
-    ensureInstagramScript();
-  }, []);
-
-  useEffect(() => {
-    processInstagramEmbeds();
-  }, []);
+  const { pages } = useCMS();
+  const instagramLatestPostImage =
+    pages.home.social.instagramLatestPostImage === 'instagram.png'
+      ? instagramFallbackImage
+      : pages.home.social.instagramLatestPostImage;
 
   const facebookEmbedUrl = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
     FACEBOOK_PAGE_URL,
@@ -100,9 +48,9 @@ export function SocialFeed() {
                   <Instagram size={18} className="text-[#E4405F]" />
                 </div>
                 <div>
-                  <p className="text-base font-black tracking-tight text-[#1E3A8A]">Instagram Posts</p>
+                  <p className="text-base font-black tracking-tight text-[#1E3A8A]">Latest Instagram Post</p>
                   <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-400">
-                    Official post embeds
+                    Managed from Home page CMS
                   </p>
                 </div>
               </div>
@@ -117,23 +65,19 @@ export function SocialFeed() {
               </a>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-2">
-              {INSTAGRAM_POSTS.map((post) => (
-                <div
-                  key={post.id}
-                  className="overflow-hidden rounded-[1.5rem] border border-gray-100 bg-[#fafbff] p-3"
-                >
-                  <blockquote
-                    className="instagram-media !m-0 !min-w-0 !max-w-none rounded-[1.1rem] border border-gray-100 !bg-white shadow-sm"
-                    data-instgrm-permalink={post.permalink}
-                    data-instgrm-version="14"
-                  >
-                    <a href={post.permalink} target="_blank" rel="noopener noreferrer">
-                      View Instagram post
-                    </a>
-                  </blockquote>
-                </div>
-              ))}
+            <div className="instagram-embed-shell overflow-hidden rounded-[1.5rem] border border-gray-100 bg-[#fafbff] p-3">
+              <a
+                href="https://www.instagram.com/naomhmairtin/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block overflow-hidden rounded-[1.1rem] border border-gray-100 bg-white shadow-sm"
+              >
+                <img
+                  src={instagramLatestPostImage}
+                  alt="Latest Instagram post"
+                  className="h-auto max-h-[40rem] w-full object-contain"
+                />
+              </a>
             </div>
           </div>
 

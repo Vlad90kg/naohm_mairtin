@@ -1,19 +1,13 @@
 import { Link } from 'react-router';
 import clubLogo from '../../assets/lgfa-logo.jpg';
-import heroBackground from '../../assets/hero_background.jpg';
 import { useCMS } from '../data/cms-context';
 
 export function HeroSection() {
   const { pages } = useCMS();
   const hero = pages.home.hero;
-  const backgroundImage = hero.backgroundImage === 'hero_background.jpg' ? heroBackground : hero.backgroundImage;
 
   return (
-    <section className="relative text-white overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      />
+    <section className="club-hero-surface relative overflow-hidden text-white">
       <div className="absolute inset-0 bg-black/40" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center relative z-10">
         {/* Club Badge */}

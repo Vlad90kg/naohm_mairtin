@@ -523,6 +523,44 @@ function HomeFormFields({ formData, setFormData }: any) {
           </div>
         ))}
       </div>
+
+      <div className="p-8 border border-gray-100 rounded-[2.5rem] space-y-6">
+        <h4 className="text-sm font-black text-[#1E3A8A] uppercase tracking-widest flex items-center gap-2">
+          <ImageIcon size={18} className="text-amber-500" /> Latest Updates - Instagram
+        </h4>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Latest Post Screenshot Image</label>
+          <div className="flex gap-4">
+            <input
+              type="text"
+              value={formData.home.social.instagramLatestPostImage}
+              onChange={(e) => setFormData({
+                ...formData,
+                home: {
+                  ...formData.home,
+                  social: {
+                    ...formData.home.social,
+                    instagramLatestPostImage: e.target.value,
+                  },
+                },
+              })}
+              className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl font-medium text-blue-600 outline-none"
+            />
+            <MediaUploadButton
+              onSelect={(url: string) => setFormData({
+                ...formData,
+                home: {
+                  ...formData.home,
+                  social: {
+                    ...formData.home.social,
+                    instagramLatestPostImage: url,
+                  },
+                },
+              })}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

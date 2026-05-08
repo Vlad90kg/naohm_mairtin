@@ -11,10 +11,10 @@ export function Footer() {
           <div>
             <div className="mb-4">
               <Link to="/">
-                <img src={clubLogo} alt="Naomh Mairtin CLG & LGFA" className="h-20 w-20 object-contain" />
+                <img src={clubLogo} alt="Naomh Mairtin CPG & LGFA" className="h-20 w-20 object-contain" />
               </Link>
             </div>
-            <h3 className="font-bold text-lg mb-2">Naomh Mairtin CLG & LGFA</h3>
+            <h3 className="font-bold text-lg mb-2">Naomh Mairtin CPG & LGFA</h3>
             <p className="text-blue-200 text-sm">
               Official GAA Club
             </p>
@@ -24,7 +24,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3">Contact</h3>
             <p className="text-blue-200 text-sm mb-2">
-              Naomh Mairtin CLG & LGFA, Sillogue Lane
+              Naomh Mairtin CPG & LGFA, Sillogue Lane
             </p>
             <p className="text-blue-200 text-sm mb-2">
               Newtown Monasterboice
@@ -116,7 +116,7 @@ export function Footer() {
 
         <div className="border-t border-blue-700 pt-6 text-center">
           <p className="text-blue-200 text-sm">
-            © {new Date().getFullYear()} Naomh Mairtin CLG & LGFA. All rights reserved.
+            © {new Date().getFullYear()} Naomh Mairtin CPG & LGFA. All rights reserved.
           </p>
         </div>
       </div>

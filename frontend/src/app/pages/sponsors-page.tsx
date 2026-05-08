@@ -84,7 +84,7 @@ export function SponsorsPage() {
 
     const loadPageContent = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/pages/sponsors/`);
+        const response = await fetch(`${API_BASE_URL}/pages/sponsors`);
         if (!response.ok) {
           return;
         }

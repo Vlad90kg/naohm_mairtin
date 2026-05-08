@@ -13,8 +13,8 @@ export function Navigation() {
           {/* Logo/Brand */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src={clubLogo} alt="Naomh Mairtin CLG & LGFA" className="h-12 w-12 object-contain" />
-              <span className="text-xl font-bold text-[#1E3A8A]">Naomh Mairtin CLG & LGFA</span>
+              <img src={clubLogo} alt="Naomh Mairtin CPG & LGFA" className="h-12 w-12 object-contain" />
+              <span className="text-xl font-bold text-[#1E3A8A]">Naomh Mairtin CPG & LGFA</span>
             </Link>
           </div>
 

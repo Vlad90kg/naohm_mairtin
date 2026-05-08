@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Enums\EventCategory;
+use App\Filament\Resources\EventResource\Pages;
+use App\Models\Event;
+use Filament\Actions;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class EventResource extends Resource
+{
+    protected static ?string $model = Event::class;
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
+    protected static string|\UnitEnum|null $navigationGroup = 'Club';
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('title')
+                            ->required(),
+                        Grid::make(2)
+                            ->schema([
+                                Forms\Components\DatePicker::make('date')
+                                    ->required(),
+                                Forms\Components\TimePicker::make('time'),
+                            ]),
+                        Forms\Components\TextInput::make('location'),
+                        Forms\Components\Select::make('category')
+                            ->options(EventCategory::class)
+                            ->required()
+                            ->native(false),
+                        Forms\Components\RichEditor::make('description')
+                            ->columnSpanFull(),
+                        Forms\Components\FileUpload::make('image')
+                            ->image()
+                            ->directory('events'),
+                    ]),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->square(),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->badge(),
+                Tables\Columns\TextColumn::make('location'),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('category')
+                    ->options(EventCategory::class),
+            ])
+            ->actions([
+                Actions\EditAction::make(),
+            ]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListEvents::route('/'),
+            'create' => Pages\CreateEvent::route('/create'),
+            'edit' => Pages\EditEvent::route('/{record}/edit'),
+        ];
+    }
+}

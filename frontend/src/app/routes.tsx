@@ -15,6 +15,7 @@ import { LottoPage } from './pages/lotto-page';
 import { ShopPage } from './pages/shop-page';
 import { SeniorMenPage } from './pages/senior-men-page';
 import { SeniorLadiesPage } from './pages/senior-ladies-page';
+import { TeamDetailPage } from './pages/team-detail-page';
 import { FixturesResultsPage } from './pages/fixtures-results-page';
 import { FixturesArchivePage } from './pages/fixtures-archive-page';
 import { AdultTeamsPage } from './pages/adult-teams-page';
@@ -73,6 +74,10 @@ export const router = createBrowserRouter([
       {
         path: 'teams/senior-men',
         Component: SeniorMenPage,
+      },
+      {
+        path: 'teams/:slug',
+        Component: TeamDetailPage,
       },
       {
         path: 'teams/senior-ladies',

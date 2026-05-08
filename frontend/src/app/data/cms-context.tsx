@@ -7,7 +7,15 @@ import {
   listSponsors,
   updateSponsorById,
 } from './sponsors-api';
-import { getEventsPageContent, listEvents } from './events-api';
+import {
+  createEvent as createEventApi,
+  deleteEvent as deleteEventApi,
+  getEventsPageContent,
+  listEvents,
+  updateEvent as updateEventApi,
+} from './events-api';
+import { fetchTeams } from './fixtures-results-api';
+import { fetchChildSafetyPageContent, fetchHomePageContent } from './page-content-api';
 
 // Types for our CMS data
 export interface Event {
@@ -136,6 +144,9 @@ export interface PageContent {
         itemsLimit: number;
       };
     };
+    social: {
+      instagramLatestPostImage: string;
+    };
   };
   events: {
     hero: {
@@ -219,6 +230,30 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
+    const loadTeams = async () => {
+      try {
+        const remoteTeams = await fetchTeams({ internal: 'true' });
+        setTeams(
+          remoteTeams.map((team) => ({
+            id: String(team.id),
+            name: team.name,
+            category: team.category === 'adult' ? 'Adult' : team.category === 'juvenile' ? 'Juvenile' : 'Ladies',
+            image: team.image,
+            managers: team.managers.map((manager) => ({
+              role: manager.role,
+              name: manager.name,
+              phone: manager.phone ?? undefined,
+              email: manager.email ?? undefined,
+            })),
+            trainingTimes: team.training_times,
+            contactEmail: team.contact_email ?? undefined,
+          })),
+        );
+      } catch (error) {
+        console.error('Failed to load teams from API:', error);
+      }
+    };
+
     const loadSponsors = async () => {
       try {
         const remoteSponsors = await listSponsors();
@@ -267,8 +302,35 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    const loadHomePage = async () => {
+      try {
+        const pageContent = await fetchHomePageContent();
+        setPages((prev) => ({
+          ...prev,
+          home: pageContent,
+        }));
+      } catch (error) {
+        console.error('Failed to load home page content:', error);
+      }
+    };
+
+    const loadChildSafetyPage = async () => {
+      try {
+        const pageContent = await fetchChildSafetyPageContent();
+        setPages((prev) => ({
+          ...prev,
+          childSafety: pageContent,
+        }));
+      } catch (error) {
+        console.error('Failed to load child safety page content:', error);
+      }
+    };
+
+    void loadTeams();
     void loadSponsors();
     void loadEvents();
+    void loadHomePage();
+    void loadChildSafetyPage();
   }, []);
 
   const [lotto, setLotto] = useState<LottoState>({
@@ -290,7 +352,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const [pages, setPages] = useState<PageContent>({
     home: {
       hero: {
-        title: 'Naomh Mairtin CLG & LGFA',
+        title: 'Naomh Mairtin CPG & LGFA',
         subtitle: 'Strength in community, excellence on the field.',
         primaryButtonText: 'View Events',
         primaryButtonLink: '/events',
@@ -326,6 +388,9 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           itemsLimit: 2,
         },
       },
+      social: {
+        instagramLatestPostImage: 'instagram.png',
+      },
     },
     events: {
       hero: {
@@ -340,7 +405,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     },
     facilities: {
       hero: {
-        description: 'Naomh Mairtin CLG & LGFA boasts some of the finest sporting and social facilities in the region, supporting our teams from juvenile to senior level.',
+        description: 'Naomh Mairtin CPG & LGFA boasts some of the finest sporting and social facilities in the region, supporting our teams from juvenile to senior level.',
         locationLabel: 'Monasterboice, Co. Louth',
       },
       media: {
@@ -381,23 +446,23 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         title: 'Safeguarding & Child Welfare',
         subtitle: 'Our commitment to a safe environment for all our young members.',
       },
-      commitment: 'Naomh Mairtin CLG & LGFA is committed to creating a safe and enjoyable environment for all children and young people. We follow the GAA Code of Behaviour (Underage) and all national safeguarding policies.',
+      commitment: 'Naomh Mairtin CPG & LGFA is committed to creating a safe and enjoyable environment for all children and young people. We follow the GAA Code of Behaviour (Underage) and all national safeguarding policies.',
       contacts: [
         {
           id: '1',
-          name: 'Mary O\'Sullivan',
+          name: 'Elma Flood',
           role: 'Children\'s Officer',
           description: 'Primary contact for safeguarding concerns and child welfare within the club.',
           email: 'childrensofficer.naomhmairtin.louth@gaa.ie',
-          phone: '087 123 4567',
+          phone: '+353 86 174 9988',
         },
         {
           id: '2',
-          name: 'TBC',
+          name: 'Martin Mc Hugh',
           role: 'Designated Liaison Person (DLP)',
           description: 'The DLP is responsible for reporting allegations or suspicions of child abuse to TUSLA and/or An Garda Síochána.',
-          email: 'dlp.naomhmairtin.louth@gaa.ie',
-          phone: '',
+          email: 'Chairperson.naomhmairtin.louth@gaa.ie',
+          phone: '+353 86 1975129',
         }
       ],
       documents: [
@@ -478,15 +543,45 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addEvent = (event: Omit<Event, 'id'>) => {
-    setEvents(prev => [...prev, { ...event, id: Date.now().toString() }]);
+    void (async () => {
+      try {
+        const created = await createEventApi({
+          title: event.title,
+          date: event.date,
+          time: event.time ?? '',
+          location: event.location,
+          category: event.category,
+          description: event.description,
+          image: event.image,
+        });
+
+        setEvents((prev) => [...prev, created]);
+      } catch (error) {
+        console.error('Failed to create event:', error);
+      }
+    })();
   };
 
   const updateEvent = (id: string, updates: Partial<Event>) => {
-    setEvents(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
+    void (async () => {
+      try {
+        const updated = await updateEventApi(id, updates);
+        setEvents((prev) => prev.map((e) => (e.id === id ? updated : e)));
+      } catch (error) {
+        console.error('Failed to update event:', error);
+      }
+    })();
   };
 
   const deleteEvent = (id: string) => {
-    setEvents(prev => prev.filter(e => e.id !== id));
+    void (async () => {
+      try {
+        await deleteEventApi(id);
+        setEvents((prev) => prev.filter((e) => e.id !== id));
+      } catch (error) {
+        console.error('Failed to delete event:', error);
+      }
+    })();
   };
 
   const addSponsor = async (sponsor: Omit<Sponsor, 'id'>) => {

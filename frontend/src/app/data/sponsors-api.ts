@@ -46,7 +46,8 @@ function mapApiSponsor(sponsor: ApiSponsor): SponsorDTO {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const normalizedPath = path.replace(/\/+$/, '') || '/';
+  const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
     ...options,
     headers: {
       ...(options?.headers ?? {}),

@@ -41,6 +41,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# PHP / Composer
+vendor/
+
 # Frontend Build
 frontend/dist/
 dist/
@@ -72,3 +75,9 @@ dist/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Laravel nested backend artifacts (extra safety at repo root)
+new-backend/vendor/
+new-backend/node_modules/
+new-backend/storage/logs/
+new-backend/bootstrap/cache/*.php

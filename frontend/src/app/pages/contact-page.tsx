@@ -1,25 +1,86 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { Mail, MapPin, Facebook, Instagram, Send, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
+import { fetchContactPageContent, type ContactPageContent } from '../data/page-content-api';
 
 export function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [content, setContent] = useState<ContactPageContent>({
+    hero: {
+      title: 'Get in Touch',
+      subtitle: "Have a question about membership, teams, or events? We'd love to hear from you.",
+    },
+    form: {
+      title: 'Send us a Message',
+      endpoint: 'https://formspree.io/f/mwvyqgdn',
+      successMessage: "Message sent successfully! We'll get back to you soon.",
+    },
+    contactInfo: {
+      clubGroundsTitle: 'Club Grounds',
+      clubGroundsAddress: 'Sillogue Lane,\nNewtown Monasterboice,\nCo. Louth, A92 H678',
+      emailTitle: 'Email Address',
+      email: 'secretary.naomhmairtin.louth@gaa.ie',
+      facebookUrl: 'https://www.facebook.com/NaomhMairtincpg/',
+      instagramUrl: 'https://www.instagram.com/naomhmairtin/',
+    },
+    mapQuery: 'Naomh Mairtin GAA, Sillogue Lane, Newtown Monasterboice, Co. Louth',
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchContactPageContent()
+      .then((response) => setContent(response))
+      .catch((error) => {
+        console.error('Failed to load contact page content:', error);
+      });
+  }, []);
+
+  const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const mapQuery = encodeURIComponent(content.mapQuery);
+  const mapEmbedSrc = `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${mapQuery}`;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(content.form.endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Formspree request failed with status ${response.status}`);
+      }
+
+      const payload = (await response.json().catch(() => null)) as
+        | { ok?: boolean; errors?: Array<{ message?: string }> }
+        | null;
+
+      if (payload?.ok === false || (Array.isArray(payload?.errors) && payload.errors.length > 0)) {
+        const firstErrorMessage = payload?.errors?.[0]?.message;
+        throw new Error(firstErrorMessage || 'Formspree rejected the submission.');
+      }
+
+      toast.success(content.form.successMessage);
+      form.reset();
+    } catch (error) {
+      console.error('Failed to send contact message:', error);
+      const message = error instanceof Error ? error.message : 'Could not send your message. Please try again.';
+      toast.error(message);
+    } finally {
       setIsSubmitting(false);
-      toast.success("Message sent successfully! We'll get back to you soon.");
-      (e.target as HTMLFormElement).reset();
-    }, 1500);
+    }
   };
 
   return (
@@ -35,7 +96,7 @@ export function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold text-white mb-4"
           >
-            Get in Touch
+            {content.hero.title}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -43,7 +104,7 @@ export function ContactPage() {
             transition={{ delay: 0.1 }}
             className="text-blue-100 text-lg max-w-2xl mx-auto"
           >
-            Have a question about membership, teams, or events? We'd love to hear from you.
+            {content.hero.subtitle}
           </motion.p>
         </div>
       </section>
@@ -60,7 +121,7 @@ export function ContactPage() {
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <Send className="w-6 h-6 text-[#1E3A8A]" />
-                Send us a Message
+                {content.form.title}
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -70,6 +131,7 @@ export function ContactPage() {
                     <input 
                       type="text" 
                       id="name" 
+                      name="name"
                       required
                       placeholder="John Doe"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent outline-none transition-all"
@@ -80,6 +142,7 @@ export function ContactPage() {
                     <input 
                       type="email" 
                       id="email" 
+                      name="email"
                       required
                       placeholder="john@example.com"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent outline-none transition-all"
@@ -92,6 +155,7 @@ export function ContactPage() {
                   <input 
                     type="text"
                     id="subject"
+                    name="subject"
                     required
                     placeholder="e.g. Membership Inquiry"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent outline-none transition-all"
@@ -102,6 +166,7 @@ export function ContactPage() {
                   <label htmlFor="message" className="text-sm font-medium text-gray-700">Your Message</label>
                   <textarea 
                     id="message" 
+                    name="message"
                     required
                     rows={5}
                     placeholder="How can we help you?"
@@ -130,17 +195,22 @@ export function ContactPage() {
               </form>
             </motion.div>
 
-            {/* Map Placeholder */}
+            {/* Map */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 overflow-hidden"
             >
-              <div className="bg-gray-200 aspect-[21/9] rounded-xl flex flex-col items-center justify-center text-gray-500 gap-2">
-                <MapPin className="w-8 h-8" />
-                <span className="text-sm font-medium">Interactive Map View</span>
-                <p className="text-xs px-4 text-center">Sillogue Lane, Monasterboice</p>
+              <div className="aspect-[21/9] rounded-xl overflow-hidden bg-gray-100">
+                <iframe
+                  title="Naomh Mairtin GAA Map"
+                  src={mapEmbedSrc}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
               </div>
             </motion.div>
           </div>
@@ -159,11 +229,14 @@ export function ContactPage() {
                     <MapPin className="w-5 h-5 text-[#1E3A8A]" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Club Grounds</p>
+                    <p className="font-semibold text-gray-900">{content.contactInfo.clubGroundsTitle}</p>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Sillogue Lane,<br />
-                      Newtown Monasterboice,<br />
-                      Co. Louth, A92 H678
+                      {content.contactInfo.clubGroundsAddress.split('\n').map((line, index) => (
+                        <span key={index}>
+                          {line}
+                          <br />
+                        </span>
+                      ))}
                     </p>
                   </div>
                 </div>
@@ -173,12 +246,12 @@ export function ContactPage() {
                     <Mail className="w-5 h-5 text-[#1E3A8A]" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Email Address</p>
+                    <p className="font-semibold text-gray-900">{content.contactInfo.emailTitle}</p>
                     <a 
-                      href="mailto:secretary.naomhmairtin.louth@gaa.ie"
+                      href={`mailto:${content.contactInfo.email}`}
                       className="text-[#1E3A8A] hover:underline text-sm break-all"
                     >
-                      secretary.naomhmairtin.louth@gaa.ie
+                      {content.contactInfo.email}
                     </a>
                   </div>
                 </div>
@@ -187,10 +260,10 @@ export function ContactPage() {
               <div className="mt-8 pt-8 border-t border-gray-100">
                 <h4 className="font-semibold text-gray-900 mb-4">Follow Us</h4>
                 <div className="flex gap-4">
-                  <a href="https://www.facebook.com/NaomhMairtincpg/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1E3A8A] hover:bg-[#1E3A8A] hover:text-white transition-all">
+                  <a href={content.contactInfo.facebookUrl} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1E3A8A] hover:bg-[#1E3A8A] hover:text-white transition-all">
                     <Facebook className="w-5 h-5" />
                   </a>
-                  <a href="https://www.instagram.com/naomhmairtin/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1E3A8A] hover:bg-[#1E3A8A] hover:text-white transition-all">
+                  <a href={content.contactInfo.instagramUrl} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1E3A8A] hover:bg-[#1E3A8A] hover:text-white transition-all">
                     <Instagram className="w-5 h-5" />
                   </a>
                 </div>

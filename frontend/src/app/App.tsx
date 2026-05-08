@@ -2,10 +2,12 @@ import { RouterProvider } from 'react-router';
 import { router } from './routes';
 import { Toaster } from 'sonner';
 import { CMSProvider } from './data/cms-context';
+import { SharedHeroBackgroundSync } from './components/shared-hero-background-sync';
 
 export default function App() {
   return (
     <CMSProvider>
+      <SharedHeroBackgroundSync />
       <Toaster position="top-right" richColors />
       <RouterProvider router={router} />
     </CMSProvider>
