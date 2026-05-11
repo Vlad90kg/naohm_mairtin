@@ -12,8 +12,7 @@ export function AdultTeamsPage() {
     const loadTeams = async () => {
       try {
         const data = await fetchTeams({ category: 'adult', internal: 'true' });
-        const ladies = await fetchTeams({ category: 'ladies', internal: 'true' });
-        setTeams([...data, ...ladies]);
+        setTeams(data);
       } catch (error) {
         console.error('Failed to load adult teams:', error);
       } finally {

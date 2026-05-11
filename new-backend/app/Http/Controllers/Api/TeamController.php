@@ -20,6 +20,10 @@ class TeamController extends Controller
             $query->where('category', $request->string('category')->toString());
         }
 
+        if ($request->filled('senior_group')) {
+            $query->where('senior_group', $request->string('senior_group')->toString());
+        }
+
         if ($request->filled('internal')) {
             $query->where('is_internal', filter_var($request->input('internal'), FILTER_VALIDATE_BOOLEAN));
         }
@@ -57,11 +61,13 @@ class TeamController extends Controller
 
     private function validateData(Request $request, ?int $ignoreId = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('teams', 'slug')->ignore($ignoreId)],
             'category' => ['required', Rule::in(array_map(fn (TeamCategory $category) => $category->value, TeamCategory::cases()))],
+            'senior_group' => ['nullable', Rule::in(['senior_men', 'senior_ladies', 'social'])],
             'image' => ['nullable', 'string', 'max:2048'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'managers' => ['nullable', 'array'],
             'managers.*.name' => ['required_with:managers', 'string', 'max:255'],
             'managers.*.role' => ['nullable', 'string', 'max:255'],
@@ -72,5 +78,13 @@ class TeamController extends Controller
             'contact_email' => ['nullable', 'email', 'max:255'],
             'is_internal' => ['sometimes', 'boolean'],
         ]);
+
+        // Backward compatibility: legacy ladies category now maps to adult + senior_ladies.
+        if (($request->input('category') ?? null) === 'ladies') {
+            $data['category'] = TeamCategory::Adult->value;
+            $data['senior_group'] = 'senior_ladies';
+        }
+
+        return $data;
     }
 }

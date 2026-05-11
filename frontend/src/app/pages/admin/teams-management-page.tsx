@@ -25,6 +25,12 @@ type EditorState =
   | { mode: 'edit' | 'add'; team: Partial<ApiTeam> }
   | null;
 
+const SENIOR_GROUP_OPTIONS = [
+  { value: 'senior_men', label: 'Senior Men' },
+  { value: 'senior_ladies', label: 'Senior Ladies' },
+  { value: 'social', label: 'Social' },
+] as const;
+
 export function TeamsManagementPage() {
   const [teams, setTeams] = useState<ApiTeam[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +53,7 @@ export function TeamsManagementPage() {
   };
 
   const adultTeams = useMemo(
-    () => teams.filter(t => t.category === 'adult' || t.category === 'ladies'),
+    () => teams.filter(t => t.category === 'adult'),
     [teams]
   );
 
@@ -103,10 +109,16 @@ export function TeamsManagementPage() {
 
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={() => setEditor({ mode: 'add', team: { category: 'adult', is_internal: true, managers: [], training_times: [] } })}
+              onClick={() => setEditor({ mode: 'add', team: { category: 'adult', senior_group: 'senior_men', is_internal: true, managers: [], training_times: [] } })}
               className="px-6 py-3.5 bg-white text-[#1E3A8A] rounded-2xl font-black uppercase tracking-widest text-[10px] border border-gray-200 hover:bg-gray-50 transition-all flex items-center gap-2"
             >
-              <Plus size={16} /> Add Adult Team
+              <Plus size={16} /> Add Senior Men Team
+            </button>
+            <button
+              onClick={() => setEditor({ mode: 'add', team: { category: 'adult', senior_group: 'senior_ladies', is_internal: true, managers: [], training_times: [] } })}
+              className="px-6 py-3.5 bg-white text-[#1E3A8A] rounded-2xl font-black uppercase tracking-widest text-[10px] border border-gray-200 hover:bg-gray-50 transition-all flex items-center gap-2"
+            >
+              <Plus size={16} /> Add Senior Ladies Team
             </button>
             <button
               onClick={() => setEditor({ mode: 'add', team: { category: 'juvenile', is_internal: true, managers: [], training_times: [] } })}
@@ -138,7 +150,7 @@ export function TeamsManagementPage() {
               <div className="p-8 space-y-5">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">
-                    {team.category_display} Team
+                    {(SENIOR_GROUP_OPTIONS.find((option) => option.value === team.senior_group)?.label ?? team.category_display)} Team
                   </p>
                   <h4 className="mt-3 text-2xl font-black text-[#1E3A8A] tracking-tight">{team.name}</h4>
                   <p className="mt-3 text-sm leading-relaxed text-gray-600 truncate-2-lines">
@@ -251,6 +263,7 @@ function TeamForm({
   onSave: (team: Partial<ApiTeam>) => void;
 }) {
   const [draft, setDraft] = useState(team);
+  const isAdult = draft.category === 'adult';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,24 +307,46 @@ function TeamForm({
         <div className="space-y-2">
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Category</label>
           <select
-            value={draft.category}
-            onChange={(e) => setDraft({ ...draft, category: e.target.value as any })}
+            value={draft.category || 'adult'}
+            onChange={(e) => {
+              const category = e.target.value as ApiTeam['category'];
+              setDraft({
+                ...draft,
+                category,
+                senior_group: category === 'adult' ? draft.senior_group || 'senior_men' : null,
+              });
+            }}
             className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 outline-none"
           >
             <option value="adult">Adult</option>
             <option value="juvenile">Juvenile</option>
-            <option value="ladies">Ladies</option>
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Contact Email</label>
-          <input
-            type="email"
-            value={draft.contact_email || ''}
-            onChange={(e) => setDraft({ ...draft, contact_email: e.target.value })}
-            className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 outline-none"
-          />
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Senior Group</label>
+          <select
+            value={draft.senior_group || 'senior_men'}
+            onChange={(e) => setDraft({ ...draft, senior_group: e.target.value as ApiTeam['senior_group'] })}
+            disabled={!isAdult}
+            className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 outline-none disabled:opacity-60"
+          >
+            {SENIOR_GROUP_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Contact Email</label>
+        <input
+          type="email"
+          value={draft.contact_email || ''}
+          onChange={(e) => setDraft({ ...draft, contact_email: e.target.value })}
+          className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 outline-none"
+        />
       </div>
 
       <div className="space-y-2">
