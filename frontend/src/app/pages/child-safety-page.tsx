@@ -9,6 +9,16 @@ export function ChildSafetyPage() {
   const { pages } = useCMS();
   const { childSafety } = pages;
   const safeguardingContacts = childSafety.contacts;
+  const visibleSafeguardingContacts = safeguardingContacts.filter((contact) => {
+    const hasName = Boolean(contact.name?.trim());
+    const hasRole = Boolean(contact.role?.trim());
+    const hasDescription = Boolean(contact.description?.trim());
+    const hasEmail = Boolean(contact.email?.trim());
+    const hasPhone = Boolean(contact.phone?.trim());
+
+    // Hide fully empty contact records.
+    return hasName || hasRole || hasDescription || hasEmail || hasPhone;
+  });
 
   // Find contact emails by role
   const childrenOfficer = safeguardingContacts.find(c => c.role.toLowerCase().includes('children\'s officer'));
@@ -77,8 +87,18 @@ export function ChildSafetyPage() {
             <Users className="w-6 h-6 text-[#1E3A8A]" />
             <h2 className="text-2xl font-bold text-gray-900">Safeguarding Contacts</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {safeguardingContacts.map((contact, idx) => (
+          {visibleSafeguardingContacts.length === 0 ? (
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm text-gray-500">
+              Safeguarding contact details will be published here shortly.
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-8">
+              {visibleSafeguardingContacts.map((contact, idx) => {
+                const hasEmail = Boolean(contact.email?.trim());
+                const hasPhone = Boolean(contact.phone?.trim());
+                const hasContactMethods = hasEmail || hasPhone;
+
+                return (
               <motion.div 
                 key={contact.id}
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
@@ -87,14 +107,21 @@ export function ChildSafetyPage() {
               >
                 <div className="flex flex-col h-full">
                   <div className="mb-6">
-                    <span className="inline-block px-3 py-1 bg-blue-50 text-[#1E3A8A] text-xs font-bold uppercase tracking-wider rounded-lg mb-4">
-                      {contact.role}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{contact.name}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{contact.description}</p>
+                    {contact.role?.trim() && (
+                      <span className="inline-block px-3 py-1 bg-blue-50 text-[#1E3A8A] text-xs font-bold uppercase tracking-wider rounded-lg mb-4">
+                        {contact.role}
+                      </span>
+                    )}
+                    {contact.name?.trim() && (
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{contact.name}</h3>
+                    )}
+                    {contact.description?.trim() && (
+                      <p className="text-sm text-gray-500 leading-relaxed">{contact.description}</p>
+                    )}
                   </div>
-                  <div className="mt-auto space-y-3 pt-6 border-t border-gray-50">
-                    {contact.email && (
+                  {hasContactMethods && (
+                    <div className="mt-auto space-y-3 pt-6 border-t border-gray-50">
+                    {hasEmail && (
                       <a href={`mailto:${contact.email}`} className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#1E3A8A] transition-colors group">
                         <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-[#1E3A8A]/10 transition-colors">
                           <Mail className="w-4 h-4" />
@@ -102,7 +129,7 @@ export function ChildSafetyPage() {
                         <span className="font-medium truncate">{contact.email}</span>
                       </a>
                     )}
-                    {contact.phone && (
+                    {hasPhone && (
                       <div className="flex items-center gap-3 text-sm text-gray-600">
                         <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
                           <Phone className="w-4 h-4" />
@@ -110,11 +137,14 @@ export function ChildSafetyPage() {
                         <span className="font-medium">{contact.phone}</span>
                       </div>
                     )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* Policies Section */}

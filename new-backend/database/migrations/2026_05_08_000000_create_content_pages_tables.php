@@ -123,6 +123,101 @@ return new class extends Migration
                 ],
             ]);
         }
+
+        if (! DB::table('content_pages')->where('slug', 'history')->exists()) {
+            $historyPageId = DB::table('content_pages')->insertGetId([
+                'title' => 'Club History',
+                'slug' => 'history',
+                'subtitle' => 'Naomh Mairtin CPG milestones, stories, and legacy.',
+                'intro_text' => 'Use this page to manage club history, milestones, and notable figures using flexible sections.',
+                'hero_image' => null,
+                'is_published' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+
+            DB::table('content_sections')->insert([
+                [
+                    'content_page_id' => $historyPageId,
+                    'title' => 'Our Story',
+                    'body' => 'Add your club history content here. You can use text-only sections, image + text, or gallery blocks.',
+                    'image' => null,
+                    'image_position' => 'none',
+                    'layout_type' => 'text_only',
+                    'order' => 1,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+            ]);
+        }
+
+        if (! DB::table('content_pages')->where('slug', 'facilities')->exists()) {
+            $facilitiesPageId = DB::table('content_pages')->insertGetId([
+                'title' => 'Facilities',
+                'slug' => 'facilities',
+                'subtitle' => 'Grounds, clubhouse, and training facilities.',
+                'intro_text' => 'Use flexible sections to present facility images, descriptions, and updates.',
+                'hero_image' => null,
+                'is_published' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+
+            DB::table('content_sections')->insert([
+                [
+                    'content_page_id' => $facilitiesPageId,
+                    'title' => 'Facility Overview',
+                    'body' => 'Add a high-level overview of Naomh Mairtin facilities here.',
+                    'image' => null,
+                    'image_position' => 'none',
+                    'layout_type' => 'text_only',
+                    'order' => 1,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+            ]);
+        }
+
+        if (! DB::table('content_pages')->where('slug', 'g4mo')->exists()) {
+            DB::table('content_pages')->insert([
+                'title' => 'Gaelic for Mothers and Others (G4MO)',
+                'slug' => 'g4mo',
+                'subtitle' => 'Social football for women who want to stay active and connected.',
+                'intro_text' => 'Add group updates, session info, photos, and key details using flexible sections.',
+                'hero_image' => null,
+                'is_published' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+
+        if (! DB::table('content_pages')->where('slug', 'g4dl')->exists()) {
+            DB::table('content_pages')->insert([
+                'title' => 'Gaelic for Dads and Lads (G4DL)',
+                'slug' => 'g4dl',
+                'subtitle' => 'Social football for men in a relaxed club setting.',
+                'intro_text' => 'Add group updates, session info, photos, and key details using flexible sections.',
+                'hero_image' => null,
+                'is_published' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+
+        if (! DB::table('content_pages')->where('slug', 'furious-but-not-fast')->exists()) {
+            DB::table('content_pages')->insert([
+                'title' => 'Furious but not Fast',
+                'slug' => 'furious-but-not-fast',
+                'subtitle' => 'A social running group focused on consistency and encouragement.',
+                'intro_text' => 'Add group updates, routes, schedules, and photos using flexible sections.',
+                'hero_image' => null,
+                'is_published' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
     }
 
     public function down(): void

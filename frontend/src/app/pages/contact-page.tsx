@@ -7,9 +7,12 @@ import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { fetchContactPageContent, type ContactPageContent } from '../data/page-content-api';
+import { DEFAULT_FORMSPREE_ENDPOINT } from '../config/contact-form';
 
 export function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [content, setContent] = useState<ContactPageContent>({
     hero: {
       title: 'Get in Touch',
@@ -17,7 +20,7 @@ export function ContactPage() {
     },
     form: {
       title: 'Send us a Message',
-      endpoint: 'https://formspree.io/f/mwvyqgdn',
+      endpoint: DEFAULT_FORMSPREE_ENDPOINT,
       successMessage: "Message sent successfully! We'll get back to you soon.",
     },
     contactInfo: {
@@ -49,12 +52,15 @@ export function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const endpoint = content.form.endpoint?.trim() || DEFAULT_FORMSPREE_ENDPOINT;
 
     try {
-      const response = await fetch(content.form.endpoint, {
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
         headers: {
@@ -76,11 +82,13 @@ export function ContactPage() {
       }
 
       toast.success(content.form.successMessage);
+      setSubmitSuccess(content.form.successMessage);
       form.reset();
     } catch (error) {
       console.error('Failed to send contact message:', error);
       const message = error instanceof Error ? error.message : 'Could not send your message. Please try again.';
       toast.error(message);
+      setSubmitError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -195,6 +203,12 @@ export function ContactPage() {
                     </>
                   )}
                 </button>
+                {submitSuccess && (
+                  <p className="text-sm text-green-700">{submitSuccess}</p>
+                )}
+                {submitError && (
+                  <p className="text-sm text-red-700">{submitError}</p>
+                )}
               </form>
             </motion.div>
 

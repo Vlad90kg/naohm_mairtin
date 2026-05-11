@@ -266,7 +266,7 @@ class PageContentController extends Controller
                 ],
                 'form' => [
                     'title' => 'Send us a Message',
-                    'endpoint' => 'https://formspree.io/f/mwvyqgdn',
+                    'endpoint' => (string) config('contact.formspree_endpoint'),
                     'successMessage' => "Message sent successfully! We'll get back to you soon.",
                 ],
                 'contactInfo' => [

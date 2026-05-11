@@ -162,9 +162,13 @@ function ContentSection({ section, index }: { section: ContentPageSectionDTO; in
 }
 
 export function ContentPage({ content }: { content: ContentPageDTO }) {
-  const activeSections = content.sections.filter((section) => {
+  const sections = Array.isArray(content.sections) ? content.sections : [];
+
+  const activeSections = sections.filter((section) => {
     if (section.layout_type === 'gallery') {
-      return Boolean(section.title || section.body || section.gallery_images.some((image) => image.image_url));
+      const galleryImages = Array.isArray(section.gallery_images) ? section.gallery_images : [];
+
+      return Boolean(section.title || section.body || galleryImages.some((image) => image.image_url));
     }
 
     if (section.layout_type === 'image_text') {

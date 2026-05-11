@@ -25,6 +25,18 @@ export interface ContentPageDTO {
   sections: ContentPageSectionDTO[];
 }
 
+function normalizeContentPage(payload: unknown): ContentPageDTO {
+  const page = (payload && typeof payload === 'object' ? payload : {}) as Partial<ContentPageDTO>;
+
+  return {
+    title: typeof page.title === 'string' && page.title.trim() ? page.title : 'Content Page',
+    subtitle: typeof page.subtitle === 'string' ? page.subtitle : null,
+    intro_text: typeof page.intro_text === 'string' ? page.intro_text : null,
+    hero_image_url: typeof page.hero_image_url === 'string' ? page.hero_image_url : null,
+    sections: Array.isArray(page.sections) ? page.sections : [],
+  };
+}
+
 export async function fetchContentPageBySlug(slug: string): Promise<ContentPageDTO> {
   const normalizedPath = `/pages/${slug}`.replace(/\/+$/, '');
   const response = await fetch(`${API_BASE_URL}${normalizedPath}`);
@@ -33,5 +45,7 @@ export async function fetchContentPageBySlug(slug: string): Promise<ContentPageD
     throw new Error(`Request failed with status ${response.status}`);
   }
 
-  return response.json() as Promise<ContentPageDTO>;
+  const payload = await response.json();
+
+  return normalizeContentPage(payload);
 }
