@@ -10,6 +10,10 @@ export function EventsPage() {
   const { events, pages } = useCMS();
   const content = pages.events;
   const [filter, setFilter] = useState('All');
+  const excludedEventCategories = new Set(['matches', 'match', 'training']);
+
+  const isExcludedCategory = (category?: string) =>
+    excludedEventCategories.has((category ?? '').trim().toLowerCase());
 
   const formatDate = (dateString: string) => {
     try {
@@ -51,8 +55,10 @@ export function EventsPage() {
   // Set time to start of day for comparison
   now.setHours(0, 0, 0, 0);
 
-  const upcomingEvents = events.filter(e => new Date(e.date) >= now);
-  const pastEvents = events.filter(e => new Date(e.date) < now);
+  const communityEvents = events.filter((event) => !isExcludedCategory(event.category));
+  const upcomingEvents = communityEvents.filter(e => new Date(e.date) >= now);
+  const pastEvents = communityEvents.filter(e => new Date(e.date) < now);
+  const eventFilters = ['All', ...Array.from(new Set(upcomingEvents.map((event) => event.category).filter(Boolean)))];
 
   const filteredEvents = filter === 'All' 
     ? upcomingEvents 
@@ -81,7 +87,7 @@ export function EventsPage() {
         
         {/* Simplified Filter Bar */}
         <div className="flex flex-wrap gap-2 mb-12">
-          {['All', 'Matches', 'Club Events', 'Training'].map((cat) => (
+          {eventFilters.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
@@ -109,7 +115,7 @@ export function EventsPage() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-[10px] font-black text-[#1E3A8A] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded">
-                    {event.category}
+                    {event.category || 'Club Event'}
                   </span>
                   <div className="text-right">
                     <p className="text-xs font-bold text-gray-400 uppercase">{getDayName(event.date)}</p>

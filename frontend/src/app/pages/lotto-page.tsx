@@ -164,6 +164,7 @@ export function LottoPage() {
 
             <div>
               <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">{pageContent.winners_section_title}</p>
+              <p className="text-[11px] font-semibold text-gray-400 mb-4">Winners shown here are for this week&apos;s draw only.</p>
               <div className="space-y-3">
                 {pageContent.winners.map((w) => (
                   <div key={w.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">

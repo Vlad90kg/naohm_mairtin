@@ -28,7 +28,7 @@ export function ContactPage() {
       facebookUrl: 'https://www.facebook.com/NaomhMairtincpg/',
       instagramUrl: 'https://www.instagram.com/naomhmairtin/',
     },
-    mapQuery: 'Naomh Mairtin GAA, Sillogue Lane, Newtown Monasterboice, Co. Louth',
+    mapQuery: 'Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth',
   });
 
   useEffect(() => {
@@ -39,9 +39,12 @@ export function ContactPage() {
       });
   }, []);
 
-  const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  const mapQuery = encodeURIComponent(content.mapQuery);
-  const mapEmbedSrc = `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${mapQuery}`;
+  const fallbackMapQuery = 'Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth';
+  const rawMapValue = content.mapQuery?.trim();
+  const mapEmbedSrc =
+    rawMapValue && /^https?:\/\//i.test(rawMapValue)
+      ? rawMapValue
+      : `https://www.google.com/maps?q=${encodeURIComponent(rawMapValue || fallbackMapQuery)}&output=embed`;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -204,7 +207,7 @@ export function ContactPage() {
             >
               <div className="aspect-[21/9] rounded-xl overflow-hidden bg-gray-100">
                 <iframe
-                  title="Naomh Mairtin GAA Map"
+                  title="Naomh Mairtin CPG Map"
                   src={mapEmbedSrc}
                   className="h-full w-full border-0"
                   loading="lazy"

@@ -38,6 +38,7 @@ class SponsorResource extends Resource
                             ->native(false),
                         Forms\Components\FileUpload::make('logo')
                             ->image()
+                            ->disk('public')
                             ->directory('sponsors'),
                         Forms\Components\Toggle::make('is_active')
                             ->default(true),

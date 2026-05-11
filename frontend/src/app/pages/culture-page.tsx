@@ -1,9 +1,8 @@
-import { ArticlePage } from '../components/article-page';
+import { ContentPageSlugPage } from './content-page-slug-page';
 import { useCMS } from '../data/cms-context';
 
 export function CulturePage() {
   const { pages } = useCMS();
-  const { culture } = pages;
 
-  return <ArticlePage content={culture} />;
+  return <ContentPageSlugPage slug="culture" fallbackContent={pages.culture} />;
 }

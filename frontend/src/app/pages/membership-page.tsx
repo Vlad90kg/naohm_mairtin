@@ -4,19 +4,21 @@ import { useEffect, useState } from 'react';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import membershipRates2026Image from '../../assets/membership-prices.jpg';
 import { fetchMembershipPageContent, type ApiMembershipPageContent } from '../data/membership-api';
 
 const DEFAULT_MEMBERSHIP_PAGE: ApiMembershipPageContent = {
   description: 'We have moved our membership and club communications to the ClubSpot app.',
   app_store_link: 'https://apps.apple.com/ie/app/clubspot/id1506101166',
   google_play_link: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
-  poster: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
+  poster: membershipRates2026Image,
   registrar_email: 'registrar.naomhmairtin.louth@gaa.ie',
 };
 
 export function MembershipPage() {
   const [membership, setMembership] = useState<ApiMembershipPageContent>(DEFAULT_MEMBERSHIP_PAGE);
+  const [posterLoadFailed, setPosterLoadFailed] = useState(false);
+  const posterSrc = membership.poster?.trim() || membershipRates2026Image;
 
   useEffect(() => {
     fetchMembershipPageContent()
@@ -25,6 +27,10 @@ export function MembershipPage() {
         console.error('Failed to load membership page content:', error);
       });
   }, []);
+
+  useEffect(() => {
+    setPosterLoadFailed(false);
+  }, [posterSrc]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -130,21 +136,39 @@ export function MembershipPage() {
               <div className="w-20 h-1 bg-amber-400 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative bg-white border-8 border-white rounded-[2.5rem] shadow-2xl overflow-hidden aspect-[1/1.4] sm:aspect-[1.4/1]">
-                <ImageWithFallback
-                  src={membership.poster}
-                  alt="Membership Poster 2026"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-8">
-                  <p className="text-white text-sm font-bold uppercase tracking-widest bg-amber-500/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-lg">
-                    Full Rates & Details on ClubSpot
-                  </p>
+            {!posterLoadFailed && posterSrc ? (
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-[3rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div className="relative bg-white border-8 border-white rounded-[2.5rem] shadow-2xl overflow-hidden aspect-[1/1.4] sm:aspect-[1.4/1]">
+                  <img
+                    src={posterSrc}
+                    alt="Membership Poster 2026"
+                    className="w-full h-full bg-white object-contain object-center"
+                    onError={() => setPosterLoadFailed(true)}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-8">
+                    <p className="text-white text-sm font-bold uppercase tracking-widest bg-amber-500/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-lg">
+                      Full Rates & Details on ClubSpot
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-amber-50 px-6 py-10 text-center">
+                <p className="text-[#1E3A8A] text-base font-black uppercase tracking-wide">
+                  Membership rates available on ClubSpot
+                </p>
+                <a
+                  href={membership.app_store_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition-colors hover:bg-[#17306f]"
+                >
+                  Open ClubSpot
+                  <ExternalLink size={14} />
+                </a>
+              </div>
+            )}
             
             <p className="mt-8 text-center text-gray-400 text-sm font-medium italic">
               Rates updated annually. For any queries, please contact the club registrar.

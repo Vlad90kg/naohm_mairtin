@@ -57,7 +57,10 @@ class LottoPageContent extends Page implements HasForms
                     ->description('Public draw values and latest result details.')
                     ->schema([
                         TextInput::make('jackpot_label')->label('Jackpot Label')->required(),
-                        TextInput::make('jackpot_amount')->label('Current Jackpot Amount')->required(),
+                        TextInput::make('jackpot_amount')
+                            ->label('Current Jackpot Amount')
+                            ->required()
+                            ->helperText('Plain text is fine, e.g. EUR8,500.'),
                         TextInput::make('next_draw_label')->label('Next Draw Label')->required(),
                         TextInput::make('next_draw_date')->label('Next Draw Date Text')->required()->helperText('Example: Every Monday Night'),
                         TextInput::make('latest_results_title')->label('Latest Results Section Title')->required(),
@@ -68,10 +71,13 @@ class LottoPageContent extends Page implements HasForms
                             ->helperText('Comma separated numbers, e.g. 7, 14, 21, 28'),
                         Toggle::make('jackpot_won')->label('Jackpot Won')->helperText('Enable if the latest jackpot was won.'),
                         TextInput::make('latest_jackpot_amount')->label('Latest Jackpot Amount')->required(),
-                        TextInput::make('winners_section_title')->label('Prize Winners Section Title')->required(),
+                        TextInput::make('winners_section_title')
+                            ->label('Prize Winners Section Title')
+                            ->required()
+                            ->helperText('Use wording for this week only, e.g. "This Week\'s Prize Winners".'),
                     ])->columns(2),
                 Section::make('Prize Winners')
-                    ->description('Add or remove individual winners shown on the public results card.')
+                    ->description('Add winners for the latest draw only (this week). No historical archive is stored here.')
                     ->schema([
                         Repeater::make('winners')
                             ->label('Winners')
@@ -81,7 +87,7 @@ class LottoPageContent extends Page implements HasForms
                                 TextInput::make('amount')->label('Amount')->required()->placeholder('EUR50'),
                             ])
                             ->default([])
-                            ->addActionLabel('Add Prize Winner')
+                            ->addActionLabel('Add This Week\'s Winner')
                             ->reorderable(false)
                             ->columns(3),
                     ]),
@@ -200,7 +206,7 @@ class LottoPageContent extends Page implements HasForms
             'winning_numbers' => [7, 14, 21, 28],
             'jackpot_won' => false,
             'latest_jackpot_amount' => 'EUR8,500',
-            'winners_section_title' => 'Prize Winners',
+            'winners_section_title' => 'This Week\'s Prize Winners',
             'winners' => [],
             'how_it_works_title' => 'How the Lotto Works',
             'bottom_cta_title' => 'Support Your Club - Play the Lotto',

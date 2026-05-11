@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\CommitteePageResource;
+use App\Http\Resources\ContentPageResource;
+use App\Models\CommitteeSection;
 use App\Http\Resources\ShopPageContentResource;
+use App\Models\ContentPage;
 use App\Models\ShopPageContent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +21,29 @@ class PageContentController extends Controller
 
     public function show(string $page): JsonResponse
     {
+        if ($page === 'committees') {
+            $sections = CommitteeSection::query()
+                ->with('members')
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->get();
+
+            return response()->json((new CommitteePageResource($sections))->resolve());
+        }
+
+        $dynamicPage = ContentPage::query()
+            ->with(['sections.galleryImages'])
+            ->where('slug', $page)
+            ->first();
+
+        if ($dynamicPage) {
+            if (! $dynamicPage->is_published) {
+                abort(404);
+            }
+
+            return response()->json((new ContentPageResource($dynamicPage))->resolve());
+        }
+
         if ($page === 'shop') {
             return response()->json((new ShopPageContentResource($this->getShopPageContent()))->resolve());
         }
@@ -250,7 +277,7 @@ class PageContentController extends Controller
                     'facebookUrl' => 'https://www.facebook.com/NaomhMairtincpg/',
                     'instagramUrl' => 'https://www.instagram.com/naomhmairtin/',
                 ],
-                'mapQuery' => 'Naomh Mairtin GAA, Sillogue Lane, Newtown Monasterboice, Co. Louth',
+                'mapQuery' => 'Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth',
             ],
             'juvenile-teams' => [
                 'hero_title' => 'Juvenile Teams',

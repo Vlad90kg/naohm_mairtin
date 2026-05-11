@@ -40,8 +40,8 @@ export function SocialFeed() {
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[2rem] border border-gray-100 bg-white p-5 shadow-[0_20px_60px_rgba(30,58,138,0.08)]">
+        <div className="grid gap-6 xl:grid-cols-2">
+          <div className="flex h-full flex-col rounded-[2rem] border border-gray-100 bg-white p-5 shadow-[0_20px_60px_rgba(30,58,138,0.08)]">
             <div className="mb-5 flex items-center justify-between gap-3 border-b border-gray-100 pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FDE7EF]">
@@ -65,23 +65,23 @@ export function SocialFeed() {
               </a>
             </div>
 
-            <div className="instagram-embed-shell overflow-hidden rounded-[1.5rem] border border-gray-100 bg-[#fafbff] p-3">
+            <div className="overflow-hidden rounded-[1.5rem] border border-gray-100 bg-[#fafbff]">
               <a
                 href="https://www.instagram.com/naomhmairtin/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block overflow-hidden rounded-[1.1rem] border border-gray-100 bg-white shadow-sm"
+                className="relative block min-h-[34rem] w-full overflow-hidden"
               >
                 <img
                   src={instagramLatestPostImage}
                   alt="Latest Instagram post"
-                  className="h-auto max-h-[40rem] w-full object-contain"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
                 />
               </a>
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-gray-100 bg-white p-5 shadow-[0_20px_60px_rgba(30,58,138,0.08)]">
+          <div className="flex h-full flex-col rounded-[2rem] border border-gray-100 bg-white p-5 shadow-[0_20px_60px_rgba(30,58,138,0.08)]">
             <div className="mb-5 flex items-center justify-between gap-3 border-b border-gray-100 pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF2FF]">

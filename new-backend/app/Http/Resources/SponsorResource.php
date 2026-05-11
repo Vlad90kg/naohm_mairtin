@@ -32,6 +32,18 @@ class SponsorResource extends JsonResource
             return $path;
         }
 
-        return URL::to(Storage::url($path));
+        if (Storage::disk('public')->exists($path)) {
+            return URL::to(Storage::disk('public')->url($path));
+        }
+
+        // Backfill old records that were uploaded to the private/local disk.
+        if (Storage::disk('local')->exists($path)) {
+            $contents = Storage::disk('local')->get($path);
+            Storage::disk('public')->put($path, $contents);
+
+            return URL::to(Storage::disk('public')->url($path));
+        }
+
+        return URL::to(Storage::disk('public')->url($path));
     }
 }

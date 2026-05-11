@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useCMS } from '../data/cms-context';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 
 function SponsorVisual({
   name,
@@ -8,12 +8,15 @@ function SponsorVisual({
   name: string;
   logo?: string;
 }) {
-  if (logo) {
+  const [logoFailed, setLogoFailed] = useState(false);
+
+  if (logo && !logoFailed) {
     return (
-      <ImageWithFallback
+      <img
         src={logo}
         alt={name}
         className="max-h-[64px] w-auto max-w-full object-contain sm:max-h-[72px]"
+        onError={() => setLogoFailed(true)}
       />
     );
   }

@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section className="club-hero-surface relative overflow-hidden text-white">
       <div className="absolute inset-0 bg-black/40" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 sm:pt-16 sm:pb-28 text-center relative z-10">
         {/* Club Badge */}
         <div className="mb-6 flex justify-center">
           <div className="w-32 h-32 sm:w-40 sm:h-40">

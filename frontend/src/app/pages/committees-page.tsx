@@ -1,4 +1,5 @@
 import { Mail, Phone } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
@@ -26,7 +27,13 @@ type CommitteeSection = {
   members: CommitteeMember[];
 };
 
-const committees: CommitteeSection[] = [
+interface CommitteesPageContent {
+  title: string;
+  subtitle: string;
+  sections: CommitteeSection[];
+}
+
+const defaultCommittees: CommitteeSection[] = [
   {
     title: 'Senior Committee',
     members: [
@@ -64,15 +71,27 @@ const committees: CommitteeSection[] = [
   },
 ];
 
+const DEFAULT_PAGE_CONTENT: CommitteesPageContent = {
+  title: 'Club Committees',
+  subtitle: 'Meet the people behind Naomh Mairtin CPG',
+  sections: defaultCommittees,
+};
+
 function CommitteeMemberCard({ member }: { member: CommitteeMember }) {
+  const hasRealPhoto = Boolean(member.image);
+
   return (
     <article className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
       <div className="mb-5 flex justify-center">
-        <img
-          src={member.image ?? avatarPlaceholder}
-          alt={member.name}
-          className="h-28 w-28 rounded-full object-cover shadow-sm"
-        />
+        <div className="h-24 w-24 overflow-hidden rounded-full bg-gray-100 shadow-sm">
+          <img
+            src={member.image ?? avatarPlaceholder}
+            alt={member.name}
+            className={hasRealPhoto
+              ? 'h-full w-full object-contain object-top p-1'
+              : 'h-full w-full object-cover object-center'}
+          />
+        </div>
       </div>
       <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-500">
         {member.role}
@@ -108,6 +127,28 @@ function CommitteeMemberCard({ member }: { member: CommitteeMember }) {
 }
 
 export function CommitteesPage() {
+  const [content, setContent] = useState<CommitteesPageContent>(DEFAULT_PAGE_CONTENT);
+
+  useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
+
+    fetch(`${apiBase}/pages/committees`)
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Failed with status ${response.status}`);
+        }
+        const data = (await response.json()) as CommitteesPageContent;
+        setContent({
+          title: data.title || DEFAULT_PAGE_CONTENT.title,
+          subtitle: data.subtitle || DEFAULT_PAGE_CONTENT.subtitle,
+          sections: Array.isArray(data.sections) && data.sections.length ? data.sections : DEFAULT_PAGE_CONTENT.sections,
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to load committees page content from API:', error);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navigation />
@@ -117,17 +158,17 @@ export function CommitteesPage() {
         <section className="club-hero-surface px-4 py-20 text-center text-white sm:py-28">
           <div className="mx-auto max-w-4xl">
             <h1 className="text-4xl font-black uppercase tracking-tight sm:text-5xl md:text-6xl">
-              Club Committees
+              {content.title}
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg font-medium text-blue-100 sm:text-xl">
-              Meet the people behind Naomh Mairtin CPG
+              {content.subtitle}
             </p>
           </div>
         </section>
 
         <section className="px-4 py-14 sm:py-16">
           <div className="mx-auto max-w-7xl space-y-12">
-            {committees.map((committee) => (
+            {content.sections.map((committee) => (
               <section key={committee.title} className="space-y-6">
                 <div className="flex items-center gap-4">
                   <h2 className="rounded-full border border-gray-100 bg-white px-4 py-2 text-sm font-black uppercase tracking-[0.2em] text-[#1E3A8A] shadow-sm">

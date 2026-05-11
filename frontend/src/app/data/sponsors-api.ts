@@ -21,6 +21,28 @@ export interface SponsorDTO {
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
+const BACKEND_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
+function normalizeStorageUrl(value?: string): string {
+  if (!value) return '';
+
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      const parsed = new URL(value);
+      if (parsed.pathname.startsWith('/storage/')) {
+        return `${BACKEND_BASE_URL}${parsed.pathname}`;
+      }
+    } catch {
+      return value;
+    }
+    return value;
+  }
+
+  const normalized = value.replace(/^\/+/, '');
+  return normalized.startsWith('storage/')
+    ? `${BACKEND_BASE_URL}/${normalized}`
+    : `${BACKEND_BASE_URL}/storage/${normalized}`;
+}
 
 function tierToLevel(tier: ApiSponsorTier): SponsorTierLevel {
   if (tier === 'gold') return 1;
@@ -38,7 +60,7 @@ function mapApiSponsor(sponsor: ApiSponsor): SponsorDTO {
   return {
     id: String(sponsor.id),
     name: sponsor.name,
-    logo: sponsor.logo ?? '',
+    logo: normalizeStorageUrl(sponsor.logo),
     url: sponsor.website ?? sponsor.url ?? '',
     tier: tierToLevel(sponsor.tier),
     isActive: sponsor.is_active ?? true,
@@ -123,5 +145,5 @@ export async function uploadSponsorLogo(file: File): Promise<string> {
     body: formData,
   });
 
-  return data.logo;
+  return normalizeStorageUrl(data.logo);
 }

@@ -1,9 +1,8 @@
-import { ArticlePage } from '../components/article-page';
+import { ContentPageSlugPage } from './content-page-slug-page';
 import { useCMS } from '../data/cms-context';
 
 export function HealthWellbeingPage() {
   const { pages } = useCMS();
-  const { healthWellbeing } = pages;
 
-  return <ArticlePage content={healthWellbeing} />;
+  return <ContentPageSlugPage slug="health-wellbeing" fallbackContent={pages.healthWellbeing} />;
 }

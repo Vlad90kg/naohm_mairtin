@@ -64,7 +64,7 @@ export function SocialPage() {
                     to={group.href}
                     className="mt-auto inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-blue-800"
                 >
-                  View Group
+                  Click here for more information
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </article>
