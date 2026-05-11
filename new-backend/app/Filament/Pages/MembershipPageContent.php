@@ -78,20 +78,19 @@ class MembershipPageContent extends Page implements HasForms
                     ->schema([
                         FileUpload::make('poster')
                             ->label('Poster Image')
-                            ->helperText('Upload a clear portrait or landscape rates poster. This is publicly visible.')
+                            ->helperText('Upload a new rates poster each year. If left empty, the frontend shows a ClubSpot fallback CTA.')
                             ->image()
                             ->disk('public')
                             ->directory('membership')
-                            ->imageEditor()
-                            ->required(),
+                            ->imageEditor(),
                     ]),
-                Section::make('Help / Registrar Contact')
+                Section::make('Help / Secretary Contact')
                     ->description('Displayed in the help section near the bottom of the page.')
                     ->schema([
-                        TextInput::make('registrar_email')
-                            ->label('Registrar Email')
-                            ->placeholder('registrar.naomhmairtin.louth@gaa.ie')
-                            ->helperText('Used for the "Contact Registrar" email link on the public page.')
+                        TextInput::make('secretary_email')
+                            ->label('Secretary Email')
+                            ->placeholder('secretary.naomhmairtin.louth@gaa.ie')
+                            ->helperText('Used for the "Contact Club Secretary" email link on the public page.')
                             ->required()
                             ->email(),
                     ]),
@@ -138,7 +137,7 @@ class MembershipPageContent extends Page implements HasForms
             'app_store_link' => (string) ($state['app_store_link'] ?? ''),
             'google_play_link' => (string) ($state['google_play_link'] ?? ''),
             'poster' => $poster,
-            'registrar_email' => (string) ($state['registrar_email'] ?? ''),
+            'secretary_email' => (string) ($state['secretary_email'] ?? ''),
         ];
 
         Storage::disk('local')->put(
@@ -177,8 +176,8 @@ class MembershipPageContent extends Page implements HasForms
             'description' => 'We have moved our membership and club communications to the ClubSpot app.',
             'app_store_link' => 'https://apps.apple.com/ie/app/clubspot/id1506101166',
             'google_play_link' => 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
-            'poster' => 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
-            'registrar_email' => 'registrar.naomhmairtin.louth@gaa.ie',
+            'poster' => '',
+            'secretary_email' => 'secretary.naomhmairtin.louth@gaa.ie',
         ];
     }
 

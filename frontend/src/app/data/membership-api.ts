@@ -3,7 +3,7 @@ export interface ApiMembershipPageContent {
   app_store_link: string;
   google_play_link: string;
   poster: string;
-  registrar_email: string;
+  secretary_email: string;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
@@ -21,9 +21,9 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export async function fetchMembershipPageContent() {
-  const data = await request<ApiMembershipPageContent>('/pages/membership/');
+  const raw = await request<Record<string, unknown>>('/pages/membership/');
 
-  let poster = data.poster ?? '';
+  let poster = typeof raw.poster === 'string' ? raw.poster : '';
   if (poster && /^https?:\/\//i.test(poster)) {
     try {
       const parsed = new URL(poster);
@@ -41,7 +41,15 @@ export async function fetchMembershipPageContent() {
   }
 
   return {
-    ...data,
+    description: typeof raw.description === 'string' ? raw.description : '',
+    app_store_link: typeof raw.app_store_link === 'string' ? raw.app_store_link : '',
+    google_play_link: typeof raw.google_play_link === 'string' ? raw.google_play_link : '',
+    secretary_email:
+      typeof raw.secretary_email === 'string' && raw.secretary_email.trim()
+        ? raw.secretary_email
+        : typeof raw.registrar_email === 'string' && raw.registrar_email.trim()
+          ? raw.registrar_email
+          : 'secretary.naomhmairtin.louth@gaa.ie',
     poster,
   };
 }

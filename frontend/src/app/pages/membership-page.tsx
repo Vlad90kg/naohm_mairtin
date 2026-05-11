@@ -4,21 +4,20 @@ import { useEffect, useState } from 'react';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
-import membershipRates2026Image from '../../assets/membership-prices.jpg';
 import { fetchMembershipPageContent, type ApiMembershipPageContent } from '../data/membership-api';
 
 const DEFAULT_MEMBERSHIP_PAGE: ApiMembershipPageContent = {
   description: 'We have moved our membership and club communications to the ClubSpot app.',
   app_store_link: 'https://apps.apple.com/ie/app/clubspot/id1506101166',
   google_play_link: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
-  poster: membershipRates2026Image,
-  registrar_email: 'registrar.naomhmairtin.louth@gaa.ie',
+  poster: '',
+  secretary_email: 'secretary.naomhmairtin.louth@gaa.ie',
 };
 
 export function MembershipPage() {
   const [membership, setMembership] = useState<ApiMembershipPageContent>(DEFAULT_MEMBERSHIP_PAGE);
   const [posterLoadFailed, setPosterLoadFailed] = useState(false);
-  const posterSrc = membership.poster?.trim() || membershipRates2026Image;
+  const posterSrc = membership.poster?.trim() || '';
 
   useEffect(() => {
     fetchMembershipPageContent()
@@ -171,7 +170,7 @@ export function MembershipPage() {
             )}
             
             <p className="mt-8 text-center text-gray-400 text-sm font-medium italic">
-              Rates updated annually. For any queries, please contact the club registrar.
+              Rates updated annually. If you need help registering, please contact the club secretary.
             </p>
           </div>
         </section>
@@ -259,13 +258,13 @@ export function MembershipPage() {
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-xl font-black text-[#1E3A8A] mb-4 uppercase tracking-tight">Need help with registration?</h3>
             <p className="text-gray-500 font-medium mb-8">
-              If you have any issues downloading the app or registering, please contact our club registrar.
+              If you need help registering, please contact the club secretary.
             </p>
             <a 
-              href={`mailto:${membership.registrar_email}`}
+              href={`mailto:${membership.secretary_email}`}
               className="text-[#1E3A8A] font-black flex items-center justify-center gap-2 hover:underline uppercase text-sm tracking-wider"
             >
-              Contact Registrar
+              Contact Club Secretary
               <ExternalLink size={16} />
             </a>
           </div>

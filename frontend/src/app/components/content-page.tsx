@@ -31,19 +31,12 @@ function ManagedImage({
 function PageHero({
   title,
   subtitle,
-  imageUrl,
 }: {
   title: string;
   subtitle?: string | null;
-  imageUrl?: string | null;
 }) {
   return (
     <section className="club-hero-surface relative overflow-hidden px-4 py-20 text-white sm:py-28">
-      <ManagedImage
-        src={imageUrl}
-        alt={title}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
       <div className="absolute inset-0 bg-black/45" />
       <div className="relative z-10 mx-auto max-w-7xl text-center">
         <motion.h1
@@ -145,14 +138,18 @@ function ContentSection({ section, index }: { section: ContentPageSectionDTO; in
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ delay: index * 0.04 }}
-        className={cn('space-y-6', isImageText ? 'flex-1' : 'w-full')}
+        className={cn('min-w-0 space-y-6', isImageText ? 'flex-1' : 'w-full')}
       >
         {section.title && (
           <h2 className="text-3xl font-black uppercase tracking-tight text-[#1E3A8A]">
             {section.title}
           </h2>
         )}
-        {section.body && <div className="whitespace-pre-wrap text-lg leading-relaxed text-gray-600">{section.body}</div>}
+        {section.body && (
+          <div className="max-w-full whitespace-pre-wrap break-words text-lg leading-relaxed text-gray-600">
+            {section.body}
+          </div>
+        )}
         {isGallery && <GallerySection images={section.gallery_images} title={section.title} />}
       </motion.div>
 
@@ -184,7 +181,7 @@ export function ContentPage({ content }: { content: ContentPageDTO }) {
       <PremiumSponsorBanner />
 
       <main className="flex-grow">
-        <PageHero title={content.title} subtitle={content.subtitle} imageUrl={content.hero_image_url} />
+        <PageHero title={content.title} subtitle={content.subtitle} />
 
         <div className="mx-auto max-w-7xl space-y-24 px-4 py-16">
           {content.intro_text && (

@@ -42,16 +42,6 @@ class ContentPageResource extends Resource
                         Forms\Components\Textarea::make('intro_text')
                             ->rows(4)
                             ->helperText('Optional intro paragraph shown before the first section.'),
-                        Forms\Components\FileUpload::make('hero_image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('content-pages/hero')
-                            ->formatStateUsing(fn ($state) => self::normalizeUploadState($state))
-                            ->fetchFileInformation(false)
-                            ->imagePreviewHeight('220')
-                            ->openable()
-                            ->downloadable()
-                            ->helperText('Optional top image for the page header.'),
                         Forms\Components\Toggle::make('is_published')
                             ->default(false)
                             ->helperText('Only published pages are returned by the frontend API.'),

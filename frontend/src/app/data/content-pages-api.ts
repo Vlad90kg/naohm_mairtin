@@ -21,7 +21,6 @@ export interface ContentPageDTO {
   title: string;
   subtitle: string | null;
   intro_text: string | null;
-  hero_image_url: string | null;
   sections: ContentPageSectionDTO[];
 }
 
@@ -32,7 +31,6 @@ function normalizeContentPage(payload: unknown): ContentPageDTO {
     title: typeof page.title === 'string' && page.title.trim() ? page.title : 'Content Page',
     subtitle: typeof page.subtitle === 'string' ? page.subtitle : null,
     intro_text: typeof page.intro_text === 'string' ? page.intro_text : null,
-    hero_image_url: typeof page.hero_image_url === 'string' ? page.hero_image_url : null,
     sections: Array.isArray(page.sections) ? page.sections : [],
   };
 }
