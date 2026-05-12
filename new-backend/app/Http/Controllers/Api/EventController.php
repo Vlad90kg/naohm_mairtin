@@ -22,6 +22,35 @@ class EventController extends Controller
         return response()->json(EventResource::collection($query->get())->resolve());
     }
 
+    public function homepage(): JsonResponse
+    {
+        $upcomingEvents = Event::query()
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->orderBy('time')
+            ->get();
+
+        $featuredEvent = Event::query()
+            ->where('is_featured', true)
+            ->whereDate('date', '>=', now()->toDateString())
+            ->orderBy('date')
+            ->orderBy('time')
+            ->first();
+
+        if (! $featuredEvent) {
+            $featuredEvent = Event::query()
+                ->where('is_featured', true)
+                ->orderByDesc('date')
+                ->orderByDesc('time')
+                ->first();
+        }
+
+        return response()->json([
+            'featured_event' => $featuredEvent ? (new EventResource($featuredEvent))->resolve() : null,
+            'upcoming_events' => EventResource::collection($upcomingEvents)->resolve(),
+        ]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $this->validateData($request);
@@ -55,6 +84,7 @@ class EventController extends Controller
             'category' => ['required', Rule::in(['Matches', 'Club Events', 'Training'])],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'string', 'max:2048'],
+            'is_featured' => ['sometimes', 'boolean'],
         ]);
     }
 }

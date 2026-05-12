@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UploadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/events', [EventController::class, 'index']);
+Route::get('/homepage', [EventController::class, 'homepage']);
 Route::post('/events', [EventController::class, 'store']);
 Route::patch('/events/{event}', [EventController::class, 'update']);
 Route::delete('/events/{event}', [EventController::class, 'destroy']);

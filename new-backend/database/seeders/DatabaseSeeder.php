@@ -26,8 +26,16 @@ class DatabaseSeeder extends Seeder
         $this->call(SponsorSeeder::class);
 
         // Teams
-        $seniorMen = Team::factory()->create(['name' => 'Senior Men', 'category' => TeamCategory::Adult]);
-        $seniorLadies = Team::factory()->create(['name' => 'Senior Ladies', 'category' => TeamCategory::Ladies]);
+        $seniorMen = Team::factory()->create([
+            'name' => 'Senior Men',
+            'category' => TeamCategory::Adult,
+            'senior_group' => 'senior_men',
+        ]);
+        $seniorLadies = Team::factory()->create([
+            'name' => 'Senior Ladies',
+            'category' => TeamCategory::Adult,
+            'senior_group' => 'senior_ladies',
+        ]);
         $u14Boys = Team::factory()->create(['name' => 'U14 Boys', 'category' => TeamCategory::Juvenile]);
         
         $otherTeams = Team::factory()->count(5)->create(['is_internal' => false]);
@@ -65,6 +73,14 @@ class DatabaseSeeder extends Seeder
         }
 
         // Events
-        Event::factory()->count(10)->create();
+        Event::factory()->count(9)->create();
+        Event::factory()->create([
+            'title' => 'Featured Club Night',
+            'date' => now()->addDays(7),
+            'location' => 'Clubhouse',
+            'category' => 'Club Events',
+            'description' => 'A sample featured event for the homepage announcement card.',
+            'is_featured' => true,
+        ]);
     }
 }

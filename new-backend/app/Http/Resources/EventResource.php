@@ -6,21 +6,27 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class EventResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $imageUrl = $this->resolveAssetUrl($this->image);
+
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'slug' => Str::slug($this->title),
             'date' => $this->date->format('Y-m-d'),
             'time' => $this->time,
             'location' => $this->location,
             'category' => $this->category,
             'category_display' => $this->category?->getLabel() ?? $this->category,
             'description' => $this->description,
-            'image' => $this->resolveAssetUrl($this->image),
+            'image' => $imageUrl,
+            'image_url' => $imageUrl,
+            'is_featured' => (bool) $this->is_featured,
         ];
     }
 

@@ -108,6 +108,7 @@ export function EventsPage() {
             {filteredEvents.map((event, idx) => (
               <motion.div
                 key={event.id}
+                id={event.slug ?? String(event.id)}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}

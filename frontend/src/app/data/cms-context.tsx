@@ -10,6 +10,7 @@ import {
   createEvent as createEventApi,
   deleteEvent as deleteEventApi,
   getEventsPageContent,
+  getHomepageEvents,
   listEvents,
   updateEvent as updateEventApi,
 } from './events-api';
@@ -20,12 +21,14 @@ import { fetchChildSafetyPageContent, fetchHomePageContent } from './page-conten
 export interface Event {
   id: string;
   title: string;
+  slug?: string;
   date: string;
   location: string;
   description: string;
   image: string;
   category: string;
   time?: string;
+  is_featured?: boolean;
 }
 
 export interface Sponsor {
@@ -195,6 +198,7 @@ export interface PageContent {
 interface CMSContextType {
   teams: Team[];
   events: Event[];
+  featuredEvent: Event | null;
   sponsors: Sponsor[];
   lotto: LottoState;
   membership: MembershipState;
@@ -217,8 +221,34 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   // Initialize with dummy data or local storage
   const [teams, setTeams] = useState<Team[]>(initialTeams);
   const [events, setEvents] = useState<Event[]>([]);
+  const [featuredEvent, setFeaturedEvent] = useState<Event | null>(null);
 
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+
+  const mapEvent = (event: {
+    id: string;
+    title: string;
+    slug?: string;
+    date: string;
+    location: string;
+    description: string;
+    image: string;
+    image_url?: string;
+    category: string;
+    time?: string;
+    is_featured?: boolean;
+  }): Event => ({
+    id: event.id,
+    title: event.title,
+    slug: event.slug,
+    date: event.date,
+    location: event.location ?? '',
+    description: event.description ?? '',
+    image: event.image_url ?? event.image ?? '',
+    category: event.category,
+    time: event.time,
+    is_featured: event.is_featured,
+  });
 
   useEffect(() => {
     const loadTeams = async () => {
@@ -265,18 +295,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     const loadEvents = async () => {
       try {
         const remoteEvents = await listEvents();
-        setEvents(
-          remoteEvents.map((event) => ({
-            id: event.id,
-            title: event.title,
-            date: event.date,
-            location: event.location,
-            description: event.description,
-            image: event.image,
-            category: event.category,
-            time: event.time,
-          }))
-        );
+        setEvents(remoteEvents.map(mapEvent));
 
         const pageContent = await getEventsPageContent();
         setPages((prev) => ({
@@ -295,7 +314,11 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
     const loadHomePage = async () => {
       try {
+        const homepageEvents = await getHomepageEvents();
         const pageContent = await fetchHomePageContent();
+
+        setFeaturedEvent(homepageEvents.featured_event ? mapEvent(homepageEvents.featured_event) : null);
+
         setPages((prev) => ({
           ...prev,
           home: pageContent,
@@ -544,9 +567,10 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           category: event.category,
           description: event.description,
           image: event.image,
+          is_featured: event.is_featured ?? false,
         });
 
-        setEvents((prev) => [...prev, created]);
+        setEvents((prev) => [...prev, mapEvent(created)]);
       } catch (error) {
         console.error('Failed to create event:', error);
       }
@@ -557,7 +581,10 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     void (async () => {
       try {
         const updated = await updateEventApi(id, updates);
-        setEvents((prev) => prev.map((e) => (e.id === id ? updated : e)));
+        const mappedEvent = mapEvent(updated);
+
+        setEvents((prev) => prev.map((e) => (e.id === id ? mappedEvent : e)));
+        setFeaturedEvent((prev) => (prev?.id === id ? mappedEvent : prev));
       } catch (error) {
         console.error('Failed to update event:', error);
       }
@@ -569,6 +596,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       try {
         await deleteEventApi(id);
         setEvents((prev) => prev.filter((e) => e.id !== id));
+        setFeaturedEvent((prev) => (prev?.id === id ? null : prev));
       } catch (error) {
         console.error('Failed to delete event:', error);
       }
@@ -640,7 +668,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CMSContext.Provider value={{
-      teams, events, sponsors, lotto, membership, pages,
+      teams, events, featuredEvent, sponsors, lotto, membership, pages,
       updateTeam, addEvent, updateEvent, deleteEvent,
       addSponsor, updateSponsor, deleteSponsor,
       updateLotto, updateMembership, updatePageContent

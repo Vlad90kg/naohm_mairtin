@@ -45,6 +45,10 @@ class EventResource extends Resource
                         Forms\Components\FileUpload::make('image')
                             ->image()
                             ->directory('events'),
+                        Forms\Components\Toggle::make('is_featured')
+                            ->label('Featured announcement')
+                            ->helperText('Show this event in the homepage Featured Announcement card.')
+                            ->default(false),
                     ]),
             ]);
     }
@@ -63,10 +67,15 @@ class EventResource extends Resource
                 Tables\Columns\TextColumn::make('category')
                     ->badge(),
                 Tables\Columns\TextColumn::make('location'),
+                Tables\Columns\IconColumn::make('is_featured')
+                    ->label('Featured')
+                    ->boolean(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('category')
                     ->options(EventCategory::class),
+                Tables\Filters\TernaryFilter::make('is_featured')
+                    ->label('Featured announcement'),
             ])
             ->actions([
                 Actions\EditAction::make(),

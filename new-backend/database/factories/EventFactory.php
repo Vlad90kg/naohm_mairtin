@@ -17,6 +17,7 @@ class EventFactory extends Factory
             'category' => $this->faker->randomElement(EventCategory::cases()),
             'description' => $this->faker->paragraph(),
             'image' => null,
+            'is_featured' => false,
         ];
     }
 }

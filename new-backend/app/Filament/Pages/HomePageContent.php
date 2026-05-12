@@ -50,12 +50,6 @@ class HomePageContent extends Page implements HasForms
                     ->helperText('This background is used across all page hero sections.')
                     ->required(),
             ])->columns(2),
-            Section::make('Featured Announcement')->schema([
-                TextInput::make('featuredAnnouncement.title')->required(),
-                TextInput::make('featuredAnnouncement.description')->required(),
-                TextInput::make('featuredAnnouncement.buttonText')->required(),
-                TextInput::make('featuredAnnouncement.buttonLink')->required(),
-            ])->columns(2),
             Section::make('Homepage Sections')->schema([
                 Toggle::make('sections.sponsors.enabled')->label('Sponsors Enabled'),
                 TextInput::make('sections.sponsors.sectionTitle')->required(),

@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
+const API_BASE_URL =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined)
+    ?.replace(/\/+$/, '')
+  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 const BACKEND_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 async function request<T>(path: string): Promise<T> {
@@ -7,7 +10,17 @@ async function request<T>(path: string): Promise<T> {
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);
   }
-  return response.json() as Promise<T>;
+
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new Error(
+      `Invalid JSON response from ${API_BASE_URL}${normalizedPath}. ` +
+      'Set VITE_API_BASE_URL to your Laravel API URL in frontend/.env.'
+    );
+  }
 }
 
 export async function fetchHomePageContent() {

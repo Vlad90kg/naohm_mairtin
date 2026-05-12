@@ -18,10 +18,12 @@ class Event extends Model
         'category',
         'description',
         'image',
+        'is_featured',
     ];
 
     protected $casts = [
         'date' => 'date',
         'category' => EventCategory::class,
+        'is_featured' => 'boolean',
     ];
 }
