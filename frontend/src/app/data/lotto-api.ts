@@ -31,7 +31,9 @@ export interface ApiLottoPageContent {
   bottom_cta_description: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 async function request<T>(path: string): Promise<T> {
   const normalizedPath = path.replace(/\/+$/, '') || '/';

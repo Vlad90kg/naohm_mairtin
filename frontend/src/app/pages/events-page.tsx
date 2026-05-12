@@ -1,6 +1,5 @@
 import { motion } from 'motion/react';
 import { Clock, MapPin, ChevronRight, History } from 'lucide-react';
-import { useState } from 'react';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
@@ -9,11 +8,6 @@ import { useCMS } from '../data/cms-context';
 export function EventsPage() {
   const { events, pages } = useCMS();
   const content = pages.events;
-  const [filter, setFilter] = useState('All');
-  const excludedEventCategories = new Set(['matches', 'match', 'training']);
-
-  const isExcludedCategory = (category?: string) =>
-    excludedEventCategories.has((category ?? '').trim().toLowerCase());
 
   const formatDate = (dateString: string) => {
     try {
@@ -55,14 +49,8 @@ export function EventsPage() {
   // Set time to start of day for comparison
   now.setHours(0, 0, 0, 0);
 
-  const communityEvents = events.filter((event) => !isExcludedCategory(event.category));
-  const upcomingEvents = communityEvents.filter(e => new Date(e.date) >= now);
-  const pastEvents = communityEvents.filter(e => new Date(e.date) < now);
-  const eventFilters = ['All', ...Array.from(new Set(upcomingEvents.map((event) => event.category).filter(Boolean)))];
-
-  const filteredEvents = filter === 'All' 
-    ? upcomingEvents 
-    : upcomingEvents.filter(e => e.category === filter);
+  const upcomingEvents = events.filter(e => new Date(e.date) >= now);
+  const pastEvents = events.filter(e => new Date(e.date) < now);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -85,27 +73,10 @@ export function EventsPage() {
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-12">
         
-        {/* Simplified Filter Bar */}
-        <div className="flex flex-wrap gap-2 mb-12">
-          {eventFilters.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-5 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all ${
-                filter === cat 
-                  ? 'bg-[#1E3A8A] text-white' 
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         {/* Upcoming Events - Simplified Cards */}
         <section className="mb-16">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event, idx) => (
+            {upcomingEvents.map((event, idx) => (
               <motion.div
                 key={event.id}
                 id={event.slug ?? String(event.id)}
@@ -115,9 +86,6 @@ export function EventsPage() {
                 className="bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-[#1E3A8A] transition-colors group flex flex-col"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <span className="text-[10px] font-black text-[#1E3A8A] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded">
-                    {event.category || 'Club Event'}
-                  </span>
                   <div className="text-right">
                     <p className="text-xs font-bold text-gray-400 uppercase">{getDayName(event.date)}</p>
                     <p className="text-sm font-black text-[#1E3A8A]">{getDateDetail(event.date)}</p>
@@ -154,7 +122,7 @@ export function EventsPage() {
             ))}
           </div>
 
-          {filteredEvents.length === 0 && (
+          {upcomingEvents.length === 0 && (
             <div className="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
               <p className="text-gray-400 font-bold uppercase tracking-widest">No events scheduled</p>
             </div>

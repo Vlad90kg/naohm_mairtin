@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { teamsData as initialTeams, type Team } from './teams';
+import { type Team } from './teams';
 import {
   createSponsor as createSponsorApi,
   deleteSponsorById,
@@ -26,7 +26,6 @@ export interface Event {
   location: string;
   description: string;
   image: string;
-  category: string;
   time?: string;
   is_featured?: boolean;
 }
@@ -219,7 +218,7 @@ const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export function CMSProvider({ children }: { children: React.ReactNode }) {
   // Initialize with dummy data or local storage
-  const [teams, setTeams] = useState<Team[]>(initialTeams);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [featuredEvent, setFeaturedEvent] = useState<Event | null>(null);
 
@@ -234,7 +233,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     description: string;
     image: string;
     image_url?: string;
-    category: string;
     time?: string;
     is_featured?: boolean;
   }): Event => ({
@@ -245,7 +243,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     location: event.location ?? '',
     description: event.description ?? '',
     image: event.image_url ?? event.image ?? '',
-    category: event.category,
     time: event.time,
     is_featured: event.is_featured,
   });
@@ -564,7 +561,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           date: event.date,
           time: event.time ?? '',
           location: event.location,
-          category: event.category,
           description: event.description,
           image: event.image,
           is_featured: event.is_featured ?? false,

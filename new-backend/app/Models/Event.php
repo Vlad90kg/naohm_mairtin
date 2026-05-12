@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\EventCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +14,6 @@ class Event extends Model
         'date',
         'time',
         'location',
-        'category',
         'description',
         'image',
         'is_featured',
@@ -23,7 +21,6 @@ class Event extends Model
 
     protected $casts = [
         'date' => 'date',
-        'category' => EventCategory::class,
         'is_featured' => 'boolean',
     ];
 }

@@ -21,8 +21,6 @@ class EventResource extends JsonResource
             'date' => $this->date->format('Y-m-d'),
             'time' => $this->time,
             'location' => $this->location,
-            'category' => $this->category,
-            'category_display' => $this->category?->getLabel() ?? $this->category,
             'description' => $this->description,
             'image' => $imageUrl,
             'image_url' => $imageUrl,

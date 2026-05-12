@@ -110,7 +110,9 @@ export interface ApiHistoryPageContent {
   cta_button_link: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 function normalizeTrainingTimes(value: unknown): string[] {
   if (!Array.isArray(value)) {
@@ -157,7 +159,11 @@ function normalizeResult(result: ApiResult): ApiResult {
 
 function buildUrl(path: string, params?: Record<string, string | undefined>) {
   const normalizedPath = path.replace(/\/+$/, '') || '/';
-  const url = new URL(`${API_BASE_URL}${normalizedPath}`);
+  const base = /^https?:\/\//i.test(API_BASE_URL) ? API_BASE_URL : window.location.origin;
+  const target = /^https?:\/\//i.test(API_BASE_URL)
+    ? `${API_BASE_URL}${normalizedPath}`
+    : `${API_BASE_URL}${normalizedPath}`;
+  const url = new URL(target, base);
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {

@@ -5,7 +5,6 @@ export interface EventDTO {
   date: string;
   time: string | null;
   location: string | null;
-  category: string;
   description: string | null;
   image: string | null;
   image_url: string | null;
@@ -22,7 +21,6 @@ export interface EventMutationDTO {
   date: string;
   time: string;
   location: string;
-  category: string;
   description: string;
   image: string;
   is_featured?: boolean;

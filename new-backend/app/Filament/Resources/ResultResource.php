@@ -29,7 +29,9 @@ class ResultResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('fixture_id')
                             ->relationship('fixture', 'id', function ($query) {
-                                return $query->orderBy('date_time', 'desc');
+                                return $query
+                                    ->whereHas('homeTeam', fn ($homeTeamQuery) => $homeTeamQuery->where('is_internal', true))
+                                    ->orderBy('date_time', 'desc');
                             })
                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->date_time->format('Y-m-d')}: {$record->homeTeam->name} vs {$record->awayTeam->name}")
                             ->required()

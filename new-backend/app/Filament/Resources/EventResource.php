@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\EventCategory;
 use App\Filament\Resources\EventResource\Pages;
 use App\Models\Event;
 use Filament\Actions;
@@ -36,10 +35,6 @@ class EventResource extends Resource
                                 Forms\Components\TimePicker::make('time'),
                             ]),
                         Forms\Components\TextInput::make('location'),
-                        Forms\Components\Select::make('category')
-                            ->options(EventCategory::class)
-                            ->required()
-                            ->native(false),
                         Forms\Components\RichEditor::make('description')
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('image')
@@ -64,16 +59,12 @@ class EventResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category')
-                    ->badge(),
                 Tables\Columns\TextColumn::make('location'),
                 Tables\Columns\IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('category')
-                    ->options(EventCategory::class),
                 Tables\Filters\TernaryFilter::make('is_featured')
                     ->label('Featured announcement'),
             ])

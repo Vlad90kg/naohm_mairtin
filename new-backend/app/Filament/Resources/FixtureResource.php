@@ -26,7 +26,7 @@ class FixtureResource extends Resource
                 Section::make()
                     ->schema([
                         Forms\Components\Select::make('home_team_id')
-                            ->relationship('homeTeam', 'name')
+                            ->relationship('homeTeam', 'name', fn ($query) => $query->where('is_internal', true))
                             ->required()
                             ->searchable(),
                         Forms\Components\Select::make('away_team_id')
@@ -59,7 +59,7 @@ class FixtureResource extends Resource
                 Tables\Filters\Filter::make('upcoming')
                     ->query(fn ($query) => $query->where('date_time', '>=', now())),
                 Tables\Filters\SelectFilter::make('home_team')
-                    ->relationship('homeTeam', 'name'),
+                    ->relationship('homeTeam', 'name', fn ($query) => $query->where('is_internal', true)),
             ])
             ->actions([
                 Actions\EditAction::make(),

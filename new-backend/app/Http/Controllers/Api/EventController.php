@@ -7,7 +7,6 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
@@ -81,7 +80,6 @@ class EventController extends Controller
             'date' => ['required', 'date'],
             'time' => ['nullable', 'date_format:H:i'],
             'location' => ['nullable', 'string', 'max:255'],
-            'category' => ['required', Rule::in(['Matches', 'Club Events', 'Training'])],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'string', 'max:2048'],
             'is_featured' => ['sometimes', 'boolean'],
