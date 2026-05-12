@@ -8,7 +8,7 @@ import { fetchMembershipPageContent, type ApiMembershipPageContent } from '../da
 
 const DEFAULT_MEMBERSHIP_PAGE: ApiMembershipPageContent = {
   description: 'We have moved our membership and club communications to the ClubSpot app.',
-  app_store_link: 'https://apps.apple.com/ie/app/clubspot/id1506101166',
+  app_store_link: 'https://apps.apple.com/ie/app/naomh-mairtin-gaa/id6752895231',
   google_play_link: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
   poster: '',
   secretary_email: 'secretary.naomhmairtin.louth@gaa.ie',

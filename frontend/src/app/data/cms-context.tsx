@@ -358,7 +358,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
   const [membership, setMembership] = useState<MembershipState>({
     description: 'We have moved our membership and club communications to the ClubSpot app.',
-    appStoreLink: 'https://apps.apple.com/ie/app/clubspot/id1506101166',
+    appStoreLink: 'https://apps.apple.com/ie/app/naomh-mairtin-gaa/id6752895231',
     googlePlayLink: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
     poster: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80',
   });
