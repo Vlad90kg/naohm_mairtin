@@ -54,7 +54,7 @@ class ShopItemsRelationManager extends RelationManager
                             ->columnSpanFull(),
                         Forms\Components\TextInput::make('url')
                             ->label('Shop URL')
-                            ->helperText('Public link when users click through to this partner.')
+                            ->helperText('Public link for this partner. Leave empty to show a "coming soon" placeholder.')
                             ->url()
                             ->maxLength(255),
                         Forms\Components\FileUpload::make('image')

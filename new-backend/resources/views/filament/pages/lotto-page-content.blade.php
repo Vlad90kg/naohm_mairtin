@@ -1,6 +1,5 @@
 <x-filament-panels::page>
-    <form wire:submit="save" class="space-y-6">
+    <form id="lotto-page-content-form" wire:submit="save" class="space-y-6">
         {{ $this->form }}
     </form>
 </x-filament-panels::page>
-

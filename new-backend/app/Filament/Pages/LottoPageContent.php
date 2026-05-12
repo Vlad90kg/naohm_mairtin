@@ -114,7 +114,7 @@ class LottoPageContent extends Page implements HasForms
                 ->url('/lotto', shouldOpenInNewTab: true),
             Action::make('save')
                 ->label('Save Lotto Page Content')
-                ->submit('save'),
+                ->action('save'),
         ];
     }
 

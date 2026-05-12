@@ -113,7 +113,6 @@ export function SocialFeed() {
                   className="absolute inset-0 h-full w-full"
                   style={{ border: 'none', overflow: 'hidden' }}
                   scrolling="no"
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 />
               </div>
             </div>

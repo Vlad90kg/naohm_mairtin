@@ -12,6 +12,7 @@ export function ShopSection({
   itemsLimit?: number;
 }) {
   const [shops, setShops] = useState<ApiShopItem[]>([]);
+  const hasValidShopUrl = (url?: string | null): boolean => Boolean(url && /^https?:\/\//i.test(url));
 
   useEffect(() => {
     fetchShopPageContent()
@@ -40,13 +41,16 @@ export function ShopSection({
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-          {visibleShops.map((shop) => (
+          {visibleShops.map((shop) => {
+            const isClickable = hasValidShopUrl(shop.url);
+
+            return (
             <div key={shop.id} className={cn('flex flex-col', shop.isPlaceholder && 'opacity-60 grayscale hover:grayscale-0 transition-all duration-500')}>
-              <a
-                href={shop.url || '#'}
-                target={shop.isPlaceholder || !shop.url ? undefined : '_blank'}
-                rel="noopener noreferrer"
-                className="group relative flex-grow overflow-hidden rounded-[2.5rem] shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white border-8 border-white aspect-[16/10] flex items-center justify-center"
+              <div
+                className={cn(
+                  'group relative flex-grow overflow-hidden rounded-[2.5rem] shadow-xl bg-white border-8 border-white aspect-[16/10] flex items-center justify-center',
+                  isClickable && 'transition-all duration-500 hover:shadow-2xl hover:-translate-y-2',
+                )}
               >
                 {shop.isLogo ? (
                   <div className="w-full h-full p-12 flex items-center justify-center bg-gray-50/50">
@@ -67,20 +71,20 @@ export function ShopSection({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
                   <div className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-black text-sm uppercase tracking-wider flex items-center gap-2 shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     <ShoppingBag size={18} />
-                    Visit {shop.name}
+                    {isClickable ? `Visit ${shop.name}` : 'Link Coming Soon'}
                   </div>
                 </div>
-              </a>
+              </div>
 
               <div className="mt-6 text-center md:text-left px-4">
                 <h3 className="text-xl font-black text-[#1E3A8A] uppercase tracking-tight flex items-center justify-center md:justify-start gap-2">
                   {shop.name}
-                  <ExternalLink size={16} className="text-amber-500" />
+                  {isClickable && <ExternalLink size={16} className="text-amber-500" />}
                 </h3>
                 <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">{shop.description}</p>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </div>
     </section>

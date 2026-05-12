@@ -145,8 +145,8 @@ export function LottoPage() {
             <div className="mb-8">
               <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Numbers Drawn</p>
               <div className="flex flex-wrap gap-4">
-                {pageContent.winning_numbers.map((num) => (
-                  <div key={num} className="w-14 h-14 rounded-full bg-[#1E3A8A] text-white flex items-center justify-center shadow-lg">
+                {pageContent.winning_numbers.map((num, index) => (
+                  <div key={`${num}-${index}`} className="w-14 h-14 rounded-full bg-[#1E3A8A] text-white flex items-center justify-center shadow-lg">
                     <span className="text-xl font-black">{num}</span>
                   </div>
                 ))}

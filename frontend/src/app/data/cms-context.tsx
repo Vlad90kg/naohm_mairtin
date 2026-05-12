@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { teamsData as initialTeams, type Team } from './teams';
-import { sponsors as initialSponsorDirectory } from './sponsors';
 import {
   createSponsor as createSponsorApi,
   deleteSponsorById,
@@ -219,15 +218,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const [teams, setTeams] = useState<Team[]>(initialTeams);
   const [events, setEvents] = useState<Event[]>([]);
 
-  const [sponsors, setSponsors] = useState<Sponsor[]>(
-    initialSponsorDirectory.map((sponsor) => ({
-      id: sponsor.id,
-      name: sponsor.name,
-      logo: sponsor.logo ?? '',
-      url: sponsor.url,
-      tier: sponsor.tier === 'gold' ? 1 : sponsor.tier === 'silver' ? 2 : 3,
-    }))
-  );
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
   useEffect(() => {
     const loadTeams = async () => {

@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Enums\SponsorTier;
 use App\Enums\TeamCategory;
 use App\Models\Event;
 use App\Models\Fixture;
 use App\Models\Result;
-use App\Models\Sponsor;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -25,10 +23,7 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        // Sponsors
-        Sponsor::factory()->create(['name' => 'Gold Sponsor 1', 'tier' => SponsorTier::Gold]);
-        Sponsor::factory()->create(['name' => 'Silver Sponsor 1', 'tier' => SponsorTier::Silver]);
-        Sponsor::factory()->count(5)->create();
+        $this->call(SponsorSeeder::class);
 
         // Teams
         $seniorMen = Team::factory()->create(['name' => 'Senior Men', 'category' => TeamCategory::Adult]);

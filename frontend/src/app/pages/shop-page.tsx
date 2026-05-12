@@ -24,6 +24,7 @@ const DEFAULT_SHOP_PAGE: ApiShopPageContent = {
 
 export function ShopPage() {
   const [pageContent, setPageContent] = useState<ApiShopPageContent>(DEFAULT_SHOP_PAGE);
+  const hasValidShopUrl = (url?: string | null): boolean => Boolean(url && /^https?:\/\//i.test(url));
 
   useEffect(() => {
     fetchShopPageContent()
@@ -72,6 +73,10 @@ export function ShopPage() {
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 mb-16">
           {pageContent.shops.map((shop, i) => (
+            (() => {
+              const isClickable = hasValidShopUrl(shop.url);
+              const ctaText = isClickable ? shop.cta : 'Link Coming Soon';
+              return (
             <motion.div
               key={shop.id}
               initial={{ opacity: 0, y: 24 }}
@@ -79,12 +84,10 @@ export function ShopPage() {
               transition={{ delay: i * 0.1 }}
               className={cn('flex flex-col', shop.isPlaceholder && 'opacity-60 grayscale hover:grayscale-0 transition-all duration-500')}
             >
-              <a
-                href={shop.url || '#'}
-                target={shop.isPlaceholder || !shop.url ? undefined : '_blank'}
-                rel="noopener noreferrer"
-                className="group relative overflow-hidden rounded-[2.5rem] shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white border-8 border-white aspect-[16/10] flex items-center justify-center"
-              >
+              <div className={cn(
+                'group relative overflow-hidden rounded-[2.5rem] shadow-xl bg-white border-8 border-white aspect-[16/10] flex items-center justify-center',
+                isClickable && 'transition-all duration-500 hover:shadow-2xl hover:-translate-y-2',
+              )}>
                 {shop.isLogo ? (
                   <div className="w-full h-full p-12 flex items-center justify-center bg-gray-50/50">
                     <ImageWithFallback
@@ -103,29 +106,37 @@ export function ShopPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A]/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
                   <div className="bg-white text-[#1E3A8A] px-6 py-3 rounded-full font-black text-sm uppercase tracking-wider flex items-center gap-2 shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                     <ShoppingBag size={18} />
-                    {shop.cta}
+                    {ctaText}
                   </div>
                 </div>
-              </a>
+              </div>
 
               <div className="mt-6 px-2">
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <h2 className="text-2xl font-black text-[#1E3A8A] uppercase tracking-tight">{shop.name}</h2>
-                  <ExternalLink size={16} className="text-amber-500 flex-shrink-0 mt-1" />
+                  {isClickable && <ExternalLink size={16} className="text-amber-500 flex-shrink-0 mt-1" />}
                 </div>
                 <p className="text-xs font-black text-amber-500 uppercase tracking-widest mb-3">{shop.description}</p>
                 <p className="text-gray-500 text-sm leading-relaxed mb-5">{shop.detail}</p>
-                <a
-                  href={shop.url || '#'}
-                  target={shop.isPlaceholder || !shop.url ? undefined : '_blank'}
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E3A8A] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-blue-800 transition-colors"
-                >
-                  {shop.cta}
-                  <ArrowRight size={16} />
-                </a>
+                {isClickable ? (
+                  <a
+                    href={shop.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E3A8A] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-blue-800 transition-colors"
+                  >
+                    {shop.cta}
+                    <ArrowRight size={16} />
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center gap-2 px-6 py-3 bg-gray-200 text-gray-500 rounded-xl font-black text-sm uppercase tracking-wider cursor-not-allowed">
+                    Link Coming Soon
+                  </span>
+                )}
               </div>
             </motion.div>
+              );
+            })()
           ))}
         </div>
 
