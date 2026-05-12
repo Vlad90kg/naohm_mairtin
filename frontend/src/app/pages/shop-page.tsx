@@ -9,15 +9,13 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { fetchShopPageContent, type ApiShopPageContent } from '../data/shop-api';
 
 const DEFAULT_SHOP_PAGE: ApiShopPageContent = {
-  hero_eyebrow: 'Official Club Stores',
-  hero_title: 'Club Shop',
-  hero_highlight: 'Shop',
-  hero_description:
-    'Support Naomh Mairtin CPG by purchasing official gear and merchandise through our approved retail partners.',
-  info_title: 'Need Help with an Order?',
-  info_description:
-    'For queries about club orders, sizes, or custom printing, contact the club directly or reach out to our retail partners using the links above.',
-  info_button_text: 'Contact the Club',
+  hero_eyebrow: '',
+  hero_title: '',
+  hero_highlight: '',
+  hero_description: '',
+  info_title: '',
+  info_description: '',
+  info_button_text: '',
   info_button_link: '/contact',
   shops: [],
 };

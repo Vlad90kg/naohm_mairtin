@@ -12,8 +12,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class PageContentController extends Controller
 {
@@ -93,6 +94,10 @@ class PageContentController extends Controller
         if (! array_key_exists($page, $pages)) {
             $pages[$page] = $defaults[$page];
             $this->saveAllPages($pages);
+        }
+
+        if ($page === 'teams') {
+            return $this->resolveTeamsPageContent($pages[$page] ?? []);
         }
 
         return $pages[$page] ?? $defaults[$page];
@@ -227,9 +232,48 @@ class PageContentController extends Controller
                 'hub_eyebrow' => 'Teams Hub',
                 'hub_title' => 'Explore Team Sections',
                 'hub_description' => 'Open the adult and juvenile pathways or follow the links to each team area.',
+                'cards' => [
+                    [
+                        'eyebrow' => 'Adult Teams',
+                        'title' => 'Adult Teams',
+                        'description' => 'Browse the adult football section, including links onward to the senior men, senior ladies, and social overview pages.',
+                        'button_label' => 'Open Page',
+                        'button_url' => '/teams/adult',
+                        'order' => 0,
+                        'is_active' => true,
+                    ],
+                    [
+                        'eyebrow' => 'Juvenile Teams',
+                        'title' => 'Juvenile Teams',
+                        'description' => 'Open the juvenile pathway page to view the full structure of teams and the current placeholder team details layout.',
+                        'button_label' => 'Open Page',
+                        'button_url' => '/teams/juvenile',
+                        'order' => 1,
+                        'is_active' => true,
+                    ],
+                    [
+                        'eyebrow' => 'Social',
+                        'title' => 'Social',
+                        'description' => 'Visit the social section for direct access to G4MO, G4DL, and Furious but not Fast.',
+                        'button_label' => 'Open Page',
+                        'button_url' => '/teams/social',
+                        'order' => 2,
+                        'is_active' => true,
+                    ],
+                    [
+                        'eyebrow' => 'Scór',
+                        'title' => 'Scór',
+                        'description' => 'Explore the dedicated Scór page for the cultural side of the club, including music, performance, storytelling, and quiz activity.',
+                        'button_label' => 'Open Page',
+                        'button_url' => '/teams/scor',
+                        'order' => 3,
+                        'is_active' => true,
+                    ],
+                ],
                 'gallery_eyebrow' => 'Gallery',
                 'gallery_title' => 'Gallery',
                 'gallery_description' => 'Team photos and highlights will appear here as they are published.',
+                'gallery_images' => [],
             ],
             'fixtures' => [
                 'hero_title' => 'Fixtures & Results',
@@ -337,17 +381,28 @@ class PageContentController extends Controller
                 'shops' => [
                     [
                         'id' => 'shop-1',
-                        'name' => 'Club Shop Partner',
-                        'description' => 'Official Club Gear',
-                        'detail' => 'The final online shop destination will be added by the club when available.',
-                        'url' => '',
-                        'image' => '',
-                        'isLogo' => true,
-                        'cta' => 'Link Coming Soon',
-                        'isPlaceholder' => true,
+                        'name' => 'O\'Neills',
+                        'description' => 'Official Club Gear & Leisurewear',
+                        'detail' => 'Browse and order official Naomh Mairtin CPG jerseys, training gear, and leisurewear directly from O\'Neills - the GAA\'s trusted kit supplier.',
+                        'url' => 'https://www.oneills.com/catalogsearch/result/?q=naomh+mairtin',
+                        'image' => '/shop-assets/oneills-placeholder.svg',
+                        'isLogo' => false,
+                        'cta' => 'Shop O\'Neills',
+                        'isPlaceholder' => false,
                     ],
                     [
                         'id' => 'shop-2',
+                        'name' => 'Clear Cut Marketing',
+                        'description' => 'Official Club Merchandise & Apparel',
+                        'detail' => 'Personalised club merchandise, custom apparel, and supporter gear from our local marketing and print partner, Clear Cut Marketing.',
+                        'url' => 'https://clearcutmarketing.ie/',
+                        'image' => '/shop-assets/clear-cut-marketing-placeholder.svg',
+                        'isLogo' => true,
+                        'cta' => 'Shop Clear Cut',
+                        'isPlaceholder' => false,
+                    ],
+                    [
+                        'id' => 'shop-3',
                         'name' => 'Future Supplier',
                         'description' => 'Coming Soon',
                         'detail' => 'We are always looking to expand our range of official club gear. Stay tuned for new partnerships and exciting new merchandise options.',
@@ -442,5 +497,72 @@ class PageContentController extends Controller
         }
 
         return $content->load('shops');
+    }
+
+    private function resolveTeamsPageContent(array $page): array
+    {
+        $defaults = $this->defaultPages()['teams'];
+
+        $cards = collect(is_array($page['cards'] ?? null) && $page['cards'] !== [] ? $page['cards'] : $defaults['cards'])
+            ->filter(fn (mixed $card): bool => is_array($card))
+            ->map(function (array $card, int $index): array {
+                return [
+                    'eyebrow' => (string) ($card['eyebrow'] ?? ''),
+                    'title' => (string) ($card['title'] ?? ''),
+                    'description' => (string) ($card['description'] ?? ''),
+                    'button_label' => (string) ($card['button_label'] ?? 'Open Page'),
+                    'button_url' => (string) ($card['button_url'] ?? ''),
+                    'order' => (int) ($card['order'] ?? $index),
+                    'is_active' => (bool) ($card['is_active'] ?? false),
+                ];
+            })
+            ->sortBy('order')
+            ->values()
+            ->all();
+
+        $galleryImages = collect($page['gallery_images'] ?? [])
+            ->filter(fn (mixed $image): bool => is_array($image))
+            ->map(function (array $image, int $index): array {
+                return [
+                    'image_url' => $this->resolveAssetUrl($image['image'] ?? null),
+                    'caption' => (string) ($image['caption'] ?? ''),
+                    'order' => (int) ($image['order'] ?? $index),
+                    'is_active' => (bool) ($image['is_active'] ?? true),
+                ];
+            })
+            ->filter(fn (array $image): bool => $image['image_url'] !== null)
+            ->sortBy('order')
+            ->values()
+            ->all();
+
+        return [
+            'hero_title' => $page['hero_title'] ?? $defaults['hero_title'],
+            'hero_subtitle' => $page['hero_subtitle'] ?? $defaults['hero_subtitle'],
+            'hub_eyebrow' => $page['hub_eyebrow'] ?? $defaults['hub_eyebrow'],
+            'hub_title' => $page['hub_title'] ?? $defaults['hub_title'],
+            'hub_description' => $page['hub_description'] ?? $defaults['hub_description'],
+            'cards' => $cards,
+            'gallery_eyebrow' => $page['gallery_eyebrow'] ?? $defaults['gallery_eyebrow'],
+            'gallery_title' => $page['gallery_title'] ?? $defaults['gallery_title'],
+            'gallery_description' => $page['gallery_description'] ?? $defaults['gallery_description'],
+            'gallery_images' => $galleryImages,
+        ];
+    }
+
+    private function resolveAssetUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, 'blob:') || str_starts_with($path, 'data:')) {
+            return $path;
+        }
+
+        return URL::to(Storage::disk('public')->url($path));
     }
 }

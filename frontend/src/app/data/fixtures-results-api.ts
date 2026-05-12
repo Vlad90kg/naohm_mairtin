@@ -51,9 +51,28 @@ export interface ApiTeamsPageContent {
   hub_eyebrow: string;
   hub_title: string;
   hub_description: string;
+  cards: ApiTeamsPageCard[];
   gallery_eyebrow: string;
   gallery_title: string;
   gallery_description: string;
+  gallery_images: ApiTeamsPageGalleryImage[];
+}
+
+export interface ApiTeamsPageCard {
+  eyebrow: string;
+  title: string;
+  description: string;
+  button_label: string;
+  button_url: string;
+  order: number;
+  is_active: boolean;
+}
+
+export interface ApiTeamsPageGalleryImage {
+  image_url: string;
+  caption: string;
+  order: number;
+  is_active: boolean;
 }
 
 export interface ApiFixturesPageContent {

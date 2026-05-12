@@ -56,6 +56,10 @@ export const router = createBrowserRouter([
         Component: SocialPage,
       },
       {
+        path: 'teams/social',
+        Component: SocialPage,
+      },
+      {
         path: 'teams/scor',
         Component: ScorPage,
       },

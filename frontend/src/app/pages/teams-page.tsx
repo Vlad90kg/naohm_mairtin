@@ -2,7 +2,7 @@ import { ChevronRight, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { TeamsPageShell, TeamsSectionIntro } from '../components/teams-page-shell';
-import { fetchTeamsPageContent, type ApiTeamsPageContent } from '../data/fixtures-results-api';
+import { fetchTeamsPageContent, type ApiTeamsPageCard, type ApiTeamsPageContent } from '../data/fixtures-results-api';
 
 const pageLinks = [
   {
@@ -10,39 +10,62 @@ const pageLinks = [
     description: 'Browse the adult football section, including links onward to the senior men, senior ladies, and social overview pages.',
     href: '/teams/adult',
     eyebrow: 'Adult Teams',
+    buttonLabel: 'Open Page',
   },
   {
     title: 'Juvenile Teams',
     description: 'Open the juvenile pathway page to view the full structure of teams and the current placeholder team details layout.',
     href: '/teams/juvenile',
     eyebrow: 'Juvenile Teams',
+    buttonLabel: 'Open Page',
   },
   {
     title: 'Social',
     description: 'Visit the social section for direct access to G4MO, G4DL, and Furious but not Fast.',
-    href: '/teams/adult/social',
+    href: '/teams/social',
     eyebrow: 'Social',
+    buttonLabel: 'Open Page',
   },
   {
     title: 'Scór',
     description: 'Explore the dedicated Scór page for the cultural side of the club, including music, performance, storytelling, and quiz activity.',
     href: '/teams/scor',
     eyebrow: 'Scór',
+    buttonLabel: 'Open Page',
   },
 ];
-
-const gallerySlots = Array.from({ length: 6 }, (_, index) => index + 1);
 
 export function TeamsPage() {
   const [content, setContent] = useState<ApiTeamsPageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchTeamsPageContent().then(data => {
-      setContent(data);
-      setIsLoading(false);
-    });
+    fetchTeamsPageContent()
+      .then((data) => {
+        setContent(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Failed to load teams page content:', error);
+        setIsLoading(false);
+      });
   }, []);
+
+  const cards: ApiTeamsPageCard[] = (content?.cards ?? pageLinks.map((page, index) => ({
+    eyebrow: page.eyebrow,
+    title: page.title,
+    description: page.description,
+    button_label: page.buttonLabel,
+    button_url: page.href,
+    order: index,
+    is_active: true,
+  })))
+    .filter((card) => card.is_active)
+    .sort((left, right) => left.order - right.order);
+
+  const galleryImages = (content?.gallery_images ?? [])
+    .filter((image) => image.is_active && image.image_url)
+    .sort((left, right) => left.order - right.order);
 
   if (isLoading) {
     return (
@@ -66,7 +89,7 @@ export function TeamsPage() {
           />
 
           <div className="grid gap-6 md:grid-cols-2">
-            {pageLinks.map((page) => (
+            {cards.map((page) => (
               <article
                 key={page.title}
                 className="rounded-[2rem] border border-gray-100 bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl sm:p-10"
@@ -82,10 +105,10 @@ export function TeamsPage() {
                     {page.description}
                   </p>
                   <Link
-                    to={page.href}
+                    to={page.button_url}
                     className="inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-6 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-blue-800"
                   >
-                    Open Page
+                    {page.button_label}
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -94,6 +117,7 @@ export function TeamsPage() {
           </div>
         </section>
 
+        {galleryImages.length > 0 && (
         <section className="space-y-8">
           <TeamsSectionIntro
             eyebrow={content?.gallery_eyebrow || "Gallery"}
@@ -102,29 +126,28 @@ export function TeamsPage() {
           />
 
           <div className="space-y-6">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.28em] text-amber-600">
-                Media
-              </p>
-              <h3 className="mt-3 text-3xl font-black uppercase tracking-tight text-[#1E3A8A]">
-                Gallery
-              </h3>
-            </div>
-
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {gallerySlots.map((slot) => (
-                <div
-                  key={slot}
-                  className="flex aspect-[4/3] items-center justify-center rounded-[2rem] border-2 border-dashed border-gray-200 bg-gray-50 text-center"
+              {galleryImages.map((image) => (
+                <figure
+                  key={`${image.order}-${image.image_url}`}
+                  className="overflow-hidden rounded-[2rem] border border-gray-100 bg-white shadow-sm"
                 >
-                  <span className="text-sm font-black uppercase tracking-[0.18em] text-gray-400">
-                    Image Placeholder
-                  </span>
-                </div>
+                  <img
+                    src={image.image_url}
+                    alt={image.caption || 'Teams gallery image'}
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                  {image.caption && (
+                    <figcaption className="px-5 py-4 text-sm text-gray-600">
+                      {image.caption}
+                    </figcaption>
+                  )}
+                </figure>
               ))}
             </div>
           </div>
         </section>
+        )}
       </div>
     </TeamsPageShell>
   );
