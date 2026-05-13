@@ -15,11 +15,15 @@ class FixtureController extends Controller
         $query = Fixture::with(['homeTeam', 'awayTeam', 'result']);
 
         if ($request->has('upcoming')) {
-            $query->where('date_time', '>=', now());
+            $query->upcoming();
         }
 
         if ($request->has('past')) {
-            $query->where('date_time', '<', now());
+            $query->past();
+        }
+
+        if (!$request->has('upcoming') && !$request->has('past')) {
+            $query->orderBy('date_time', 'asc');
         }
 
         return response()->json(FixtureResource::collection($query->get())->resolve());

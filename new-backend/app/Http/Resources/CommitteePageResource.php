@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class CommitteePageResource extends JsonResource
 {
@@ -45,8 +46,16 @@ class CommitteePageResource extends JsonResource
             return $path;
         }
 
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
         $publicPath = Storage::disk('public')->url($path);
 
-        return rtrim(request()->getSchemeAndHttpHost(), '/') . '/' . ltrim($publicPath, '/');
+        if (str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')) {
+            return $publicPath;
+        }
+
+        return URL::to($publicPath);
     }
 }

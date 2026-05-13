@@ -38,6 +38,16 @@ class EventResource extends JsonResource
             return $path;
         }
 
-        return URL::to(Storage::url($path));
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
+        $publicPath = Storage::url($path);
+
+        if (str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')) {
+            return $publicPath;
+        }
+
+        return URL::to($publicPath);
     }
 }

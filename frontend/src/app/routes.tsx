@@ -30,6 +30,11 @@ const RootLayout = () => (
   <Outlet />
 );
 
+const routerBasename =
+  import.meta.env.BASE_URL === '/'
+    ? '/'
+    : import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -145,4 +150,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  basename: routerBasename,
+});

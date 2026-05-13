@@ -27,8 +27,16 @@ class ContentSectionImageResource extends JsonResource
             return $path;
         }
 
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
         $publicPath = Storage::disk('public')->url($path);
 
-        return rtrim(request()->getSchemeAndHttpHost(), '/') . '/' . ltrim($publicPath, '/');
+        if (str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')) {
+            return $publicPath;
+        }
+
+        return URL::to($publicPath);
     }
 }

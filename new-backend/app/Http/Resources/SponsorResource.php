@@ -32,8 +32,15 @@ class SponsorResource extends JsonResource
             return $path;
         }
 
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
         if (Storage::disk('public')->exists($path)) {
-            return URL::to(Storage::disk('public')->url($path));
+            $publicPath = Storage::disk('public')->url($path);
+            return str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')
+                ? $publicPath
+                : URL::to($publicPath);
         }
 
         // Backfill old records that were uploaded to the private/local disk.
@@ -41,9 +48,16 @@ class SponsorResource extends JsonResource
             $contents = Storage::disk('local')->get($path);
             Storage::disk('public')->put($path, $contents);
 
-            return URL::to(Storage::disk('public')->url($path));
+            $publicPath = Storage::disk('public')->url($path);
+            return str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')
+                ? $publicPath
+                : URL::to($publicPath);
         }
 
-        return URL::to(Storage::disk('public')->url($path));
+        $publicPath = Storage::disk('public')->url($path);
+
+        return str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')
+            ? $publicPath
+            : URL::to($publicPath);
     }
 }

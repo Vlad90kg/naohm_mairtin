@@ -27,12 +27,10 @@ class FixtureResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('home_team_id')
                             ->relationship('homeTeam', 'name', fn ($query) => $query->where('is_internal', true))
-                            ->required()
-                            ->searchable(),
+                            ->required(),
                         Forms\Components\Select::make('away_team_id')
                             ->relationship('awayTeam', 'name')
-                            ->required()
-                            ->searchable(),
+                            ->required(),
                         Forms\Components\DateTimePicker::make('date_time')
                             ->required(),
                         Forms\Components\TextInput::make('location'),

@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Throwable;
 use Illuminate\Support\Facades\Storage;
 
 class ChildSafetyPageContent extends Page implements HasForms
@@ -48,8 +49,8 @@ class ChildSafetyPageContent extends Page implements HasForms
                     TextInput::make('name')->required(),
                     TextInput::make('role')->required(),
                     TextInput::make('description')->required(),
-                    TextInput::make('email')->email()->required(),
-                    TextInput::make('phone')->required(),
+                    TextInput::make('email')->email(),
+                    TextInput::make('phone'),
                 ])->columns(2)->reorderable(false),
             ]),
             Section::make('Documents')->schema([
@@ -85,16 +86,31 @@ class ChildSafetyPageContent extends Page implements HasForms
     {
         return [
             Action::make('openFrontend')->label('Open Frontend Page')->url('/child-safety', shouldOpenInNewTab: true),
-            Action::make('save')->label('Save Child Safety Page Content')->submit('save'),
+            Action::make('save')->label('Save Child Safety Page Content')->action('save'),
         ];
     }
 
     public function save(): void
     {
-        $pages = $this->loadAllPages();
-        $pages['child-safety'] = $this->form->getState();
-        Storage::disk('local')->put(self::STORAGE_PATH, json_encode($pages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        Notification::make()->title('Child safety page content saved')->success()->send();
+        try {
+            $pages = $this->loadAllPages();
+            $pages['child-safety'] = $this->form->getState();
+
+            Storage::disk('local')->put(
+                self::STORAGE_PATH,
+                json_encode($pages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
+
+            Notification::make()->title('Child safety page content saved')->success()->send();
+        } catch (Throwable $exception) {
+            report($exception);
+
+            Notification::make()
+                ->title('Failed to save Child Safety page content')
+                ->body($exception->getMessage())
+                ->danger()
+                ->send();
+        }
     }
 
     private function loadPage(): array

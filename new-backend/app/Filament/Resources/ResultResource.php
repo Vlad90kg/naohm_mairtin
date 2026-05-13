@@ -8,6 +8,7 @@ use App\Models\Result;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -30,25 +31,42 @@ class ResultResource extends Resource
                         Forms\Components\Select::make('fixture_id')
                             ->relationship('fixture', 'id', function ($query) {
                                 return $query
-                                    ->whereHas('homeTeam', fn ($homeTeamQuery) => $homeTeamQuery->where('is_internal', true))
+                                    ->where('date_time', '<', now())
+                                    ->whereDoesntHave('result')
                                     ->orderBy('date_time', 'desc');
                             })
                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->date_time->format('Y-m-d')}: {$record->homeTeam->name} vs {$record->awayTeam->name}")
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->searchable(),
+                            ->preload()
+                            ->helperText('Only past fixtures without a result are listed.'),
                         Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('home_score')
                                     ->helperText('e.g. 1-12')
-                                    ->required(),
+                                    ->required(fn (Get $get): bool => $get('status') === ResultStatus::Final->value)
+                                    ->dehydrateStateUsing(function ($state, Get $get) {
+                                        if ($state !== null && $state !== '') {
+                                            return $state;
+                                        }
+
+                                        return $get('status') === ResultStatus::Final->value ? $state : 0;
+                                    }),
                                 Forms\Components\TextInput::make('away_score')
                                     ->helperText('e.g. 2-08')
-                                    ->required(),
+                                    ->required(fn (Get $get): bool => $get('status') === ResultStatus::Final->value)
+                                    ->dehydrateStateUsing(function ($state, Get $get) {
+                                        if ($state !== null && $state !== '') {
+                                            return $state;
+                                        }
+
+                                        return $get('status') === ResultStatus::Final->value ? $state : 0;
+                                    }),
                             ]),
                         Forms\Components\Select::make('status')
                             ->options(ResultStatus::class)
                             ->required()
+                            ->live()
                             ->native(false),
                     ]),
             ]);

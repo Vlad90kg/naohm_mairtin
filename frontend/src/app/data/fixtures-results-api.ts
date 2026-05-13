@@ -26,6 +26,9 @@ export interface ApiFixtureResultSummary {
 export interface ApiFixture {
   id: number;
   date: string;
+  time: string;
+  datetime?: string;
+  starts_at?: string;
   location: string;
   competition: string;
   home_team: ApiTeam;
@@ -37,6 +40,9 @@ export interface ApiResult {
   id: number;
   fixture_id: number;
   date: string;
+  time?: string;
+  datetime?: string;
+  starts_at?: string;
   location: string;
   competition: string;
   home_team: ApiTeam;
@@ -45,6 +51,15 @@ export interface ApiResult {
   away_score: string;
   status: string;
   status_display: string;
+  fixture?: {
+    id: number;
+    date: string;
+    time: string;
+    datetime?: string;
+    starts_at?: string;
+    location: string;
+    competition: string;
+  };
 }
 
 export interface ApiTeamsPageContent {
@@ -183,7 +198,7 @@ async function request<T>(path: string, params?: Record<string, string | undefin
   return response.json() as Promise<T>;
 }
 
-export async function fetchFixtures(params?: { team?: string; category?: string }) {
+export async function fetchFixtures(params?: { team?: string; category?: string; upcoming?: string; past?: string }) {
   const fixtures = await request<ApiFixture[]>('/fixtures/', params);
   return fixtures.map(normalizeFixture);
 }

@@ -15,6 +15,8 @@ class FixtureResource extends JsonResource
             'id' => $this->id,
             'date' => $this->date_time->toDateString(),
             'time' => $this->date_time->format('H:i'),
+            'datetime' => $this->date_time->toIso8601String(),
+            'starts_at' => $this->date_time->toIso8601String(),
             'location' => $this->location,
             'competition' => $this->competition,
             'home_team' => new TeamResource($this->whenLoaded('homeTeam')),

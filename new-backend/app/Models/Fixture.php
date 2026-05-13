@@ -24,11 +24,18 @@ class Fixture extends Model
         'date_time' => 'datetime',
     ];
 
-    protected static function booted()
+    public function scopeUpcoming(Builder $query): Builder
     {
-        static::addGlobalScope('order_by_date', function (Builder $builder) {
-            $builder->orderBy('date_time');
-        });
+        return $query
+            ->where('date_time', '>=', now())
+            ->orderBy('date_time', 'asc');
+    }
+
+    public function scopePast(Builder $query): Builder
+    {
+        return $query
+            ->where('date_time', '<', now())
+            ->orderBy('date_time', 'desc');
     }
 
     public function homeTeam(): BelongsTo

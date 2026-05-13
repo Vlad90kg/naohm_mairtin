@@ -23,6 +23,8 @@ export function ChildSafetyPage() {
   // Find contact emails by role
   const childrenOfficer = safeguardingContacts.find(c => c.role.toLowerCase().includes('children\'s officer'));
   const dlp = safeguardingContacts.find(c => c.role.toLowerCase().includes('dlp') || c.role.toLowerCase().includes('designated liaison person'));
+  const childrenOfficerEmail = childrenOfficer?.email?.trim() ?? '';
+  const dlpEmail = dlp?.email?.trim() ?? '';
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -260,22 +262,28 @@ export function ChildSafetyPage() {
           <div className="p-12 bg-white rounded-[3rem] border border-gray-100 shadow-sm max-w-4xl mx-auto">
              <h3 className="text-2xl font-black text-[#1E3A8A] uppercase tracking-tight mb-4">{childSafety.cta.title}</h3>
              <p className="text-gray-500 mb-8 max-w-xl mx-auto">{childSafety.cta.description}</p>
-             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
-                  href={`mailto:${childrenOfficer?.email || ''}`}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1E3A8A] text-white font-bold rounded-2xl hover:bg-blue-800 transition-colors uppercase tracking-widest text-xs"
-                >
-                  Contact Children's Officer
-                  <Mail className="w-4 h-4" />
-                </a>
-                <a 
-                  href={`mailto:${dlp?.email || ''}`}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-amber-400 text-[#1E3A8A] font-bold rounded-2xl hover:bg-amber-500 transition-colors uppercase tracking-widest text-xs"
-                >
-                  Contact Designated Liaison Person
-                  <Mail className="w-4 h-4" />
-                </a>
-             </div>
+             {(childrenOfficerEmail || dlpEmail) && (
+               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  {childrenOfficerEmail && (
+                    <a
+                      href={`mailto:${childrenOfficerEmail}`}
+                      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1E3A8A] text-white font-bold rounded-2xl hover:bg-blue-800 transition-colors uppercase tracking-widest text-xs"
+                    >
+                      Contact Children's Officer
+                      <Mail className="w-4 h-4" />
+                    </a>
+                  )}
+                  {dlpEmail && (
+                    <a
+                      href={`mailto:${dlpEmail}`}
+                      className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-amber-400 text-[#1E3A8A] font-bold rounded-2xl hover:bg-amber-500 transition-colors uppercase tracking-widest text-xs"
+                    >
+                      Contact Designated Liaison Person
+                      <Mail className="w-4 h-4" />
+                    </a>
+                  )}
+               </div>
+             )}
           </div>
         </section>
 

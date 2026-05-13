@@ -11,6 +11,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Throwable;
 use Illuminate\Support\Facades\Storage;
 
 class ContactPageContent extends Page implements HasForms
@@ -64,16 +65,31 @@ class ContactPageContent extends Page implements HasForms
     {
         return [
             Action::make('openFrontend')->label('Open Frontend Page')->url('/contact', shouldOpenInNewTab: true),
-            Action::make('save')->label('Save Contact Page Content')->submit('save'),
+            Action::make('save')->label('Save Contact Page Content')->action('save'),
         ];
     }
 
     public function save(): void
     {
-        $pages = $this->loadAllPages();
-        $pages['contact'] = $this->form->getState();
-        Storage::disk('local')->put(self::STORAGE_PATH, json_encode($pages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        Notification::make()->title('Contact page content saved')->success()->send();
+        try {
+            $pages = $this->loadAllPages();
+            $pages['contact'] = $this->form->getState();
+
+            Storage::disk('local')->put(
+                self::STORAGE_PATH,
+                json_encode($pages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
+
+            Notification::make()->title('Contact page content saved')->success()->send();
+        } catch (Throwable $exception) {
+            report($exception);
+
+            Notification::make()
+                ->title('Failed to save Contact page content')
+                ->body($exception->getMessage())
+                ->danger()
+                ->send();
+        }
     }
 
     private function loadPage(): array

@@ -6,25 +6,26 @@ import { Footer } from '../components/footer';
 import { Navigation } from '../components/navigation';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { cn } from '../components/ui/utils';
-import { fetchFixtures, fetchResults, fetchFixturesPageContent, type ApiFixture, type ApiResult, type ApiFixturesPageContent } from '../data/fixtures-results-api';
+import { fetchFixtures, fetchFixturesPageContent, type ApiFixture, type ApiFixturesPageContent } from '../data/fixtures-results-api';
+import { getFixtureDateTime, isPastFixture, isUpcomingFixture } from '../lib/fixture-datetime';
 
-function formatMatchDate(date: string, options?: Intl.DateTimeFormatOptions) {
-  return new Date(date).toLocaleDateString(
+function formatMatchDate(fixture: Pick<ApiFixture, 'date' | 'time' | 'datetime' | 'starts_at'>, options?: Intl.DateTimeFormatOptions) {
+  return getFixtureDateTime(fixture).toLocaleDateString(
     'en-IE',
     options ?? { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' },
   );
 }
 
-function formatMatchTime(date: string) {
-  return new Date(date).toLocaleTimeString('en-IE', {
+function formatMatchTime(fixture: Pick<ApiFixture, 'date' | 'time' | 'datetime' | 'starts_at'>) {
+  return getFixtureDateTime(fixture).toLocaleTimeString('en-IE', {
     hour: '2-digit',
     minute: '2-digit',
   });
 }
 
 export function FixturesResultsPage() {
-  const [fixtures, setFixtures] = useState<ApiFixture[]>([]);
-  const [results, setResults] = useState<ApiResult[]>([]);
+  const [upcomingFixtures, setUpcomingFixtures] = useState<ApiFixture[]>([]);
+  const [pastFixtures, setPastFixtures] = useState<ApiFixture[]>([]);
   const [content, setContent] = useState<ApiFixturesPageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedResults, setExpandedResults] = useState<Set<number>>(new Set());
@@ -46,14 +47,14 @@ export function FixturesResultsPage() {
 
     const loadData = async () => {
       try {
-        const [fixturesResponse, resultsResponse, contentResponse] = await Promise.all([
-          fetchFixtures(), 
-          fetchResults(),
-          fetchFixturesPageContent()
+        const [upcomingResponse, pastResponse, contentResponse] = await Promise.all([
+          fetchFixtures({ upcoming: '1' }),
+          fetchFixtures({ past: '1' }),
+          fetchFixturesPageContent(),
         ]);
         if (!ignore) {
-          setFixtures(fixturesResponse);
-          setResults(resultsResponse);
+          setUpcomingFixtures(upcomingResponse);
+          setPastFixtures(pastResponse);
           setContent(contentResponse);
         }
       } catch (error) {
@@ -73,18 +74,12 @@ export function FixturesResultsPage() {
   }, []);
 
   const now = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(now.getDate() - 30);
-
-  // Fixtures are matches in the future that don't have a result yet
-  const upcomingFixtures = fixtures
-    .filter((fixture) => new Date(fixture.date).getTime() >= now.getTime() && !fixture.result)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  // Recent results are matches with results from the last 30 days
-  const recentResults = results
-    .filter((result) => new Date(result.date).getTime() >= thirtyDaysAgo.getTime())
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const normalizedUpcomingFixtures = upcomingFixtures
+    .filter((fixture) => isUpcomingFixture(fixture, now))
+    .sort((a, b) => getFixtureDateTime(a).getTime() - getFixtureDateTime(b).getTime());
+  const recentPastFixtures = pastFixtures
+    .filter((fixture) => isPastFixture(fixture, now))
+    .sort((a, b) => getFixtureDateTime(b).getTime() - getFixtureDateTime(a).getTime());
 
   if (isLoading) {
     return (
@@ -130,8 +125,8 @@ export function FixturesResultsPage() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingFixtures.length > 0 ? (
-                upcomingFixtures.map((fixture, idx) => (
+              {normalizedUpcomingFixtures.length > 0 ? (
+                normalizedUpcomingFixtures.map((fixture, idx) => (
                   <motion.div
                     key={fixture.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -161,11 +156,11 @@ export function FixturesResultsPage() {
                       <div className="pt-4 border-t border-gray-50 space-y-3 text-[11px] font-bold text-gray-500">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-3 h-3" />
-                          {formatMatchDate(fixture.date)}
+                          {formatMatchDate(fixture)}
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="w-3 h-3" />
-                          {formatMatchTime(fixture.date)}
+                          {formatMatchTime(fixture)}
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="w-3 h-3" />
@@ -207,25 +202,26 @@ export function FixturesResultsPage() {
 
             <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
               <div className="divide-y divide-gray-50">
-                {recentResults.length > 0 ? (
-                  recentResults.map((result, idx) => {
-                    const isExpanded = expandedResults.has(result.id);
+                {recentPastFixtures.length > 0 ? (
+                  recentPastFixtures.map((fixture, idx) => {
+                    const isExpanded = expandedResults.has(fixture.id);
+                    const hasResult = Boolean(fixture.result);
                     return (
                       <motion.div
-                        key={result.id}
+                        key={fixture.id}
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.04 }}
-                        onClick={() => toggleExpand(result.id)}
+                        onClick={() => toggleExpand(fixture.id)}
                         className="p-6 md:p-8 hover:bg-gray-50/50 transition-colors cursor-pointer group/row"
                       >
                         <div className="grid md:grid-cols-12 gap-6 items-center">
                           <div className="md:col-span-3">
                             <div className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em] mb-1">
-                              {formatMatchDate(result.date, { day: 'numeric', month: 'short', year: 'numeric' })}
+                              {formatMatchDate(fixture, { day: 'numeric', month: 'short', year: 'numeric' })}
                             </div>
-                            <div className="text-xs font-bold text-gray-400 truncate">{result.competition}</div>
+                            <div className="text-xs font-bold text-gray-400 truncate">{fixture.competition}</div>
                           </div>
 
                           <div className="md:col-span-6">
@@ -235,15 +231,15 @@ export function FixturesResultsPage() {
                                   "text-lg font-black text-[#1E3A8A] uppercase block transition-all duration-300",
                                   isExpanded ? "whitespace-normal" : "truncate"
                                 )}>
-                                  {result.home_team.name}
+                                  {fixture.home_team.name}
                                 </span>
                               </div>
 
                               <div className="flex flex-col items-center shrink-0">
                                 <div className="text-xl font-black px-4 py-2 rounded-xl border-2 bg-blue-50 border-blue-100 text-[#1E3A8A] flex items-center gap-2 tabular-nums">
-                                  <span>{result.home_score}</span>
+                                  <span>{hasResult ? fixture.result?.home_score : '-'}</span>
                                   <span className="text-xs text-gray-300">-</span>
-                                  <span>{result.away_score}</span>
+                                  <span>{hasResult ? fixture.result?.away_score : '-'}</span>
                                 </div>
                               </div>
 
@@ -252,7 +248,7 @@ export function FixturesResultsPage() {
                                   "text-lg font-black text-gray-800 uppercase block transition-all duration-300",
                                   isExpanded ? "whitespace-normal" : "truncate"
                                 )}>
-                                  {result.away_team.name}
+                                  {fixture.away_team.name}
                                 </span>
                               </div>
                             </div>
@@ -262,10 +258,10 @@ export function FixturesResultsPage() {
                             <div
                               className={cn(
                                 'px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest',
-                                result.status === 'final' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500',
+                                hasResult && fixture.result?.status === 'final' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500',
                               )}
                             >
-                              {result.status_display}
+                              {hasResult ? fixture.result?.status_display : 'Awaiting Result'}
                             </div>
                           </div>
                         </div>

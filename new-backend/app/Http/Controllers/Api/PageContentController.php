@@ -555,14 +555,20 @@ class PageContentController extends Controller
             return null;
         }
 
-        if (str_starts_with($path, '/')) {
-            return URL::to($path);
-        }
-
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, 'blob:') || str_starts_with($path, 'data:')) {
             return $path;
         }
 
-        return URL::to(Storage::disk('public')->url($path));
+        if (str_starts_with($path, '/')) {
+            return URL::to($path);
+        }
+
+        $publicPath = Storage::disk('public')->url($path);
+
+        if (str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')) {
+            return $publicPath;
+        }
+
+        return URL::to($publicPath);
     }
 }
