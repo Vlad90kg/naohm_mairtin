@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../lib/api';
+
 export interface ApiTeam {
   id: number;
   slug: string;
@@ -109,10 +111,6 @@ export interface ApiHistoryPageContent {
   cta_button_text: string;
   cta_button_link: string;
 }
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 function normalizeTrainingTimes(value: unknown): string[] {
   if (!Array.isArray(value)) {

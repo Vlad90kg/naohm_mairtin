@@ -3,6 +3,7 @@ import { Clock, MapPin, ChevronRight, History } from 'lucide-react';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
+import { SafeHtml } from '../components/safe-html';
 import { useCMS } from '../data/cms-context';
 
 export function EventsPage() {
@@ -109,9 +110,10 @@ export function EventsPage() {
                   </div>
                 </div>
 
-                <p className="text-gray-500 text-sm mb-6 flex-grow">
-                  {event.description}
-                </p>
+                <SafeHtml
+                  html={event.description}
+                  className="mb-6 flex-grow text-sm leading-relaxed text-gray-500"
+                />
 
                 <div className="pt-4 border-t border-gray-50">
                   <span className="text-xs font-black text-[#1E3A8A] flex items-center gap-1 group-hover:gap-2 transition-all">

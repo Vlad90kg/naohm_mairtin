@@ -1,6 +1,4 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
+import { API_BASE_URL } from '../lib/api';
 
 export type ContentPageLayoutType = 'text_only' | 'image_text' | 'gallery';
 export type ContentPageImagePosition = 'left' | 'right' | 'none';

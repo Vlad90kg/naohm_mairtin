@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../lib/api';
+
 export interface EventDTO {
   id: string;
   title: string;
@@ -30,11 +32,6 @@ export interface EventsPageContentDTO {
   hero_title: string;
   hero_subtitle: string;
 }
-
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined)
-    ?.replace(/\/+$/, '')
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const normalizedPath = path.replace(/\/+$/, '') || '/';

@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { cn } from './ui/utils';
+import { SafeHtml } from './safe-html';
 import type { ContentPageSectionDTO } from '../data/content-pages-api';
 
 function ManagedImage({
@@ -110,9 +111,10 @@ function ContentSection({ section, index }: { section: ContentPageSectionDTO; in
           </h2>
         )}
         {section.body && (
-          <div className="max-w-full whitespace-pre-wrap break-words text-lg leading-relaxed text-gray-600">
-            {section.body}
-          </div>
+          <SafeHtml
+            html={section.body}
+            className="text-lg leading-relaxed"
+          />
         )}
         {isGallery && <GallerySection images={section.gallery_images} title={section.title} />}
       </motion.div>
@@ -148,4 +150,3 @@ export function FlexibleSections({ sections }: { sections: ContentPageSectionDTO
     </div>
   );
 }
-

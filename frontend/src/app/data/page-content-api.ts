@@ -1,7 +1,4 @@
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined)
-    ?.replace(/\/+$/, '')
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
+import { API_BASE_URL } from '../lib/api';
 const BACKEND_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 async function request<T>(path: string): Promise<T> {

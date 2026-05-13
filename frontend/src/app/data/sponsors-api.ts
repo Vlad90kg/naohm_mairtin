@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../lib/api';
+
 export type SponsorTierLevel = 1 | 2 | 3;
 export type ApiSponsorTier = 'gold' | 'silver' | 'bronze';
 
@@ -20,9 +22,6 @@ export interface SponsorDTO {
   isActive: boolean;
 }
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 const BACKEND_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 function normalizeStorageUrl(value?: string): string {

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Footer } from './footer';
 import { Navigation } from './navigation';
 import { PremiumSponsorBanner } from './premium-sponsor-banner';
+import { SafeHtml } from './safe-html';
 import { cn } from './ui/utils';
 import type { ContentPageDTO, ContentPageLayoutType, ContentPageSectionDTO } from '../data/content-pages-api';
 
@@ -146,9 +147,10 @@ function ContentSection({ section, index }: { section: ContentPageSectionDTO; in
           </h2>
         )}
         {section.body && (
-          <div className="max-w-full whitespace-pre-wrap break-words text-lg leading-relaxed text-gray-600">
-            {section.body}
-          </div>
+          <SafeHtml
+            html={section.body}
+            className="text-lg leading-relaxed"
+          />
         )}
         {isGallery && <GallerySection images={section.gallery_images} title={section.title} />}
       </motion.div>

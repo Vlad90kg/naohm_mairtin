@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../lib/api';
+
 export interface ApiShopItem {
   id: string;
   name: string;
@@ -21,11 +23,6 @@ export interface ApiShopPageContent {
   info_button_link: string;
   shops: ApiShopItem[];
 }
-
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined)
-    ?.replace(/\/+$/, '')
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 async function request<T>(path: string): Promise<T> {
   const normalizedPath = path.replace(/\/+$/, '') || '/';

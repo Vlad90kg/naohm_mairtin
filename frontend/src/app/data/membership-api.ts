@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../lib/api';
+
 export interface ApiMembershipPageContent {
   description: string;
   app_store_link: string;
@@ -6,9 +8,6 @@ export interface ApiMembershipPageContent {
   secretary_email: string;
 }
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 const BACKEND_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 async function request<T>(path: string): Promise<T> {

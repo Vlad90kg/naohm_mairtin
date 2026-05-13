@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
+import { API_BASE_URL } from '../lib/api';
 import audreyGannonPhoto from '../../assets/Committee Photos/Audrey Gannon.jpeg';
 import avatarPlaceholder from '../../assets/Committee Photos/avatar_placeholder.jpg';
 import deirdreRyanPhoto from '../../assets/Committee Photos/Deirdre Ryan.jpeg';
@@ -130,10 +131,7 @@ export function CommitteesPage() {
   const [content, setContent] = useState<CommitteesPageContent>(DEFAULT_PAGE_CONTENT);
 
   useEffect(() => {
-    const apiBase = import.meta.env.VITE_API_BASE_URL
-      ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
-
-    fetch(`${apiBase}/pages/committees`)
+    fetch(`${API_BASE_URL}/pages/committees`)
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`Failed with status ${response.status}`);

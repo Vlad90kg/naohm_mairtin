@@ -5,6 +5,7 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { Navigation } from '../components/navigation';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { useCMS } from '../data/cms-context';
+import { API_BASE_URL } from '../lib/api';
 
 type SponsorsPageContent = {
   hero_eyebrow: string;
@@ -31,9 +32,6 @@ const defaultPageContent: SponsorsPageContent = {
   cta_button_text: 'Get In Touch',
   cta_button_link: '/contact',
 };
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-  ?? (import.meta.env.DEV ? 'http://127.0.0.1:8000/api' : '/api');
 
 function BronzeSponsorCard({
   name,
