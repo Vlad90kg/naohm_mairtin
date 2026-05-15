@@ -62,7 +62,7 @@ export function EventsManagementPage() {
             />
           </div>
           <button 
-            onClick={() => setIsAdding({ title: '', date: '', location: '', description: '', image: '' })}
+            onClick={() => setIsAdding({ title: '', date: '', time: '', end_time: '', location: '', description: '', image: '' })}
             className="px-6 py-3.5 bg-[#1E3A8A] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-800 transition-all flex items-center gap-2 shadow-xl shadow-blue-900/20"
           >
             <Plus size={16} /> Add Event
@@ -196,6 +196,33 @@ export function EventsManagementPage() {
                     }}
                     className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 focus:ring-2 focus:ring-[#1E3A8A]/20 outline-none"
                     required
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Start Time</label>
+                  <input
+                    type="time"
+                    value={isEditing?.time || isAdding?.time || ''}
+                    onChange={(e) => {
+                      if (isEditing) setIsEditing({ ...isEditing, time: e.target.value });
+                      if (isAdding) setIsAdding({ ...isAdding, time: e.target.value });
+                    }}
+                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 focus:ring-2 focus:ring-[#1E3A8A]/20 outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">End Time</label>
+                  <input
+                    type="time"
+                    value={isEditing?.end_time || isAdding?.end_time || ''}
+                    onChange={(e) => {
+                      if (isEditing) setIsEditing({ ...isEditing, end_time: e.target.value });
+                      if (isAdding) setIsAdding({ ...isAdding, end_time: e.target.value });
+                    }}
+                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl font-bold text-gray-800 focus:ring-2 focus:ring-[#1E3A8A]/20 outline-none"
                   />
                 </div>
               </div>

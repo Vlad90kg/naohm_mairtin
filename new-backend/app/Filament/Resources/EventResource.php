@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Schema as SchemaFacade;
 
 class EventResource extends Resource
 {
@@ -22,6 +23,8 @@ class EventResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
+        $hasEndTime = SchemaFacade::hasColumn('events', 'end_time');
+
         return $schema
             ->components([
                 Section::make()
@@ -33,12 +36,16 @@ class EventResource extends Resource
                                 Forms\Components\DatePicker::make('date')
                                     ->required(),
                                 Forms\Components\TimePicker::make('time'),
+                                Forms\Components\TimePicker::make('end_time')
+                                    ->visible($hasEndTime)
+                                    ->label('End time'),
                             ]),
                         Forms\Components\TextInput::make('location'),
                         Forms\Components\RichEditor::make('description')
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('image')
                             ->image()
+                            ->disk('public')
                             ->directory('events'),
                         Forms\Components\Toggle::make('is_featured')
                             ->label('Featured announcement')
@@ -50,6 +57,8 @@ class EventResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $hasEndTime = SchemaFacade::hasColumn('events', 'end_time');
+
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
@@ -59,6 +68,13 @@ class EventResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('time')
+                    ->label('Start')
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('end_time')
+                    ->visible($hasEndTime)
+                    ->label('End')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('location'),
                 Tables\Columns\IconColumn::make('is_featured')
                     ->label('Featured')
@@ -70,6 +86,12 @@ class EventResource extends Resource
             ])
             ->actions([
                 Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

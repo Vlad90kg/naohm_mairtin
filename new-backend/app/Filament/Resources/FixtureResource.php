@@ -6,11 +6,13 @@ use App\Filament\Resources\FixtureResource\Pages;
 use App\Models\Fixture;
 use Filament\Actions;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class FixtureResource extends Resource
 {
@@ -61,6 +63,46 @@ class FixtureResource extends Resource
             ])
             ->actions([
                 Actions\EditAction::make(),
+                Actions\DeleteAction::make()
+                    ->before(function (Fixture $record, Actions\DeleteAction $action): void {
+                        if ($record->result()->exists()) {
+                            Notification::make()
+                                ->title('Fixture cannot be deleted')
+                                ->body('This fixture already has a result. Delete the result first.')
+                                ->danger()
+                                ->send();
+
+                            $action->cancel();
+                        }
+                    }),
+            ])
+            ->bulkActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
+                        ->before(function (Collection $records, Actions\DeleteBulkAction $action): void {
+                            $blocked = $records
+                                ->filter(fn (Fixture $fixture): bool => $fixture->result()->exists())
+                                ->map(fn (Fixture $fixture): string => sprintf(
+                                    '%s (%s vs %s)',
+                                    $fixture->date_time?->format('Y-m-d H:i') ?? 'Unknown date',
+                                    $fixture->homeTeam?->name ?? 'Unknown',
+                                    $fixture->awayTeam?->name ?? 'Unknown',
+                                ))
+                                ->values();
+
+                            if ($blocked->isEmpty()) {
+                                return;
+                            }
+
+                            Notification::make()
+                                ->title('Some fixtures cannot be deleted')
+                                ->body('Linked result exists for: ' . $blocked->join(', '))
+                                ->danger()
+                                ->send();
+
+                            $action->cancel();
+                        }),
+                ]),
             ]);
     }
 

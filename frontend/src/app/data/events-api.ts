@@ -6,6 +6,7 @@ export interface EventDTO {
   slug: string;
   date: string;
   time: string | null;
+  end_time: string | null;
   location: string | null;
   description: string | null;
   image: string | null;
@@ -22,6 +23,7 @@ export interface EventMutationDTO {
   title: string;
   date: string;
   time: string;
+  end_time?: string | null;
   location: string;
   description: string;
   image: string;
@@ -65,6 +67,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export async function listEvents(): Promise<EventDTO[]> {
   return request<EventDTO[]>('/events/');
+}
+
+export async function getEventBySlug(slug: string): Promise<EventDTO> {
+  return request<EventDTO>(`/events/slug/${slug}/`);
 }
 
 export async function getHomepageEvents(): Promise<HomepageEventsDTO> {

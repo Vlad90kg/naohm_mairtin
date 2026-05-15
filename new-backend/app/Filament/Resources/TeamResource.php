@@ -7,6 +7,7 @@ use App\Filament\Resources\TeamResource\Pages;
 use App\Models\Team;
 use Filament\Actions;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -15,6 +16,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class TeamResource extends Resource
@@ -113,6 +115,41 @@ class TeamResource extends Resource
             ])
             ->actions([
                 Actions\EditAction::make(),
+                Actions\DeleteAction::make()
+                    ->before(function (Team $record, Actions\DeleteAction $action): void {
+                        if (self::isTeamReferencedByFixtures($record)) {
+                            Notification::make()
+                                ->title('Team cannot be deleted')
+                                ->body('This team is referenced by fixtures. Remove or reassign those fixtures first.')
+                                ->danger()
+                                ->send();
+
+                            $action->cancel();
+                        }
+                    }),
+            ])
+            ->bulkActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()
+                        ->before(function (Collection $records, Actions\DeleteBulkAction $action): void {
+                            $blockedNames = $records
+                                ->filter(fn (Team $team): bool => self::isTeamReferencedByFixtures($team))
+                                ->pluck('name')
+                                ->values();
+
+                            if ($blockedNames->isEmpty()) {
+                                return;
+                            }
+
+                            Notification::make()
+                                ->title('Some teams cannot be deleted')
+                                ->body('Referenced by fixtures: ' . $blockedNames->join(', '))
+                                ->danger()
+                                ->send();
+
+                            $action->cancel();
+                        }),
+                ]),
             ]);
     }
 
@@ -123,5 +160,10 @@ class TeamResource extends Resource
             'create' => Pages\CreateTeam::route('/create'),
             'edit' => Pages\EditTeam::route('/{record}/edit'),
         ];
+    }
+
+    private static function isTeamReferencedByFixtures(Team $team): bool
+    {
+        return $team->homeFixtures()->exists() || $team->awayFixtures()->exists();
     }
 }

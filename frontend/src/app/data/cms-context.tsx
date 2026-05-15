@@ -27,6 +27,7 @@ export interface Event {
   description: string;
   image: string;
   time?: string;
+  end_time?: string | null;
   is_featured?: boolean;
 }
 
@@ -234,6 +235,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     image: string;
     image_url?: string;
     time?: string;
+    end_time?: string | null;
     is_featured?: boolean;
   }): Event => ({
     id: event.id,
@@ -244,6 +246,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     description: event.description ?? '',
     image: event.image_url ?? event.image ?? '',
     time: event.time,
+    end_time: event.end_time ?? null,
     is_featured: event.is_featured,
   });
 

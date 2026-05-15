@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\TeamCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Team extends Model
@@ -17,6 +16,7 @@ class Team extends Model
         'slug',
         'category',
         'senior_group',
+        'sort_order',
         'image',
         'description',
         'managers',
@@ -30,14 +30,8 @@ class Team extends Model
         'managers' => 'json',
         'training_times' => 'json',
         'is_internal' => 'boolean',
+        'sort_order' => 'integer',
     ];
-
-    protected static function booted()
-    {
-        static::addGlobalScope('order_by_category_and_name', function (Builder $builder) {
-            $builder->orderBy('category')->orderBy('name');
-        });
-    }
 
     public function homeFixtures(): HasMany
     {

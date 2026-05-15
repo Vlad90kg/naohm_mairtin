@@ -410,7 +410,7 @@ class TeamsPageContent extends Page implements HasForms
                     'title' => 'Scór',
                     'description' => 'Explore the dedicated Scór page for the cultural side of the club, including music, performance, storytelling, and quiz activity.',
                     'button_label' => 'Open Page',
-                    'button_url' => '/teams/scor',
+                    'button_url' => '/scor',
                     'order' => 4,
                     'is_active' => true,
                 ],

@@ -20,6 +20,7 @@ class EventResource extends JsonResource
             'slug' => Str::slug($this->title),
             'date' => $this->date->format('Y-m-d'),
             'time' => $this->time,
+            'end_time' => $this->end_time,
             'location' => $this->location,
             'description' => $this->description,
             'image' => $imageUrl,
@@ -42,7 +43,7 @@ class EventResource extends JsonResource
             return URL::to($path);
         }
 
-        $publicPath = Storage::url($path);
+        $publicPath = Storage::disk('public')->url($path);
 
         if (str_starts_with($publicPath, 'http://') || str_starts_with($publicPath, 'https://')) {
             return $publicPath;

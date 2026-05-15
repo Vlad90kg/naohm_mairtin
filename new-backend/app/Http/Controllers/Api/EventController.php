@@ -7,6 +7,8 @@ use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
@@ -50,6 +52,17 @@ class EventController extends Controller
         ]);
     }
 
+    public function showBySlug(string $slug): JsonResponse
+    {
+        $event = Event::query()
+            ->get()
+            ->first(fn (Event $candidate): bool => Str::slug($candidate->title) === $slug);
+
+        abort_if(! $event, 404);
+
+        return response()->json((new EventResource($event))->resolve());
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $this->validateData($request);
@@ -75,14 +88,21 @@ class EventController extends Controller
 
     private function validateData(Request $request, ?int $ignoreId = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'date' => ['required', 'date'],
-            'time' => ['nullable', 'date_format:H:i'],
+            'time' => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
+            'end_time' => ['nullable', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
             'location' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'string', 'max:2048'],
             'is_featured' => ['sometimes', 'boolean'],
         ]);
+
+        if (! Schema::hasColumn('events', 'end_time')) {
+            unset($data['end_time']);
+        }
+
+        return $data;
     }
 }

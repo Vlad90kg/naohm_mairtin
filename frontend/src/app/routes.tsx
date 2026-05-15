@@ -25,6 +25,7 @@ import { G4MOPage } from './pages/g4mo-page';
 import { G4DLPage } from './pages/g4dl-page';
 import { FuriousButNotFastPage } from './pages/furious-but-not-fast-page';
 import { ScorPage } from './pages/scor-page';
+import { EventDetailPage } from './pages/event-detail-page';
 
 const RootLayout = () => (
   <Outlet />
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: 'teams/social',
         Component: SocialPage,
+      },
+      {
+        path: 'scor',
+        Component: ScorPage,
       },
       {
         path: 'teams/scor',
@@ -111,6 +116,10 @@ export const router = createBrowserRouter([
       {
         path: 'events',
         Component: EventsPage,
+      },
+      {
+        path: 'events/:slug',
+        Component: EventDetailPage,
       },
       {
         path: 'child-safety',

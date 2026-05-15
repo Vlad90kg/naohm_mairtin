@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Clock, MapPin, ChevronRight, History } from 'lucide-react';
+import { Link } from 'react-router';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
@@ -46,6 +47,19 @@ export function EventsPage() {
     }
   };
 
+  const formatTime = (time?: string | null) => {
+    if (!time) return '';
+    const normalized = /^\d{2}:\d{2}:\d{2}$/.test(time) ? time.slice(0, 5) : time;
+    const [hourString, minuteString] = normalized.split(':');
+    const hour = Number(hourString);
+    const minute = Number(minuteString);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) return time;
+    return new Intl.DateTimeFormat('en-IE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(2000, 0, 1, hour, minute));
+  };
+
   const now = new Date();
   // Set time to start of day for comparison
   now.setHours(0, 0, 0, 0);
@@ -86,6 +100,16 @@ export function EventsPage() {
                 transition={{ delay: idx * 0.05 }}
                 className="bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-[#1E3A8A] transition-colors group flex flex-col"
               >
+                {event.image && (
+                  <div className="mb-4 overflow-hidden rounded-xl bg-gray-100">
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                )}
+
                 <div className="flex justify-between items-start mb-4">
                   <div className="text-right">
                     <p className="text-xs font-bold text-gray-400 uppercase">{getDayName(event.date)}</p>
@@ -101,7 +125,8 @@ export function EventsPage() {
                   {event.time && (
                     <div className="flex items-center gap-2 text-gray-500 text-xs font-bold">
                       <Clock size={14} className="text-amber-500" />
-                      {event.time}
+                      {formatTime(event.time)}
+                      {event.end_time ? ` - ${formatTime(event.end_time)}` : ''}
                     </div>
                   )}
                   <div className="flex items-center gap-2 text-gray-500 text-xs font-bold">
@@ -116,9 +141,12 @@ export function EventsPage() {
                 />
 
                 <div className="pt-4 border-t border-gray-50">
-                  <span className="text-xs font-black text-[#1E3A8A] flex items-center gap-1 group-hover:gap-2 transition-all">
+                  <Link
+                    to={`/events/${event.slug ?? event.id}`}
+                    className="text-xs font-black text-[#1E3A8A] flex items-center gap-1 group-hover:gap-2 transition-all"
+                  >
                     MORE INFO <ChevronRight size={14} />
-                  </span>
+                  </Link>
                 </div>
               </motion.div>
             ))}

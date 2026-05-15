@@ -57,7 +57,7 @@ export function Navigation() {
                 </div>
                 <Link to="/teams/juvenile" className="block px-3.5 py-1 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Juvenile Teams</Link>
                 <Link to="/teams/adult/social" className="block px-3.5 py-1 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Social</Link>
-                <Link to="/teams/scor" className="block px-3.5 py-1 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Scór</Link>
+                <Link to="/scor" className="block px-3.5 py-1 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Scór</Link>
               </div>
             </div>
             <Link to="/fixtures-results" className="px-3 py-1 text-sm font-medium text-gray-700 hover:text-[#1E3A8A]">
@@ -143,7 +143,7 @@ export function Navigation() {
                 <Link to="/teams/adult/social" onClick={() => setIsOpen(false)} className="block px-2.5 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-[3px]">
                   Social
                 </Link>
-                <Link to="/teams/scor" onClick={() => setIsOpen(false)} className="block px-2.5 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-[3px]">
+                <Link to="/scor" onClick={() => setIsOpen(false)} className="block px-2.5 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-[3px]">
                   Scór
                 </Link>
               </div>

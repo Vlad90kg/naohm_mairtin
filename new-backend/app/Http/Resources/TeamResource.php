@@ -18,6 +18,7 @@ class TeamResource extends JsonResource
             'category' => $this->category?->value ?? $this->category,
             'category_display' => $this->category?->getLabel() ?? $this->category,
             'senior_group' => $this->senior_group,
+            'sort_order' => $this->sort_order,
             'image' => $this->resolveAssetUrl($this->image),
             'description' => $this->description,
             'managers' => collect($this->managers ?? [])->map(function ($manager) {

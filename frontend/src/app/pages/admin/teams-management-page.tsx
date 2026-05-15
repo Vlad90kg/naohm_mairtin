@@ -58,7 +58,7 @@ export function TeamsManagementPage() {
   );
 
   const juvenileTeams = useMemo(
-    () => teams.filter(t => t.category === 'juvenile').sort((a, b) => a.name.localeCompare(b.name)),
+    () => teams.filter(t => t.category === 'juvenile'),
     [teams]
   );
 

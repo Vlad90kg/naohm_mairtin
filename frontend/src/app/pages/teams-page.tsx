@@ -29,7 +29,7 @@ const pageLinks = [
   {
     title: 'Scór',
     description: 'Explore the dedicated Scór page for the cultural side of the club, including music, performance, storytelling, and quiz activity.',
-    href: '/teams/scor',
+    href: '/scor',
     eyebrow: 'Scór',
     buttonLabel: 'Open Page',
   },

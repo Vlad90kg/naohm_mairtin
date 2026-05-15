@@ -6,6 +6,7 @@ export interface ApiTeam {
   name: string;
   category: 'adult' | 'juvenile';
   senior_group?: 'senior_men' | 'senior_ladies' | 'social' | null;
+  sort_order?: number | null;
   category_display: string;
   image: string;
   description?: string | null;
