@@ -31,7 +31,7 @@ export function ContactPage() {
       facebookUrl: 'https://www.facebook.com/NaomhMairtincpg/',
       instagramUrl: 'https://www.instagram.com/naomhmairtin/',
     },
-    mapQuery: 'Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth',
+    mapQuery: 'Naomh Mairtin CPG & LGFA, Sillogue Lane, Newtown Monasterboice, Co. Louth',
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function ContactPage() {
       });
   }, []);
 
-  const fallbackMapQuery = 'Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth';
+  const fallbackMapQuery = 'Naomh Mairtin CPG & LGFA, Sillogue Lane, Newtown Monasterboice, Co. Louth';
   const rawMapValue = content.mapQuery?.trim();
   const mapEmbedSrc =
     rawMapValue && /^https?:\/\//i.test(rawMapValue)
@@ -221,7 +221,7 @@ export function ContactPage() {
             >
               <div className="aspect-[21/9] rounded-xl overflow-hidden bg-gray-100">
                 <iframe
-                  title="Naomh Mairtin CPG Map"
+                  title="Naomh Mairtin CPG & LGFA Map"
                   src={mapEmbedSrc}
                   className="h-full w-full border-0"
                   loading="lazy"

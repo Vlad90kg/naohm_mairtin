@@ -6,7 +6,7 @@ import { fetchJuvenileTeamsPageContent, type ApiJuvenileTeamsPageContent } from 
 
 const DEFAULT_PAGE_CONTENT: ApiJuvenileTeamsPageContent = {
   hero_title: 'Juvenile Teams',
-  hero_subtitle: 'Browse every juvenile team at Naomh Mairtin CPG',
+  hero_subtitle: 'Browse every juvenile team at Naomh Mairtin CPG & LGFA',
   intro_eyebrow: 'Juvenile Pathway',
   intro_title: 'Juvenile Teams',
   intro_description: 'Browse the full juvenile setup below and open any card to view the team details.',

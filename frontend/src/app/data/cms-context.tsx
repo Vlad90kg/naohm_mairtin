@@ -490,7 +490,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       steps: [
         { title: 'Report', description: 'Inform the Children\'s Officer of any concerns immediately.' },
         { title: 'Record', description: 'Document all details of the incident as soon as possible.' },
-        { title: 'Review', description: 'The concern will be reviewed by the club executive.' },
+        { title: 'Review', description: 'The concern will be reviewed by the club safeguarding committee' },
         { title: 'Refer', description: 'If necessary, the matter will be referred to statutory authorities.' }
       ],
       helplines: [
@@ -498,8 +498,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         { name: 'Gardaí', phone: '999/112' }
       ],
       cta: {
-        title: 'Need to Speak Privately?',
-        description: 'Our Children\'s Officer is available for confidential discussions.',
+        title: 'Our Children\'s Officer and DLP are available for confidential discussions',
+        description: 'Contact either safeguarding officer for a confidential discussion.',
         buttonText: 'Contact Mary',
         buttonLink: 'mailto:childrensofficer.naomhmairtin.louth@gaa.ie',
       }

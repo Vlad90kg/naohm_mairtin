@@ -5,7 +5,7 @@ export function MembershipCTA() {
     <section className="bg-gray-100 py-12 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-[#1E3A8A] mb-4">
-          Become a member of Naomh Mairtin CPG
+          Become a member of Naomh Mairtin CPG & LGFA
         </h2>
         <p className="text-gray-600 mb-8 text-lg">
           Join our club and be part of the Naomh Mairtin family

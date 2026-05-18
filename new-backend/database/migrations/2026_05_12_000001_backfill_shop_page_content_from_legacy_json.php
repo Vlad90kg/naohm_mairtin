@@ -100,7 +100,7 @@ return new class extends Migration
             ->all();
 
         return ($content['hero_title'] ?? null) === 'Club Shop'
-            && ($content['hero_description'] ?? null) === 'Support Naomh Mairtin CPG by purchasing official gear and merchandise through our approved retail partners.'
+            && ($content['hero_description'] ?? null) === 'Support Naomh Mairtin CPG & LGFA by purchasing official gear and merchandise through our approved retail partners.'
             && count($existingItems) === 2
             && ($existingItems[0]['name'] ?? null) === 'Club Shop Partner'
             && ($existingItems[1]['name'] ?? null) === 'Future Supplier'

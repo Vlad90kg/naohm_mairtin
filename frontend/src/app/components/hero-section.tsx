@@ -13,7 +13,7 @@ export function HeroSection() {
         {/* Club Badge */}
         <div className="mb-6 flex justify-center">
           <div className="w-32 h-32 sm:w-40 sm:h-40">
-            <img src={clubLogo} alt="Naomh Mairtin CPG Logo" className="w-full h-full object-contain drop-shadow-2xl" />
+            <img src={clubLogo} alt="Naomh Mairtin CPG & LGFA Logo" className="w-full h-full object-contain drop-shadow-2xl" />
           </div>
         </div>
 

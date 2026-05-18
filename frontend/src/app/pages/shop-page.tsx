@@ -23,6 +23,7 @@ const DEFAULT_SHOP_PAGE: ApiShopPageContent = {
 export function ShopPage() {
   const [pageContent, setPageContent] = useState<ApiShopPageContent>(DEFAULT_SHOP_PAGE);
   const hasValidShopUrl = (url?: string | null): boolean => Boolean(url && /^https?:\/\//i.test(url));
+  const infoButtonLink = hasValidShopUrl(pageContent.info_button_link) ? pageContent.info_button_link : null;
 
   useEffect(() => {
     fetchShopPageContent()
@@ -142,15 +143,22 @@ export function ShopPage() {
           <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-6 h-6 text-[#1E3A8A]" />
           </div>
-          <h3 className="text-xl font-black text-[#1E3A8A] uppercase tracking-tight mb-3">{pageContent.info_title}</h3>
-          <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xl mx-auto">{pageContent.info_description}</p>
-          <a
-            href={pageContent.info_button_link}
-            className="inline-flex items-center gap-2 px-8 py-3 bg-amber-400 text-[#1E3A8A] rounded-xl font-black text-sm uppercase tracking-wider hover:bg-amber-300 transition-colors"
-          >
-            {pageContent.info_button_text}
-            <ArrowRight size={16} />
-          </a>
+          <h3 className="text-xl font-black text-[#1E3A8A] uppercase tracking-tight mb-3">Contact Supplier Directly</h3>
+          <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xl mx-auto">
+            For order, payment, delivery, sizing or product issues, contact the supplier you purchased from directly.
+            The club cannot resolve supplier order queries.
+          </p>
+          {infoButtonLink && (
+            <a
+              href={infoButtonLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-amber-400 text-[#1E3A8A] rounded-xl font-black text-sm uppercase tracking-wider hover:bg-amber-300 transition-colors"
+            >
+              {pageContent.info_button_text || 'Visit Supplier'}
+              <ArrowRight size={16} />
+            </a>
+          )}
         </div>
       </main>
 

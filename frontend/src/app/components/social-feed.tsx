@@ -49,9 +49,6 @@ export function SocialFeed() {
                 </div>
                 <div>
                   <p className="text-base font-black tracking-tight text-[#1E3A8A]">Latest Instagram Post</p>
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-gray-400">
-                    Managed from Home page CMS
-                  </p>
                 </div>
               </div>
               <a

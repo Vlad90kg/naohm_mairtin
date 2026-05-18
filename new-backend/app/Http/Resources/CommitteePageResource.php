@@ -13,7 +13,7 @@ class CommitteePageResource extends JsonResource
     {
         return [
             'title' => 'Club Committees',
-            'subtitle' => 'Meet the people behind Naomh Mairtin CPG',
+            'subtitle' => 'Meet the people behind Naomh Mairtin CPG & LGFA',
             'sections' => $this->resource->map(function ($section) {
                 return [
                     'title' => $section->title,

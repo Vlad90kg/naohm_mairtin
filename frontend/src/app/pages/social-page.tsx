@@ -32,7 +32,7 @@ export function SocialPage() {
   return (
     <TeamsPageShell
       title="Social"
-      subtitle="Explore the social side of the adult pathway at Naomh Mairtin CPG"
+      subtitle="Explore the social side of the adult pathway at Naomh Mairtin CPG & LGFA"
     >
       <div className="space-y-10">
         <TeamsSectionIntro

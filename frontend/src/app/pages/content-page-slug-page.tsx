@@ -9,10 +9,14 @@ export function ContentPageSlugPage({
   slug,
   fallbackContent,
   fallback,
+  titleOverride,
+  subtitleOverride,
 }: {
   slug: string;
   fallbackContent?: ArticlePageContent;
   fallback?: ReactNode;
+  titleOverride?: string;
+  subtitleOverride?: string;
 }) {
   const [content, setContent] = useState<ContentPageDTO | null>(null);
   const [didFail, setDidFail] = useState(false);
@@ -42,5 +46,13 @@ export function ContentPageSlugPage({
     return null;
   }
 
-  return <ContentPage content={content} />;
+  return (
+    <ContentPage
+      content={{
+        ...content,
+        title: titleOverride ?? content.title,
+        subtitle: subtitleOverride ?? content.subtitle,
+      }}
+    />
+  );
 }

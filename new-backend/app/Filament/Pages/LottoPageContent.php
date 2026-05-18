@@ -191,7 +191,7 @@ class LottoPageContent extends Page implements HasForms
             'hero_eyebrow' => 'Weekly Club Lotto',
             'hero_title' => 'Club',
             'hero_highlight' => 'Lotto',
-            'hero_description' => 'Play the Naomh Mairtin CPG weekly lotto and support your club.',
+            'hero_description' => 'Play the Naomh Mairtin CPG & LGFA weekly lotto and support your club.',
             'jackpot_label' => 'Current Jackpot',
             'jackpot_amount' => 'EUR8,500',
             'next_draw_label' => 'Draw',
@@ -210,7 +210,7 @@ class LottoPageContent extends Page implements HasForms
             'winners' => [],
             'how_it_works_title' => 'How the Lotto Works',
             'bottom_cta_title' => 'Support Your Club - Play the Lotto',
-            'bottom_cta_description' => 'Every ticket purchased goes directly back into Naomh Mairtin CPG.',
+            'bottom_cta_description' => 'Every ticket purchased goes directly back into Naomh Mairtin CPG & LGFA.',
         ];
     }
 }

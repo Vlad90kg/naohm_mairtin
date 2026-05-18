@@ -5,9 +5,10 @@ import { PremiumSponsorBanner } from '../components/premium-sponsor-banner';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { fetchMembershipPageContent, type ApiMembershipPageContent } from '../data/membership-api';
+import appScreenshot from '../../assets/membership/naomh-mairtin-app-screenshot.png';
 
 const DEFAULT_MEMBERSHIP_PAGE: ApiMembershipPageContent = {
-  description: 'We have moved our membership and club communications to the ClubSpot app.',
+  description: 'Manage membership and club communications through the Naomh Mairtin App.',
   app_store_link: 'https://apps.apple.com/ie/app/naomh-mairtin-gaa/id6752895231',
   google_play_link: 'https://play.google.com/store/apps/details?id=app.clubspot.naomh.mairtin.gfc',
   poster: '',
@@ -18,6 +19,9 @@ export function MembershipPage() {
   const [membership, setMembership] = useState<ApiMembershipPageContent>(DEFAULT_MEMBERSHIP_PAGE);
   const [posterLoadFailed, setPosterLoadFailed] = useState(false);
   const posterSrc = membership.poster?.trim() || '';
+  const membershipDescription = (membership.description || DEFAULT_MEMBERSHIP_PAGE.description)
+    .replace(/ClubSpot app/gi, 'Naomh Mairtin App')
+    .replace(/ClubSpot/gi, 'Naomh Mairtin App');
 
   useEffect(() => {
     fetchMembershipPageContent()
@@ -48,7 +52,7 @@ export function MembershipPage() {
               className="inline-flex items-center gap-2 bg-blue-800/50 backdrop-blur-sm text-blue-200 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6 border border-blue-700/50"
             >
               <Smartphone size={14} />
-              ClubSpot App — Official Club Partner
+              Naomh Mairtin App
             </motion.div>
             
             <motion.h1
@@ -58,7 +62,7 @@ export function MembershipPage() {
               className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-6 leading-tight"
             >
               Club Membership <br className="hidden md:block" />
-              <span className="text-amber-400">Now on ClubSpot</span>
+              <span className="text-amber-400">Now on Naomh Mairtin App</span>
             </motion.h1>
             
             <motion.p
@@ -67,7 +71,7 @@ export function MembershipPage() {
               transition={{ delay: 0.1 }}
               className="text-blue-100/80 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-10 leading-relaxed"
             >
-              {membership.description}
+              {membershipDescription}
             </motion.p>
 
             {/* App Download Buttons */}
@@ -121,7 +125,7 @@ export function MembershipPage() {
               transition={{ delay: 0.25 }}
               className="mt-6 text-blue-300/60 text-xs"
             >
-              Available free on iOS and Android · Powered by ClubSpot
+              Available free on iOS and Android
             </motion.p>
           </div>
         </section>
@@ -147,7 +151,7 @@ export function MembershipPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-8">
                     <p className="text-white text-sm font-bold uppercase tracking-widest bg-amber-500/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-lg">
-                      Full Rates & Details on ClubSpot
+                      Full Rates & Details on Naomh Mairtin App
                     </p>
                   </div>
                 </div>
@@ -155,7 +159,7 @@ export function MembershipPage() {
             ) : (
               <div className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-amber-50 px-6 py-10 text-center">
                 <p className="text-[#1E3A8A] text-base font-black uppercase tracking-wide">
-                  Membership rates available on ClubSpot
+                  Membership rates available on Naomh Mairtin App
                 </p>
                 <a
                   href={membership.app_store_link}
@@ -163,7 +167,7 @@ export function MembershipPage() {
                   rel="noopener noreferrer"
                   className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1E3A8A] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition-colors hover:bg-[#17306f]"
                 >
-                  Open ClubSpot
+                  Open Naomh Mairtin App
                   <ExternalLink size={14} />
                 </a>
               </div>
@@ -183,7 +187,7 @@ export function MembershipPage() {
                 <div>
                   <h2 className="text-3xl font-black text-[#1E3A8A] uppercase tracking-tight mb-4">Why join via the app?</h2>
                   <p className="text-gray-500 font-medium leading-relaxed">
-                    The Naomh Mairtin CPG app powered by ClubSpot is our central hub for all club activity. It's the fastest and most secure way to manage your membership.
+                    The Naomh Mairtin App is our central hub for membership, updates and club activity. It is the fastest and most secure way to manage your membership.
                   </p>
                 </div>
 
@@ -206,25 +210,18 @@ export function MembershipPage() {
                 </div>
               </div>
 
-              {/* Phone mock */}
-              <div className="relative">
-                <div className="bg-gradient-to-br from-amber-400 to-yellow-500 aspect-square rounded-[3rem] shadow-2xl overflow-hidden flex items-center justify-center p-8 rotate-3">
-                  <div className="bg-[#1E3A8A] w-full h-full rounded-2xl shadow-inner flex items-center justify-center -rotate-3 border-4 border-[#1E3A8A]/20">
-                    <Smartphone size={120} className="text-white/20" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
-                      <div className="w-20 h-20 bg-white rounded-2xl mb-4 flex items-center justify-center shadow-lg">
-                        <div className="w-12 h-12 bg-[#1E3A8A] rounded-xl" />
-                      </div>
-                      <span className="text-xl font-black uppercase tracking-widest text-center">Naomh Mairtin CPG App</span>
-                      <div className="mt-4 flex gap-2">
-                        <span className="text-[9px] bg-white/20 rounded-lg px-2 py-1 font-black uppercase tracking-wider">iOS</span>
-                        <span className="text-[9px] bg-white/20 rounded-lg px-2 py-1 font-black uppercase tracking-wider">Android</span>
-                      </div>
-                    </div>
+              <div className="relative mx-auto w-full max-w-[20rem] lg:max-w-[22rem]">
+                <div className="bg-gradient-to-br from-amber-400 to-yellow-500 aspect-[10/18] rounded-[2.75rem] shadow-2xl overflow-hidden flex items-center justify-center p-4 rotate-2">
+                  <div className="bg-[#1E3A8A] w-full h-full rounded-[2.1rem] shadow-inner flex items-center justify-center -rotate-2 border-4 border-[#1E3A8A]/20 p-3">
+                    <img
+                      src={appScreenshot}
+                      alt="Naomh Mairtin App screenshot"
+                      className="h-full w-full rounded-[1.6rem] object-cover object-top shadow-2xl"
+                    />
                   </div>
                 </div>
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-amber-200/50 rounded-full blur-2xl" />
-                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-200/50 rounded-full blur-3xl" />
+                <div className="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-amber-200/50 blur-2xl" />
+                <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-blue-200/50 blur-3xl" />
               </div>
             </div>
           </div>
@@ -234,12 +231,12 @@ export function MembershipPage() {
         <section className="bg-[#1E3A8A] py-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-3">How to Join</h2>
-            <p className="text-blue-200 mb-12 max-w-xl mx-auto">Follow these simple steps to register your membership through the ClubSpot app.</p>
+            <p className="text-blue-200 mb-12 max-w-xl mx-auto">Follow these simple steps to register your membership through the Naomh Mairtin App.</p>
             <div className="grid sm:grid-cols-3 gap-6">
               {[
-                { step: '1', title: 'Download the App', desc: 'Get ClubSpot free on the App Store or Google Play.' },
-                { step: '2', title: 'Find Our Club', desc: 'Search for "Naomh Mairtin CPG" in the app.' },
-                { step: '3', title: 'Register & Pay', desc: 'Complete your membership and pay dues securely online.' },
+                { step: '1', title: 'Download the Naomh Mairtin App', desc: 'Get it free on the App Store or Google Play.' },
+                { step: '2', title: 'Select the Membership Package to Suit Your Needs', desc: 'Choose the membership option that matches you or your family.' },
+                { step: '3', title: 'Register and Pay', desc: 'Complete your membership and pay securely online.' },
               ].map((s) => (
                 <div key={s.step} className="bg-white/10 rounded-2xl p-6 text-left">
                   <div className="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center mb-4">

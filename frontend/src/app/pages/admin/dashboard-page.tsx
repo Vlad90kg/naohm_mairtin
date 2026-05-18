@@ -36,7 +36,7 @@ export function DashboardPage() {
       {/* Welcome Section */}
       <section className="bg-[#1E3A8A] rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl">
         <div className="relative z-10">
-          <p className="text-amber-400 font-black uppercase tracking-[0.25em] text-xs mb-3">Naomh Mairtin CPG</p>
+          <p className="text-amber-400 font-black uppercase tracking-[0.25em] text-xs mb-3">Naomh Mairtin CPG & LGFA</p>
           <h1 className="text-4xl font-black uppercase tracking-tight mb-4 leading-tight">Club CMS Dashboard</h1>
           <p className="text-blue-100/80 font-medium max-w-xl text-lg leading-relaxed">
             Manage your club's online presence with ease. Update teams, post events, 

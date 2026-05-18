@@ -11,7 +11,7 @@ const DEFAULT_LOTTO_PAGE: ApiLottoPageContent = {
   hero_title: 'Club',
   hero_highlight: 'Lotto',
   hero_description:
-    'Play the Naomh Mairtin CPG weekly lotto and support your club. Every ticket helps fund our teams, facilities, and community.',
+    'Play the Naomh Mairtin CPG & LGFA weekly lotto and support your club. Every ticket helps fund our teams, facilities, and community.',
   jackpot_label: 'Current Jackpot',
   jackpot_amount: 'EUR8,500',
   next_draw_label: 'Draw',
@@ -31,7 +31,7 @@ const DEFAULT_LOTTO_PAGE: ApiLottoPageContent = {
   how_it_works_title: 'How the Lotto Works',
   bottom_cta_title: 'Support Your Club - Play the Lotto',
   bottom_cta_description:
-    'Every ticket purchased goes directly back into Naomh Mairtin CPG. Your support keeps our club, pitches, and community programmes running.',
+    'Every ticket purchased goes directly back into Naomh Mairtin CPG & LGFA. Your support keeps our club, pitches, and community programmes running.',
 };
 
 export function LottoPage() {

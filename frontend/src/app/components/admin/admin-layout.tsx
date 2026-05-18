@@ -54,7 +54,7 @@ export function AdminLayout() {
                 </div>
                 <div>
                   <h1 className="text-xl font-black uppercase tracking-tight">Admin CMS</h1>
-                  <p className="text-[10px] text-blue-300 font-bold uppercase tracking-widest leading-none">Naomh Mairtin CPG</p>
+                  <p className="text-[10px] text-blue-300 font-bold uppercase tracking-widest leading-none">Naomh Mairtin CPG & LGFA</p>
                 </div>
               </Link>
               <button 

@@ -74,7 +74,7 @@ const defaultCommittees: CommitteeSection[] = [
 
 const DEFAULT_PAGE_CONTENT: CommitteesPageContent = {
   title: 'Club Committees',
-  subtitle: 'Meet the people behind Naomh Mairtin CPG',
+  subtitle: 'Meet the People Behind Naomh Mairtin CPG & LGFA',
   sections: defaultCommittees,
 };
 
@@ -139,7 +139,7 @@ export function CommitteesPage() {
         const data = (await response.json()) as CommitteesPageContent;
         setContent({
           title: data.title || DEFAULT_PAGE_CONTENT.title,
-          subtitle: data.subtitle || DEFAULT_PAGE_CONTENT.subtitle,
+          subtitle: DEFAULT_PAGE_CONTENT.subtitle,
           sections: Array.isArray(data.sections) && data.sections.length ? data.sections : DEFAULT_PAGE_CONTENT.sections,
         });
       })

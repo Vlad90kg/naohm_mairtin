@@ -25,7 +25,7 @@ export function AdultTeamsPage() {
   return (
     <TeamsPageShell
       title="Adult Teams"
-      subtitle="Explore the senior adult teams representing Naomh Mairtin CPG"
+      subtitle="Explore the senior adult teams representing Naomh Mairtin CPG & LGFA"
     >
       <div className="space-y-10">
         <TeamsSectionIntro

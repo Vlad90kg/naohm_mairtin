@@ -41,7 +41,7 @@ return new class extends Migration
             'hero_eyebrow' => 'Official Club Stores',
             'hero_title' => 'Club Shop',
             'hero_highlight' => 'Shop',
-            'hero_description' => 'Support Naomh Mairtin CPG by purchasing official gear and merchandise through our approved retail partners.',
+            'hero_description' => 'Support Naomh Mairtin CPG & LGFA by purchasing official gear and merchandise through our approved retail partners.',
             'info_title' => 'Need Help with an Order?',
             'info_description' => 'For queries about club orders, sizes, or custom printing, contact the club directly or reach out to our retail partners using the links above.',
             'info_button_text' => 'Contact the Club',

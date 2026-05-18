@@ -49,7 +49,7 @@ class ShopPageContentResource extends Resource
                         Forms\Components\Textarea::make('hero_description')
                             ->label('Hero Description')
                             ->helperText('Short introduction shown below the shop heading.')
-                            ->placeholder('Support Naomh Mairtin CPG by purchasing official gear...')
+                            ->placeholder('Support Naomh Mairtin CPG & LGFA by purchasing official gear...')
                             ->required()
                             ->rows(4)
                             ->columnSpanFull(),

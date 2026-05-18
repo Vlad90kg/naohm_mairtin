@@ -17,7 +17,7 @@ return new class extends Migration
             [
                 'title' => 'Club History',
                 'slug' => 'history',
-                'subtitle' => 'Naomh Mairtin CPG milestones, stories, and legacy.',
+                'subtitle' => 'Naomh Mairtin CPG & LGFA milestones, stories, and legacy.',
                 'intro_text' => 'Use this page to manage club history, milestones, and notable figures using flexible sections.',
                 'hero_image' => null,
                 'is_published' => true,
@@ -78,4 +78,3 @@ return new class extends Migration
             ->delete();
     }
 };
-

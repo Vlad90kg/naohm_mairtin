@@ -26,7 +26,7 @@ const defaultPageContent: SponsorsPageContent = {
   hero_description: 'A full directory of club sponsors, with featured supporters highlighted across the wider site.',
   section_eyebrow: 'Our Sponsors',
   section_title: 'Every Sponsor In One Place',
-  section_description: 'Please support the businesses and individuals who support Naomh Mairtin CPG.',
+  section_description: 'Please support the businesses and individuals who support Naomh Mairtin CPG & LGFA.',
   cta_title: 'Become A Club Sponsor',
   cta_description: 'We offer sponsorship options for businesses at different levels while keeping visibility clear and structured.',
   cta_button_text: 'Get In Touch',

@@ -55,7 +55,7 @@ class ContactPageContent extends Page implements HasForms
             Section::make('Map')->schema([
                 TextInput::make('mapQuery')
                     ->label('Google Maps Location or Embed URL')
-                    ->helperText('Use a location query like "Naomh Mairtin CPG, Sillogue Lane, Newtown Monasterboice, Co. Louth" or a full Google Maps embed URL.')
+                    ->helperText('Use a location query like "Naomh Mairtin CPG & LGFA, Sillogue Lane, Newtown Monasterboice, Co. Louth" or a full Google Maps embed URL.')
                     ->required(),
             ]),
         ]);
