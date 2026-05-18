@@ -1,59 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Naomh Mairtin Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This Laravel + Filament backend powers the private club CMS at `/backend/admin`.
 
-## About Laravel
+## Admin access
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Filament login is email + password only.
+- There is no public registration page.
+- Only users with `is_admin = true` and `is_active = true` may access the admin panel.
+- Only users with `is_super_admin = true` may manage admin accounts.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Password reset
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- The Filament login page includes a standard Laravel password reset flow.
+- Reset emails depend on working mail delivery.
+- If `MAIL_MAILER=log`, reset emails are written to logs and will not reach real admins.
+- Production must use a real SMTP mailbox in `.env`.
 
-## Learning Laravel
+## Local password reset testing
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Use this when testing on localhost (`http://127.0.0.1:8000`):
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Start Laravel:
+   `php artisan serve`
+2. Confirm local `.env` includes:
+   `APP_URL=http://127.0.0.1:8000`
+   `MAIL_MAILER=log`
+3. Clear config:
+   `php artisan optimize:clear`
+4. Open:
+   `http://127.0.0.1:8000/admin/password-reset/request`
+5. Enter an email that exists in your local `users` table.
+6. Open:
+   `storage/logs/laravel.log`
+7. Search for the password reset email and copy the reset URL.
+8. Open the reset URL in browser and set a new password.
 
-## Laravel Sponsors
+Important:
+- Do not open `/admin/password-reset/reset` by itself.
+- Always use the full Reset Password URL (including `email`, `token`, and `signature`).
+- If copied from HTML, replace `&amp;` with `&`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Local helper command:
 
-### Premium Partners
+```bash
+php artisan mail:test-reset admin@example.com
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Sends a password reset notification to the specified existing user.
+- Prints the full reset URL directly in terminal as plain text.
+- If `MAIL_MAILER=log`, the email is also written to `storage/logs/laravel.log`.
 
-## Contributing
+Optional token validation:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan mail:test-reset admin@example.com --validate-token
+```
 
-## Code of Conduct
+- Prints `tokenExists=true` when the generated raw token matches broker validation.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Optional Mailpit (local inbox)
 
-## Security Vulnerabilities
+You can use Mailpit instead of `MAIL_MAILER=log`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=admin@example.com
+MAIL_FROM_NAME="Naomh Mairtin CMS"
+```
 
-## License
+Mailpit UI:
+`http://localhost:8025`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Example production mail settings:
+
+```env
+MAIL_MAILER=smtp
+MAIL_SCHEME=tls
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USERNAME=admin-mailbox@example.com
+MAIL_PASSWORD=your-smtp-password
+MAIL_FROM_ADDRESS=admin-mailbox@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Production warning:
+- Do not run production with `MAIL_MAILER=log`.
+- Real admins will only receive reset emails when SMTP is configured with valid credentials.
+
+## Emergency admin user command
+
+For emergency recovery, a developer can create or reset an admin user non-interactively:
+
+```bash
+php artisan admin:user --name="Admin" --email="admin@example.com" --password="StrongPassword" --super
+```
+
+- This command creates the user if missing.
+- If the user already exists, it updates the password and admin flags.
+- `--super` grants super-admin access.
+
+## Production commands
+
+```bash
+php artisan migrate --force
+php artisan optimize:clear
+```
